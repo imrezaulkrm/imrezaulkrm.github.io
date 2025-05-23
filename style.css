@@ -306,63 +306,6 @@ canvas#cosmos {
 
 
 
-
-.scroll-arrow-container {
-  position: fixed;
-  bottom: 30px;
-  left: 50%;
-  transform: translateX(-50%);
-  cursor: pointer;
-  text-align: center;
-  color: #fff;
-  font-family: 'Poppins', sans-serif;
-  z-index: 1000;
-  user-select: none;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-/* Label above arrow */
-.scroll-label {
-  font-size: 1rem;
-  margin-bottom: 5px;
-  opacity: 0.7;
-  letter-spacing: 1.2px;
-  transition: opacity 0.3s ease, transform 0.3s ease;
-}
-
-/* Arrow style */
-.scroll-arrow {
-  font-size: 3rem;
-  animation: bounce 2s infinite;
-  transition: color 0.3s ease;
-}
-
-/* Hover effects */
-.scroll-arrow-container:hover .scroll-arrow {
-  color: #7bed9f;
-}
-
-.scroll-arrow-container:hover .scroll-label {
-  opacity: 1;
-  transform: translateY(-3px);
-}
-
-/* Bounce animation */
-@keyframes bounce {
-  0%, 20%, 50%, 80%, 100% {
-    transform: translateY(0);
-  }
-  40% {
-    transform: translateY(-10px);
-  }
-  60% {
-    transform: translateY(-5px);
-  }
-}
-
-
 #about {
   min-height: 100vh;
   background: #1e2a2f;  /* আলাদা ব্যাকগ্রাউন্ড কালার */
@@ -540,12 +483,131 @@ canvas#cosmos {
 
 
 
+
+
 @media (max-width: 768px) {
-  .hero-content {
+  .hero {
     flex-direction: column-reverse;
+    justify-content: flex-start;
+    padding-top: 4rem;
     text-align: center;
+    height: auto;
   }
-  .terminal-container, .photo, .text {
-    max-width: 100%;
+
+  .hero-content {
+    display: contents;
+    gap: 2rem;
+  }
+
+  .text h1 {
+    font-size: 2.2rem;
+  }
+
+  .text h2 {
+    font-size: 1.25rem;
+    margin-top: 5px;
+  }
+
+  .text p {
+    font-size: 0.95rem;
+  }
+
+  .editor-tab {
+    width: 100%;
+    max-width: 160px;
+    height: 220px;
+    padding-bottom: 2rem;
+    margin: 0 auto;
+    margin-bottom: 25px;
+  }
+
+  .profile-img {
+    height: 200px;
+  }
+
+  .terminal-container {
+    width: 100%;
+    max-width: 85vw;
+    margin: 0 auto;
+    margin-top: 85px;
+    height: 80px;
+    padding: 1.2rem;
+  }
+
+  #terminal-text {
+    font-size: 0.80rem;
+    line-height: .3rem;
+  }
+
+  .terminal-header {
+    top: 0.4rem;
+    left: 0.6rem;
+  }
+  #command-line {
+    display: block;
+    text-align: left;
+    margin: -5px 10px -8px -25px;
+    padding: 0;
+}
+
+  .dot {
+    width: 8px;
+    height: 8px;
+  }
+
+  #result-block {
+    font-size: 0.85rem;
+    padding-left: 1rem;
+  }
+
+  .side-nav {
+    right: 10px;
+    padding: 6px 3px;
+    gap: 10px;
+  }
+
+  .material-symbols-outlined {
+    font-size: 22px;
+  }
+
+  .nav-dot {
+    font-size: 22px;
+    padding: 2px;
+  }
+
+  .highlight-paragraph {
+    font-size: 1rem;
+    line-height: 1.5;
+    padding-left: 0.8rem;
   }
 }
+
+@media (max-width: 430px) {
+  .text h1 {
+    font-size: 1.8rem;
+  }
+
+  .text h2 {
+    font-size: 1.1rem;
+  }
+  #terminal-text {
+    font-size: 10px;
+    line-height: .3rem;
+  }
+  #command-line {
+    margin: -5px 10px -8px -32px;
+  }
+  #result-block{
+    font-size: 10px;
+    padding-left: 0px;
+  }
+  .terminal-container {
+    padding: 1rem 0.8rem;
+  }
+
+  .highlight-paragraph {
+    font-size: 0.95rem;
+    padding-left: 0.6rem;
+  }
+}
+
