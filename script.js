@@ -42,3 +42,84 @@ function animate() {
   requestAnimationFrame(animate);
 }
 animate();
+
+
+
+
+
+
+
+const navDots = document.querySelectorAll('.nav-dot');
+const sections = [...navDots].map(dot => document.querySelector(dot.dataset.target));
+let currentIndex = 0;
+
+const upArrowBtn = document.querySelector('.nav-arrow:first-of-type');
+const downArrowBtn = document.querySelector('.nav-arrow:last-of-type');
+
+function activateNavDot(index) {
+  navDots.forEach(dot => dot.classList.remove('active'));
+  if (navDots[index]) navDots[index].classList.add('active');
+}
+
+function updateArrowVisibility() {
+  if (upArrowBtn) {
+    upArrowBtn.style.display = currentIndex === 0 ? 'none' : 'flex';
+  }
+  if (downArrowBtn) {
+    downArrowBtn.style.display = currentIndex === sections.length - 1 ? 'none' : 'flex';
+  }
+}
+
+function scrollToSection(index) {
+  if (index >= 0 && index < sections.length) {
+    currentIndex = index;
+    sections[index].scrollIntoView({ behavior: 'smooth' });
+    activateNavDot(index);
+    updateArrowVisibility();
+  }
+}
+
+// Nav dots click
+navDots.forEach((dot, index) => {
+  dot.addEventListener('click', () => scrollToSection(index));
+});
+
+// Arrow buttons
+if (upArrowBtn) {
+  upArrowBtn.addEventListener('click', () => {
+    if (currentIndex > 0) {
+      scrollToSection(currentIndex - 1);
+    }
+  });
+}
+
+if (downArrowBtn) {
+  downArrowBtn.addEventListener('click', () => {
+    if (currentIndex < sections.length - 1) {
+      scrollToSection(currentIndex + 1);
+    }
+  });
+}
+
+// On scroll update index & arrow
+function onScroll() {
+  const scrollMiddle = window.innerHeight / 2;
+  let closestIndex = 0;
+  let smallestDiff = Infinity;
+
+  sections.forEach((section, i) => {
+    const rect = section.getBoundingClientRect();
+    const diff = Math.abs(rect.top - scrollMiddle);
+    if (diff < smallestDiff) {
+      smallestDiff = diff;
+      closestIndex = i;
+    }
+  });
+
+  currentIndex = closestIndex;
+  activateNavDot(currentIndex);
+  updateArrowVisibility();
+}
+
+window.addEventListener('scroll', onScroll);
+onScroll(); // initialize

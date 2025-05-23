@@ -6,11 +6,54 @@
   <title>Md Rezaul Karim | DevOps Engineer</title>
   <link rel="stylesheet" href="style.css" />
   <link href="https://fonts.googleapis.com/css2?family=Orbitron&family=Poppins&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/fontawesome.min.css" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+
 </head>
 <body>
   <canvas id="cosmos"></canvas>
+  <!-- Vertical Scroll Nav -->
+  <nav class="side-nav" aria-label="Section navigation">
+    <button class="nav-arrow" data-target="#hero" aria-label="Scroll to Hero section">
+      <span class="material-symbols-outlined">arrow_upward</span>
+    </button>
+  
+    <div class="nav-icons">
+      <span class="nav-dot active" data-target="#hero" title="Hero">
+        <span class="material-symbols-outlined">home</span>
+      </span>
+      <span class="nav-dot" data-target="#about" title="About">
+        <span class="material-symbols-outlined">person</span>
+      </span>
+      <span class="nav-dot" data-target="#skills" title="Skills">
+        <span class="material-symbols-outlined">build</span>
+      </span>
+      <span class="nav-dot" data-target="#projects" title="Projects">
+        <span class="material-symbols-outlined">work</span>
+      </span>
+      <span class="nav-dot" data-target="#experience" title="Experience">
+        <span class="material-symbols-outlined">calendar_today</span>
+      </span>
+      <span class="nav-dot" data-target="#education" title="Education & Certification">
+        <span class="material-symbols-outlined">school</span>
+      </span>
+      <span class="nav-dot" data-target="#contact" title="Contact">
+        <span class="material-symbols-outlined">mail</span>
+      </span>
+      <span class="nav-dot" data-target="#footer" title="Footer">
+        <span class="material-symbols-outlined">expand_more</span>
+      </span>
+    </div>
+  
+    <button class="nav-arrow" data-target="#footer" aria-label="Scroll to Footer section">
+      <span class="material-symbols-outlined">arrow_downward</span>
+    </button>
+  </nav>
+  
+  
 
-  <section class="hero">
+  <section class="hero" id="hero">
     <div class="hero-content">
 
       <!-- hero-content এর ভিতরে: -->
@@ -32,20 +75,57 @@
         </div>
       </div>
 
-      <p>Building scalable pipelines, containerized microservices, and seamless cloud-native deployments.</p>
-      <a href="#projects" class="btn-glow">View Projects</a>
+      <p class="highlight-paragraph">
+        From code to cloud, I build systems that scale, ship faster, and never break under pressure.
+      </p>      
+      <a href="file/resumeOfRezaulKarim.pdf" target="_blank" rel="noopener" class="btn-glow">Download CV</a>
     </div>
 
-    <div class="photo">
-      <img src="img/MdRezaulKarim.jpg" alt="Md Rezaul Karim" />
+    <div class="editor-tab">
+      <div class="tab-header">
+        <span class="tab-dot red"></span>
+        <span class="tab-dot yellow"></span>
+        <span class="tab-dot green"></span>
+      </div>
+      <img class="profile-img" src="img/MdRezaulKarim.png" alt="Profile Image" />
     </div>
-
-
     </div>
   </section>
+   
+
+  <section id="about">
+    <h1>About Me</h1>
+    <p>
+      Hi! I am Md Rezaul Karim, a passionate Cloud & DevOps Engineer. I specialize in building scalable and reliable cloud-native applications,
+      implementing CI/CD pipelines, container orchestration, and automation.
+    </p>
+  </section>
+  <section id="skills">
+    <h1>Skills</h1>
+    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Perferendis aliquid ut facilis itaque voluptatem eaque sunt neque quasi quam odit, id, ipsa, quibusdam amet atque tempora sapiente! Eius, dicta alias?</p>
+  </section>
+  <section id="projects">
+    <h1>Projects</h1>
+    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Perferendis aliquid ut facilis itaque voluptatem eaque sunt neque quasi quam odit, id, ipsa, quibusdam amet atque tempora sapiente! Eius, dicta alias?</p>
+  </section>
+  <section id="experience">
+    <h1>Experience</h1>
+    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Perferendis aliquid ut facilis itaque voluptatem eaque sunt neque quasi quam odit, id, ipsa, quibusdam amet atque tempora sapiente! Eius, dicta alias?</p>
+  </section>
+  <section id="education">
+    <h1>Education & Certification</h1>
+    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Perferendis aliquid ut facilis itaque voluptatem eaque sunt neque quasi quam odit, id, ipsa, quibusdam amet atque tempora sapiente! Eius, dicta alias?</p>
+  </section>
+  <section id="contact">
+    <h1>Contact</h1>
+    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Perferendis aliquid ut facilis itaque voluptatem eaque sunt neque quasi quam odit, id, ipsa, quibusdam amet atque tempora sapiente! Eius, dicta alias?</p>
+  </section>
+  <footer id="footer">
+    <h1>Connect with Me</h1>
+    <p>Feel free to reach out for collaboration or just a chat!</p>
+  </footer>
 
   <script src="typing.js"></script>
   <script src="script.js"></script>
 </body>
 </html>
-
