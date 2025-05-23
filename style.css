@@ -1,0 +1,153 @@
+/* আগের কোড থাকবে যেটা তুমি দিয়েছিলে */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+body {
+  font-family: 'Poppins', sans-serif;
+  background: #0a0a0a;
+  color: #e0fce0;
+  overflow-x: hidden;
+  position: relative;
+  height: 100vh;
+}
+canvas#cosmos {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: -1;
+}
+.hero {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  padding: 2rem;
+}
+.hero-content {
+  max-width: 1200px;
+  display: flex;
+  flex-direction: row;
+  gap: 2rem;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+.text {
+  flex: 1;
+  min-width: 280px;
+}
+.text h1 {
+  font-size: 3rem;
+  color: #78ff96;
+  font-family: 'Orbitron', sans-serif;
+}
+.text h2 {
+  font-size: 1.5rem;
+  color: #c1f0d1;
+  margin-bottom: 1rem;
+}
+.text p {
+  font-size: 1rem;
+  color: #cfcfcf;
+  margin-bottom: 1.5rem;
+}
+.btn-glow {
+  padding: 0.8rem 1.5rem;
+  background: transparent;
+  border: 2px solid #78ff96;
+  color: #78ff96;
+  font-weight: bold;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.3s ease;
+  box-shadow: 0 0 15px #78ff96;
+  text-decoration: none;
+}
+.btn-glow:hover {
+  background: #78ff96;
+  color: #000;
+}
+
+/* photo improved style */
+.photo {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+.photo img {
+  width: 300px;
+  height: 300px;
+  border-radius: 50%;
+  border: 6px solid #78ff96;
+  object-fit: cover;
+  box-shadow: 0 0 30px rgba(120, 255, 150, 0.8);
+  transition: transform 0.3s ease;
+  filter: drop-shadow(0 0 8px #78ff96);
+}
+.photo img:hover {
+  transform: scale(1.05) rotate(3deg);
+}
+
+.terminal-container {
+  background: #111;
+  border-radius: 6px;
+  padding: 1.6rem 1rem;
+  width: 435px;
+  box-shadow: 0 0 12px #78ff96;
+  user-select: none;
+  overflow: hidden;
+  height: 120px;
+}
+
+.terminal-header {
+  display: flex;
+  gap: 5px;
+  margin-bottom: 4px;
+}
+
+.dot {
+  height: 10px;
+  width: 10px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.red { background: #ff5f56; }
+.yellow { background: #ffbd2e; }
+.green { background: #27c93f; }
+
+#terminal-text {
+  font-size: 0.88rem;
+  line-height: 5px;
+  white-space: pre-wrap;
+}
+
+#cmd-line {
+  display: block;
+  color: #78ff96;
+  font-weight: 500;
+  margin-bottom: 0.1rem;
+}
+
+#result-line {
+  display: block;
+  margin-left: 1rem;
+  color: #b1f7b1;
+  font-weight: 400;
+}
+
+
+@media (max-width: 768px) {
+  .hero-content {
+    flex-direction: column-reverse;
+    text-align: center;
+  }
+  .terminal-container, .photo, .text {
+    max-width: 100%;
+  }
+}
