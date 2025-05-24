@@ -2,11 +2,25 @@ const cmdLine = document.getElementById('cmd-line');
 const resultBlock = document.getElementById('result-block');
 
 const commands = [
-  { cmd: 'kubectl get skill', result: 'Docker ✅  Kubernetes ✅  CI/CD ✅' },
-  { cmd: 'docker ps -a', result: 'abcd1234  nginx  Up 2 hours' },
-  { cmd: 'git status', result: 'On branch main nothing to commit' },
+  { cmd: 'kubectl get skill', result: 'Docker  Kubernetes  Jenkins  AWS  Git  CI/CD' },
+  { cmd: 'docker ps -a', result: 'c0ffee42  devops_life  Up 24/7' },
+  { cmd: 'git status', result: 'On branch main → working clean, committed to excellence' },
   { cmd: 'whoami', result: 'Md Rezaul Karim' },
-  { cmd: 'terraform plan', result: 'No changes. Infrastructure up-to-date.' }
+  { cmd: 'terraform plan', result: '0 to add, 0 to change, 0 to destroy — everything is stable!' },
+  { cmd: 'echo $FOCUS', result: 'DevOps | Cloud | Automation | Problem Solving' },
+  { cmd: 'top -u rezaul', result: 'CPU: 90% learning, 10% execution' },
+  { cmd: 'sudo apt install passion', result: 'Already installed and up-to-date' },
+  { cmd: 'ping future', result: 'future is alive (latency=0ms)' },
+  { cmd: 'curl ifconfig.me/goal', result: 'Become a Pro DevOps Engineer' },
+  { cmd: 'ls ~/projects', result: 'smart-home  ci-cd-pipeline  k8s-lab  blood-donation-app' },
+  { cmd: 'uptime', result: 'System running: 26 years | Status: Healthy' },
+  { cmd: 'crontab -l', result: '@daily learn && build && grow' },
+  { cmd: 'alias success="consistency && focus && patience"', result: 'Success command ready!' },
+  { cmd: 'nmap localhost', result: 'Open ports: 80 (nginx), 443 (https), 22 (ssh), 3000 (dev)' },
+  { cmd: 'cat /etc/rezaul/vision.txt', result: 'Build impactful solutions with elegance & efficiency' },
+  { cmd: 'watch -n 86400 "echo Keep going Rezaul!"', result: 'Reminder scheduled: daily motivation running' },
+  { cmd: 'history | grep success', result: '100+ matched results found' },
+  { cmd: 'netstat -tuln | grep active', result: 'Listening on opportunities...' }
 ];
 
 const typingSpeed = 50;
