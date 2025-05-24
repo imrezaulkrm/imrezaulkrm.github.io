@@ -3,24 +3,25 @@ const resultBlock = document.getElementById('result-block');
 
 const commands = [
   { cmd: 'whoami', result: 'Md Rezaul Karim' },
+  { cmd: 'echo $username', result: 'imrezaulkrm' },
   { cmd: 'cat ~/email.txt', result: 'rezaul1203karim@gmail.com' },
   { cmd: 'cat ~/phone.txt', result: '01871468781' },
-  { cmd: 'kubectl get skills', result: 'Docker, Kubernetes, Jenkins, Git, GitHub, AWS, Ubuntu Server' },
-  { cmd: 'docker ps -a', result: 'smart-home-box  Up 12 hrs | blood-donation-app  Up 1 day' },
-  { cmd: 'ls ~/projects', result: 'pharmacy-system  maze-escape-game  digital-doc-generator' },
-  { cmd: 'cat ~/current_job.txt', result: 'IT Department, Garments Industry' },
-  { cmd: 'cat ~/goals.txt', result: 'Become a Pro DevOps Engineer, Master Kubernetes & AWS' },
-  { cmd: 'crontab -l', result: '@daily 6AM: black cumin + honey + chia + learning DevOps' },
-  { cmd: 'history | grep kubernetes', result: 'minikube start, ingress apply, service clusterIP, nodePort test' },
-  { cmd: 'git log --author="rezaul"', result: 'feat: k8s ingress, fix: docker-compose, doc: setup guide' },
-  { cmd: 'uptime', result: 'System active for 26+ years | Mode: Learning' },
-  { cmd: 'echo $LIFESTYLE', result: 'Healthy, Focused, Budget Friendly' },
-  { cmd: 'ping dream-job.com', result: 'Reply from future: DevOps role reachable' },
-  { cmd: 'nmap localhost', result: 'Ports open: 22(ssh), 80(web), 443(secure), 3000(dev)' },
-  { cmd: 'df -h ~/skills', result: 'Usage: 80% | Remaining: GoLang, Monitoring, Security' },
-  { cmd: 'top -u rezaul', result: 'Focus: 90% Learning | 5% Practice | 5% Sleep' },
-  { cmd: 'alias grow="learn && build && never_give_up"', result: 'Alias set successfully' },
-  { cmd: 'cat /etc/motivation.txt', result: '"Consistency beats intensity. Keep going Rezaul."' }
+  { cmd: 'kubectl get skills', result: 'Docker Kubernetes Jenkins AWS Git' },
+  { cmd: 'docker ps -a', result: 'bartadhara Up | bytelock Up' },
+  { cmd: 'ls ~/projects', result: 'Bartadhara Studentify Bytelock' },
+  { cmd: 'cat ~/job.txt', result: 'DevOps Engineer, Software Company' },
+  { cmd: 'cat ~/goals.txt', result: 'Master K8s & AWS | Pro DevOps' },
+  { cmd: 'crontab -l', result: '6AM: fuel body && boot brain' },
+  { cmd: 'history | tail -n 1', result: 'helm upgrade --install prod-app' },
+  { cmd: 'git log --oneline', result: 'init CI | add ingress | fix docker' },
+  { cmd: 'uptime', result: '27y | Dev Mode | Active' },
+  { cmd: 'echo $LIFE', result: 'Healthy Consistent Focused' },
+  { cmd: 'ping dream-job.com', result: 'Reply: DevOps reachable' },
+  { cmd: 'nmap 127.0.0.1', result: '22 ssh | 443 https | 3000 dev' },
+  { cmd: 'df -h ~/skills', result: 'Used: 85% | Free: GoLang' },
+  { cmd: 'top -u rezaul', result: 'Focus 90% | Rest 5%' },
+  { cmd: 'alias grow', result: 'learn && build && never_give_up' },
+  { cmd: 'cat ~/motivation.txt', result: 'Consistency > Motivation' }
 ];
 
 const typingSpeed = 50;
