@@ -2,25 +2,25 @@ const cmdLine = document.getElementById('cmd-line');
 const resultBlock = document.getElementById('result-block');
 
 const commands = [
-  { cmd: 'kubectl get skill', result: 'Docker  Kubernetes  Jenkins  AWS  Git  CI/CD' },
-  { cmd: 'docker ps -a', result: 'c0ffee42  devops_life  Up 24/7' },
-  { cmd: 'git status', result: 'On branch main → working clean, committed to excellence' },
   { cmd: 'whoami', result: 'Md Rezaul Karim' },
-  { cmd: 'terraform plan', result: '0 to add, 0 to change, 0 to destroy — everything is stable!' },
-  { cmd: 'echo $FOCUS', result: 'DevOps | Cloud | Automation | Problem Solving' },
-  { cmd: 'top -u rezaul', result: 'CPU: 90% learning, 10% execution' },
-  { cmd: 'sudo apt install passion', result: 'Already installed and up-to-date' },
-  { cmd: 'ping future', result: 'future is alive (latency=0ms)' },
-  { cmd: 'curl ifconfig.me/goal', result: 'Become a Pro DevOps Engineer' },
-  { cmd: 'ls ~/projects', result: 'smart-home  ci-cd-pipeline  k8s-lab  blood-donation-app' },
-  { cmd: 'uptime', result: 'System running: 26 years | Status: Healthy' },
-  { cmd: 'crontab -l', result: '@daily learn && build && grow' },
-  { cmd: 'alias success="consistency && focus && patience"', result: 'Success command ready!' },
-  { cmd: 'nmap localhost', result: 'Open ports: 80 (nginx), 443 (https), 22 (ssh), 3000 (dev)' },
-  { cmd: 'cat /etc/rezaul/vision.txt', result: 'Build impactful solutions with elegance & efficiency' },
-  { cmd: 'watch -n 86400 "echo Keep going Rezaul!"', result: 'Reminder scheduled: daily motivation running' },
-  { cmd: 'history | grep success', result: '100+ matched results found' },
-  { cmd: 'netstat -tuln | grep active', result: 'Listening on opportunities...' }
+  { cmd: 'cat ~/email.txt', result: 'rezaul1203karim@gmail.com' },
+  { cmd: 'cat ~/phone.txt', result: '01871468781' },
+  { cmd: 'kubectl get skills', result: 'Docker, Kubernetes, Jenkins, Git, GitHub, AWS, Ubuntu Server' },
+  { cmd: 'docker ps -a', result: 'smart-home-box  Up 12 hrs | blood-donation-app  Up 1 day' },
+  { cmd: 'ls ~/projects', result: 'pharmacy-system  maze-escape-game  digital-doc-generator' },
+  { cmd: 'cat ~/current_job.txt', result: 'IT Department, Garments Industry' },
+  { cmd: 'cat ~/goals.txt', result: 'Become a Pro DevOps Engineer, Master Kubernetes & AWS' },
+  { cmd: 'crontab -l', result: '@daily 6AM: black cumin + honey + chia + learning DevOps' },
+  { cmd: 'history | grep kubernetes', result: 'minikube start, ingress apply, service clusterIP, nodePort test' },
+  { cmd: 'git log --author="rezaul"', result: 'feat: k8s ingress, fix: docker-compose, doc: setup guide' },
+  { cmd: 'uptime', result: 'System active for 26+ years | Mode: Learning' },
+  { cmd: 'echo $LIFESTYLE', result: 'Healthy, Focused, Budget Friendly' },
+  { cmd: 'ping dream-job.com', result: 'Reply from future: DevOps role reachable' },
+  { cmd: 'nmap localhost', result: 'Ports open: 22(ssh), 80(web), 443(secure), 3000(dev)' },
+  { cmd: 'df -h ~/skills', result: 'Usage: 80% | Remaining: GoLang, Monitoring, Security' },
+  { cmd: 'top -u rezaul', result: 'Focus: 90% Learning | 5% Practice | 5% Sleep' },
+  { cmd: 'alias grow="learn && build && never_give_up"', result: 'Alias set successfully' },
+  { cmd: 'cat /etc/motivation.txt', result: '"Consistency beats intensity. Keep going Rezaul."' }
 ];
 
 const typingSpeed = 50;
