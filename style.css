@@ -418,27 +418,98 @@ canvas#cosmos {
 
 
 
-#skills {
-  min-height: 100vh;
-  background: #1e2a2f;  /* আলাদা ব্যাকগ্রাউন্ড কালার */
-  padding: 60px 20px;
-  box-sizing: border-box;
-  color: #eee;
-}
 
-#skills h2 {
+
+
+.title {
+  text-align: center;
   font-size: 2.5rem;
   margin-bottom: 20px;
-  color: #78ff96;
+  text-shadow: 1px 1px 3px #000;
 }
 
-#skills p {
-  max-width: 700px;
-  margin: 0 auto;
-  font-size: 1.2rem;
-  line-height: 1.6;
-  color: #bbb;
+.tree {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
 }
+
+.root {
+  background: #1f4068;
+  padding: 15px 25px;
+  border-radius: 10px;
+  font-size: 1.5rem;
+  position: relative;
+  box-shadow: 0 0 10px #00bcd4;
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.branch {
+  margin-top: 10px;
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: center;
+  font-size: 0.9rem;
+}
+
+.branch span {
+  background: #16213e;
+  padding: 5px 10px;
+  border-radius: 6px;
+  border: 1px solid #00bcd4;
+  transition: 0.3s;
+}
+.branch span:hover {
+  background: #00bcd4;
+  color: #000;
+}
+
+.branches {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 30px;
+}
+
+.leaf {
+  background: rgba(255, 255, 255, 0.05);
+  padding: 15px 20px;
+  border-radius: 12px;
+  width: 250px;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 0 10px rgba(0, 255, 255, 0.2);
+  transition: transform 0.3s;
+}
+.leaf:hover {
+  transform: scale(1.05);
+}
+
+.leaf h3 {
+  font-size: 1.2rem;
+  margin-bottom: 10px;
+  color: #00e0ff;
+}
+
+.leaf ul {
+  list-style: none;
+  padding-left: 0;
+}
+.leaf ul li {
+  padding: 5px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+
+
+
+
+
+
+
 
 
 

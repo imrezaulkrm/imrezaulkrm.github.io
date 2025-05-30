@@ -41,9 +41,6 @@
       <span class="nav-dot" data-target="#contact" title="Contact">
         <span class="material-symbols-outlined">mail</span>
       </span>
-      <span class="nav-dot" data-target="#footer" title="Footer">
-        <span class="material-symbols-outlined">expand_more</span>
-      </span>
     </div>
   
     <button class="nav-arrow" data-target="#footer" aria-label="Scroll to Footer section">
@@ -138,9 +135,61 @@
 
 <!-- ...existing code... -->
   <section id="skills">
-    <h1>Skills</h1>
-    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Perferendis aliquid ut facilis itaque voluptatem eaque sunt neque quasi quam odit, id, ipsa, quibusdam amet atque tempora sapiente! Eius, dicta alias?</p>
+    <h1 class="title">My Skills Tree</h1>
+    <div class="tree">
+      <div class="root">DevOps Tools
+        <div class="branch">
+          <span>Docker</span>
+          <span>Kubernetes</span>
+          <span>Jenkins</span>
+          <span>ArgoCD</span>
+          <span>GitHub Actions</span>
+        </div>
+      </div>
+      <div class="branches">
+        <div class="leaf">
+          <h3>Backend Technologies</h3>
+          <ul>
+            <li>Spring Boot</li>
+            <li>Express.js</li>
+            <li>Node.js</li>
+            <li>Golang</li>
+            <li>Flask</li>
+          </ul>
+        </div>
+        <div class="leaf">
+          <h3>Frontend Technologies</h3>
+          <ul>
+            <li>Angular</li>
+            <li>Vue.js</li>
+            <li>React</li>
+            <li>HTML/CSS</li>
+            <li>JavaScript</li>
+          </ul>
+        </div>
+        <div class="leaf">
+          <h3>Monitoring & IaC</h3>
+          <ul>
+            <li>Prometheus</li>
+            <li>Grafana</li>
+            <li>Loki</li>
+            <li>Terraform</li>
+          </ul>
+        </div>
+        <div class="leaf">
+          <h3>Cloud & DB</h3>
+          <ul>
+            <li>AWS</li>
+            <li>MySQL</li>
+            <li>MongoDB</li>
+            <li>phpMyAdmin</li>
+          </ul>
+        </div>
+      </div>
+    </div>
   </section>
+
+
   <section id="projects">
     <h1>Projects</h1>
     <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Perferendis aliquid ut facilis itaque voluptatem eaque sunt neque quasi quam odit, id, ipsa, quibusdam amet atque tempora sapiente! Eius, dicta alias?</p>
@@ -157,14 +206,18 @@
     <h1>Contact</h1>
     <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Perferendis aliquid ut facilis itaque voluptatem eaque sunt neque quasi quam odit, id, ipsa, quibusdam amet atque tempora sapiente! Eius, dicta alias?</p>
   </section>
-  <footer id="footer">
-    <h1>Connect with Me</h1>
-    <p>Feel free to reach out for collaboration or just a chat!</p>
-  </footer>
-
   <script src="typing.js"></script>
   <script src="script.js"></script>
 
+  <script>
+// Optional interactive animation if needed
+document.querySelectorAll('.branch span').forEach(el => {
+  el.addEventListener('click', () => {
+    alert(`You clicked on: ${el.textContent}`);
+  });
+});
+
+  </script>
 
 </body>
 </html>
