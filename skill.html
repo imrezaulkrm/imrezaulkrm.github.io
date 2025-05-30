@@ -1,185 +1,122 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>DevOps Skill Pipeline</title>
-  <style>
-    body {
-      margin: 0;
-      padding: 0;
-      background: #0d1117;
-      font-family: sans-serif;
-    }
-    .container {
-      position: relative;
-      width: 100vw;
-      height: 100vh;
-      overflow: hidden;
-    }
-    .node {
-      position: absolute;
-      width: 60px;
-      height: 60px;
-      border-radius: 50%;
-      background-color: #161b22;
-      border: 2px solid #58a6ff;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      transition: transform 0.3s;
-    }
-    .node img {
-      width: 35px;
-      height: 35px;
-    }
-    .node:hover {
-      transform: scale(1.2);
-      z-index: 2;
-    }
-    svg {
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      z-index: 0;
-    }
-    .tooltip {
-      position: absolute;
-      padding: 8px 12px;
-      background: #21262d;
-      color: white;
-      border-radius: 6px;
-      font-size: 14px;
-      pointer-events: none;
-      opacity: 0;
-      transition: opacity 0.3s;
-      z-index: 3;
-    }
-  </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>DevOps Solar System - Small</title>
+<style>
+  body {
+    background: #0b0f23;
+    color: white;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    overflow: hidden;
+    margin: 0; padding: 0;
+    display: flex; justify-content: center; align-items: center; height: 100vh;
+  }
+  svg {
+    width: 450px; /* choto kore dilam */
+    height: 350px; /* choto kore dilam */
+    background: radial-gradient(circle at center, #12162f 40%, #0b0f23 90%);
+    border-radius: 15px;
+    box-shadow: 0 0 20px #1e293b;
+  }
+  .orbit {
+    stroke: transparent !important;
+  }
+</style>
 </head>
 <body>
-  <div class="container" id="pipeline">
-    <svg id="pipes"></svg>
-    <div class="tooltip" id="tooltip"></div>
-  </div>
 
-  <script>
-    const container = document.getElementById('pipeline');
-    const svg = document.getElementById('pipes');
-    const tooltip = document.getElementById('tooltip');
+<svg id="solarSystem" viewBox="0 0 900 700" xmlns="http://www.w3.org/2000/svg" >
 
-    const nodes = [
-        // Top Nodes
-        { id: 'frontend', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg', label: 'Frontend', percent: 85, x: 600, y: 100 },
-        { id: 'backend', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nodejs/nodejs-original.svg', label: 'Backend', percent: 90, x: 500, y: 150 },
-        { id: 'database', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mysql/mysql-original.svg', label: 'Database', percent: 80, x: 700, y: 150 },
-      // Top Nodes
-        { id: 'frontend', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg', label: 'Frontend', percent: 85, x: 600, y: 100 },
-        { id: 'backend', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nodejs/nodejs-original.svg', label: 'Backend', percent: 90, x: 500, y: 150 },
-        { id: 'database', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mysql/mysql-original.svg', label: 'Database', percent: 80, x: 700, y: 150 },
+  <!-- Center DevOps Sun -->
+  <circle id="devopsSun" cx="450" cy="350" r="30" fill="url(#devopsGradient)" />
+  <image xlink:href="https://www.svgrepo.com/show/445095/dev-ops-solid.svg" x="425" y="325" width="50" height="50" />
+  <text x="450" y="390" fill="#ffd700" font-weight="bold" font-size="14" text-anchor="middle">DevOps</text>
 
-      // Center DevOps
-        { id: 'devops', icon: 'https://www.svgrepo.com/show/445095/dev-ops-solid.svg', label: 'DevOps', percent: 95, x: 600, y: 300 },
-        { id: 'CI', icon: 'https://www.svgrepo.com/show/332275/ci-circle.svg', label: 'Kubernetes', percent: 85, x: 600, y: 400 },
-        { id: 'CD', icon: 'icons/terraform.svg', label: 'Terraform', percent: 80, x: 500, y: 450 },
-        { id: 'Containerization', icon: 'icons/jenkins.svg', label: 'Jenkins', percent: 90, x: 700, y: 450 },
-        { id: 'Monitoring', icon: 'icons/monitoring.svg', label: 'Monitoring', percent: 88, x: 700, y: 350 },
-        { id: 'OS', icon: 'icons/linux.svg', label: 'Linux', percent: 90, x: 500, y: 350 },
-        { id: 'Git', icon: 'icons/git.svg', label: 'Git', percent: 95, x: 600, y: 200 },
-        { id: 'orchestration', icon: 'icons/argocd.svg', label: 'ArgoCD', percent: 80, x: 700, y: 550 },
-        { id: 'IaC', icon: 'icons/ansible.svg', label: 'Ansible', percent: 85, x: 500, y: 550 },
-        { id: 'Cloud', icon: 'icons/aws.svg', label: 'AWS', percent: 90, x: 800, y: 300 },
+  <!-- Orbits hidden -->
+  <circle class="orbit" cx="450" cy="350" r="60" fill="none" stroke="#444" stroke-dasharray="4 6" />
+  <circle class="orbit" cx="450" cy="350" r="96" fill="none" stroke="#333" stroke-dasharray="3 5" />
+  <circle class="orbit" cx="450" cy="350" r="132" fill="none" stroke="#222" stroke-dasharray="2 4" />
+  <circle class="orbit" cx="450" cy="350" r="168" fill="none" stroke="#111" stroke-dasharray="1 3" />
 
-        { id: 'ubuntu', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/ubuntu/ubuntu-plain.svg', label: 'Ubuntu', percent: 90, x: 400, y: 450 },
-        { id: 'git', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/git/git-plain.svg', label: 'Git', percent: 95, x: 500, y: 480 },
-        { id: 'github', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/github/github-original.svg', label: 'GitHub', percent: 95, x: 600, y: 500 },
-        { id: 'aws', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/amazonwebservices/amazonwebservices-original.svg', label: 'AWS', percent: 85, x: 700, y: 480 },
-        { id: 'docker', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/docker/docker-original.svg', label: 'Docker', percent: 90, x: 800, y: 450 },
-        { id: 'k8s', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/kubernetes/kubernetes-plain.svg', label: 'Kubernetes', percent: 85, x: 600, y: 600 },
-        { id: 'terraform', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/terraform/terraform-original.svg', label: 'Terraform', percent: 80, x: 500, y: 630 },
-        { id: 'jenkins', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/jenkins/jenkins-original.svg', label: 'Jenkins', percent: 90, x: 700, y: 630 },
-        { id: 'argocd', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/argocd/argocd-original.svg', label: 'ArgoCD', percent: 75, x: 600, y: 680 },
-        { id: 'grafana', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/grafana/grafana-original.svg', label: 'Grafana', percent: 85, x: 500, y: 730 },
-        { id: 'prom', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/prometheus/prometheus-original.svg', label: 'Prometheus', percent: 85, x: 700, y: 730 },
-    ];
+</svg>
 
-    const connections = [
-      // Top
-      ['frontend', 'devops'],
-      ['backend', 'devops'],
-      ['database', 'devops'],
-      // Bottom
-      ['devops', 'ubuntu'], ['devops', 'git'], ['devops', 'github'], ['devops', 'aws'], ['devops', 'docker'],
-      ['github', 'k8s'], ['k8s', 'terraform'], ['k8s', 'jenkins'],
-      ['jenkins', 'argocd'],
-      ['argocd', 'grafana'], ['argocd', 'prom']
-    ];
+<script>
+  const svgNS = "http://www.w3.org/2000/svg";
 
-    nodes.forEach(({ id, icon, x, y }) => {
-      const el = document.createElement('div');
-      el.className = 'node';
-      el.style.left = x + 'px';
-      el.style.top = y + 'px';
-      el.dataset.id = id;
-      if (icon.startsWith('http')) {
-        el.innerHTML = `<img src="${icon}" alt="${id}" />`;
-      } else {
-        el.textContent = icon;
-      }
-      container.appendChild(el);
+  // Tools scaled down orbit radius (divide original by ~1.6)
+  const tools = [
+    { id: 'html', icon: 'https://icon.icepanel.io/Technology/svg/HTML5.svg', orbit: 62.5, angle: 0 },
+    { id: 'css', icon: 'https://icon.icepanel.io/Technology/svg/CSS3.svg', orbit: 62.5, angle: 72 },
+    { id: 'js', icon: 'https://icon.icepanel.io/Technology/svg/JavaScript.svg', orbit: 62.5, angle: 144 },
+    { id: 'angular', icon: 'https://icon.icepanel.io/Technology/svg/Angular.svg', orbit: 100, angle: 0 },
+    { id: 'react', icon: 'https://icon.icepanel.io/Technology/svg/React.svg', orbit: 100, angle: 90 },
+    { id: 'springboot', icon: 'https://icon.icepanel.io/Technology/svg/Spring.svg', orbit: 100, angle: 180 },
+    { id: 'expressjs', icon: 'https://icon.icepanel.io/Technology/png-shadow-512/Express.png', orbit: 100, angle: 270 },
+    { id: 'go', icon: 'https://icon.icepanel.io/Technology/svg/Go.svg', orbit: 132, angle: 0 },
+    { id: 'php', icon: 'https://icon.icepanel.io/Technology/svg/PHP.svg', orbit: 132, angle: 72 },
+    { id: 'flask', icon: 'https://icon.icepanel.io/Technology/png-shadow-512/Flask.png', orbit: 132, angle: 144 },
+    { id: 'python', icon: 'https://icon.icepanel.io/Technology/svg/Python.svg', orbit: 132, angle: 216 },
+    { id: 'nginx', icon: 'https://icon.icepanel.io/Technology/svg/NGINX.svg', orbit: 132, angle: 288 },
+    { id: 'mysql', icon: 'https://icon.icepanel.io/Technology/svg/MySQL.svg', orbit: 168, angle: 0 },
+    { id: 'mongodb', icon: 'https://icon.icepanel.io/Technology/svg/MongoDB.svg', orbit: 168, angle: 60 },
+    { id: 'ubuntu', icon: 'https://www.svgrepo.com/show/355338/ubuntu.svg', orbit: 168, angle: 120 },
+    { id: 'git', icon: 'https://www.svgrepo.com/show/353782/git-icon.svg', orbit: 168, angle: 180 },
+    { id: 'github', icon: 'https://www.svgrepo.com/show/452211/github.svg', orbit: 168, angle: 240 },
+    { id: 'aws', icon: 'https://www.svgrepo.com/show/448266/aws.svg', orbit: 168, angle: 300 },
+    { id: 'docker', icon: 'https://www.svgrepo.com/show/452192/docker.svg', orbit: 168, angle: 330 },
+    { id: 'k8s', icon: 'https://www.svgrepo.com/show/448233/kubernetes.svg', orbit: 168, angle: 350 },
+    { id: 'terraform', icon: 'https://www.svgrepo.com/show/354447/terraform-icon.svg', orbit: 168, angle: 20 },
+    { id: 'jenkins', icon: 'https://www.svgrepo.com/show/373699/jenkins.svg', orbit: 168, angle: 40 },
+    { id: 'argocd', icon: 'https://icon.icepanel.io/Technology/svg/Argo-CD.svg', orbit: 168, angle: 80 },
+    { id: 'grafana', icon: 'https://icon.icepanel.io/Technology/svg/Grafana.svg', orbit: 168, angle: 110 },
+    { id: 'prom', icon: 'https://icon.icepanel.io/Technology/svg/Prometheus.svg', orbit: 168, angle: 150 },
+  ];
+
+  const centerX = 450;
+  const centerY = 350;
+
+  const svg = document.getElementById('solarSystem');
+
+  function placeTool(tool) {
+    const rad = (tool.angle * Math.PI) / 180;
+    const x = centerX + tool.orbit * Math.cos(rad);
+    const y = centerY + tool.orbit * Math.sin(rad);
+
+    const g = document.createElementNS(svgNS, 'g');
+    g.setAttribute('class', 'tool-group');
+    g.setAttribute('transform', `translate(${x},${y})`);
+
+    const img = document.createElementNS(svgNS, 'image');
+    img.setAttributeNS('http://www.w3.org/1999/xlink', 'href', tool.icon);
+    img.setAttribute('width', 25);  // smaller icons
+    img.setAttribute('height', 25);
+    img.setAttribute('x', -12.5);
+    img.setAttribute('y', -12.5);
+    g.appendChild(img);
+
+    svg.appendChild(g);
+  }
+
+  tools.forEach(placeTool);
+
+  // Animate with slow orbit speed
+  let angleOffset = 0;
+  function animate() {
+    angleOffset += 0.15;
+    svg.querySelectorAll('.tool-group').forEach((g, i) => {
+      const tool = tools[i];
+      const rad = ((tool.angle + angleOffset) * Math.PI) / 180;
+      const x = centerX + tool.orbit * Math.cos(rad);
+      const y = centerY + tool.orbit * Math.sin(rad);
+      g.setAttribute('transform', `translate(${x},${y})`);
     });
+    requestAnimationFrame(animate);
+  }
+  animate();
 
-    const getCenter = id => {
-      const el = document.querySelector(`[data-id='${id}']`);
-      return {
-        x: el.offsetLeft + el.offsetWidth / 2,
-        y: el.offsetTop + el.offsetHeight / 2
-      };
-    };
+</script>
 
-    connections.forEach(([from, to]) => {
-      const start = getCenter(from);
-      const end = getCenter(to);
-      const dx = end.x - start.x;
-      const dy = end.y - start.y;
-      const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-      path.setAttribute('fill', 'none');
-      path.setAttribute('stroke', '#58a6ff');
-      path.setAttribute('stroke-width', '3');
-      path.setAttribute('stroke-linecap', 'round');
-      path.setAttribute('stroke-linejoin', 'round');
-      path.setAttribute('d', `M${start.x},${start.y} C${start.x},${start.y + dy / 2} ${end.x},${end.y - dy / 2} ${end.x},${end.y}`);
-      svg.appendChild(path);
-    });
-
-    // Tooltip
-    document.querySelectorAll('.node').forEach(node => {
-      node.addEventListener('mouseenter', e => {
-        const id = node.dataset.id;
-        const data = nodes.find(n => n.id === id);
-        if (!data) return;
-        tooltip.innerHTML = `
-          <strong>${data.label}</strong><br />
-          Proficiency: ${data.percent}%
-          <div style="background:#444; height:6px; border-radius:4px; margin-top:4px;">
-            <div style="background:#58a6ff; width:${data.percent}%; height:100%; border-radius:4px;"></div>
-          </div>`;
-
-        const rect = node.getBoundingClientRect();
-        const containerRect = container.getBoundingClientRect();
-        const top = rect.top - containerRect.top + node.offsetHeight + 8;
-        const left = rect.left - containerRect.left + node.offsetWidth / 2 - tooltip.offsetWidth / 2;
-
-        tooltip.style.top = top + 'px';
-        tooltip.style.left = `${Math.max(5, Math.min(left, containerRect.width - tooltip.offsetWidth - 5))}px`;
-        tooltip.style.opacity = 1;
-      });
-
-      node.addEventListener('mouseleave', () => {
-        tooltip.style.opacity = 0;
-      });
-    });
-  </script>
 </body>
 </html>
