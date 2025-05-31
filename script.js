@@ -123,3 +123,33 @@ function onScroll() {
 
 window.addEventListener('scroll', onScroll);
 onScroll(); // initialize
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+document.addEventListener("DOMContentLoaded", () => {
+  const circles = document.querySelectorAll("#skills .progress-circle");
+  circles.forEach(circle => {
+    const percent = circle.dataset.percent;
+    const progress = circle.querySelector(".progress");
+    const offset = 175 - (175 * percent) / 100;
+    progress.style.strokeDashoffset = offset;
+  });
+
+  if (typeof AOS !== 'undefined') {
+    AOS.init({ duration: 800 });
+  }
+});

@@ -1,5 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
+
 /* আগের কোড থাকবে যেটা তুমি দিয়েছিলে */
 
 * {
@@ -421,87 +423,286 @@ canvas#cosmos {
 
 
 
-.title {
+#skills {
+  background: linear-gradient(135deg, #f0fdf4 60%, #ffffff 100%);
+  padding: 4rem 1.2rem;
+  font-family: 'Inter', sans-serif;
+  overflow: hidden;
+}
+.section-title {
+  color: #14532d;
   text-align: center;
-  font-size: 2.5rem;
-  margin-bottom: 20px;
-  text-shadow: 1px 1px 3px #000;
+  font-size: 2rem;
+  margin-bottom: 40px;
+  font-weight: bold;
+}
+.tools-subtitle {
+  text-align: center;
+  font-size: 1.35rem;
+  font-weight: 600;
+  color: #0c2f1c;
+  letter-spacing: 0.5px;
+  margin-bottom: 18px;
+  margin-top: -10px;
+  font-family: 'Inter', sans-serif;
+  display: inline-block;
+  padding: 0.5rem 1.5rem 0.2rem 1.5rem;
+  border-radius: 0;
+  background: none;
+  box-shadow: none;
+  border: none;
+  position: relative;
+  font-family: 'Inter', sans-serif;
+  color: #0c2f1c;
 }
 
-.tree {
+.tools-subtitle::after {
+  content: "";
+  display: block;
+  margin: 0 auto;
+  margin-top: 6px;
+  width: 60%;
+  height: 3px;
+  border-radius: 2px;
+  background: linear-gradient(90deg, #0c2f1c 0%, #78ff96 100%);
+  transition: width 0.3s;
+}
+
+.tool-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 30px;
+  position: relative;
+  overflow: visible;
+  z-index: 1;
+}
+
+.tool-card {
+  position: relative;
+  background: #ffffff;
+  border-radius: 18px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.07);
+  overflow: visible;
+  padding: 40px 20px;
+  height: 150px;
+  width: 100%;
+  transition: box-shadow 0.3s ease, z-index 0.3s;
+  cursor: pointer;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1;
+}
+
+.tool-card:hover,
+.tool-card:focus-within {
+  z-index: 30;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+}
+
+.tool-card .icon {
+  font-size: 48px;
+  transition: transform 0.4s ease, opacity 0.4s ease;
+  z-index: 2;
+}
+
+.tool-card .details {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  min-height: 330px;
+  height: auto;
+  background: #e8f0ff;
+  border-radius: 18px;
+  padding: 20px;
+  box-sizing: border-box;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  text-align: left;
+  z-index: 3;
+  overflow: hidden;
+  pointer-events: none;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.18);
+}
+
+.tool-card:hover .icon,
+.tool-card:focus-within .icon {
+  transform: translateY(-100px);
+  opacity: 0;
+}
+
+.tool-card:hover .details,
+.tool-card:focus-within .details {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.tool-card .details h4 {
+  margin-top: 0;
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: #1e3a8a;
+}
+
+.tool-card .details p {
+  font-size: 0.95rem;
+  margin: 10px 0;
+  color: #334155;
+}
+
+.progress-circle {
+  position: relative;
+  width: 60px;
+  height: 60px;
+  margin: 10px 0;
+}
+
+.progress-circle svg {
+  width: 60px;
+  height: 60px;
+  transform: rotate(-90deg);
+}
+
+.progress-circle circle {
+  fill: none;
+  stroke-width: 4;
+  cx: 30;
+  cy: 30;
+  r: 28;
+}
+
+.progress-circle circle:first-child {
+  stroke: #d1d5db;
+}
+
+.progress-circle circle.progress {
+  stroke: #3b82f6;
+  stroke-dasharray: 175;
+  stroke-dashoffset: 175;
+  transition: stroke-dashoffset 1s ease;
+}
+
+.progress-circle span {
+  position: absolute;
+  top: 18px;
+  left: 18px;
+  font-size: 0.85rem;
+  font-weight: bold;
+  color: #1e3a8a;
+}
+
+.details .experience {
+  margin-top: 10px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #2563eb;
+}
+
+.details .tags {
+  margin-top: 10px;
+}
+
+.details .tag {
+  display: inline-block;
+  background: #dbeafe;
+  color: #1e40af;
+  padding: 4px 10px;
+  font-size: 0.75rem;
+  margin-right: 6px;
+  margin-bottom: 6px;
+  border-radius: 9999px;
+}
+
+/* DevOps & Tech Section Styles */
+.devops-tech-section {
+  padding: 50px 20px;
+  text-align: center;
+  max-width: 1300px;
+  margin: 0 auto;
+  margin-top: 140px;
+}
+
+.devops-tech-title {
+  font-size: 2.5rem;
+  margin-bottom: 40px;
+  color: #00bcd4;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-family: 'Inter', sans-serif;
+  font-weight: 700;
+}
+
+.devops-tech-cards {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 25px;
+}
+
+.devops-tech-card {
+  background-color: #fff;
+  border-radius: 14px;
+  padding: 25px 15px;
+  width: 110px;
+  height: 135px;
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.13);
+  transition: transform 0.3s, box-shadow 0.3s;
+  text-decoration: none;
+  border: none;
+  outline: none;
+  cursor: pointer;
   position: relative;
 }
 
-.root {
-  background: #1f4068;
-  padding: 15px 25px;
-  border-radius: 10px;
-  font-size: 1.5rem;
-  position: relative;
-  box-shadow: 0 0 10px #00bcd4;
-  text-align: center;
-  margin-bottom: 40px;
+.devops-tech-card:hover,
+.devops-tech-card:focus {
+  transform: translateY(-8px) scale(1.04);
+  box-shadow: 0 8px 24px rgba(0, 188, 212, 0.18);
 }
 
-.branch {
-  margin-top: 10px;
-  display: flex;
-  gap: 10px;
-  flex-wrap: wrap;
-  justify-content: center;
-  font-size: 0.9rem;
-}
-
-.branch span {
-  background: #16213e;
-  padding: 5px 10px;
-  border-radius: 6px;
-  border: 1px solid #00bcd4;
-  transition: 0.3s;
-}
-.branch span:hover {
-  background: #00bcd4;
-  color: #000;
-}
-
-.branches {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 30px;
-}
-
-.leaf {
-  background: rgba(255, 255, 255, 0.05);
-  padding: 15px 20px;
-  border-radius: 12px;
-  width: 250px;
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow: 0 0 10px rgba(0, 255, 255, 0.2);
+.devops-tech-card i {
+  font-size: 2.5rem;
+  margin-bottom: 10px;
   transition: transform 0.3s;
 }
-.leaf:hover {
-  transform: scale(1.05);
+
+.devops-tech-card:hover i,
+.devops-tech-card:focus i {
+  transform: scale(1.12) rotate(-6deg);
 }
 
-.leaf h3 {
-  font-size: 1.2rem;
-  margin-bottom: 10px;
-  color: #00e0ff;
+.devops-tech-card .devops-tech-link {
+  margin-top: 10px;
+  text-decoration: none;
+  color: #00bcd4;
+  font-size: 0.9rem;
+  font-weight: bold;
+  background-color: rgba(0, 188, 212, 0.15);
+  padding: 6px 10px;
+  border-radius: 8px;
+  transition: background-color 0.3s, color 0.3s;
+  display: inline-block;
 }
 
-.leaf ul {
-  list-style: none;
-  padding-left: 0;
+.devops-tech-card .devops-tech-link:hover {
+  background-color: #00bcd4;
+  color: #fff;
 }
-.leaf ul li {
-  padding: 5px 0;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+
+.devops-tech-card .colored {
+  filter: drop-shadow(0 2px 8px rgba(0,188,212,0.08));
 }
+
+
+
+
+
 
 
 
@@ -636,12 +837,60 @@ canvas#cosmos {
   color: #bbb;
 }
 
+/* ----------- Responsive Styles ----------- */
 
 
 
+@media (max-width: 1200px) {
+  .tool-cards {
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 22px;
+  }
+  .devops-tech-section {
+    max-width: 98vw;
+    margin-top: 90px;
+  }
+}
 
-
-
+@media (max-width: 1024px) {
+  #skills {
+    padding: 3rem 0.7rem;
+  }
+  .section-title {
+    font-size: 1.6rem;
+    margin-bottom: 28px;
+  }
+  .tool-cards {
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 18px;
+  }
+  .tool-card {
+    padding: 28px 10px;
+    height: 120px;
+  }
+  .tool-card .icon {
+    font-size: 38px;
+  }
+  .tool-card .details {
+    min-height: 250px;
+    padding: 14px;
+  }
+  .devops-tech-section {
+    margin-top: 80px;
+    padding: 35px 8px;
+  }
+  .devops-tech-card {
+    width: 95px;
+    height: 120px;
+    padding: 18px 10px;
+  }
+  .devops-tech-title {
+    font-size: 2rem;
+  }
+  .devops-tech-card i {
+    font-size: 2rem;
+  }
+}
 
 
 @media (max-width: 768px) {
@@ -774,6 +1023,132 @@ canvas#cosmos {
     border-left: 4px solid #2e7d32;
     color: #2e7d32;
   }
+  /* Skills Section */
+  #skills {
+    padding: 2.2rem 0.5rem;
+  }
+  .section-title {
+    font-size: 1.25rem;
+    margin-bottom: 20px;
+  }
+  .tools-subtitle {
+    font-size: 1.1rem;
+    padding: 0.3rem 1rem 0.1rem 1rem;
+  }
+  .tool-cards {
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 10px;
+  }
+  .tool-card {
+    padding: 16px 6px;
+    height: 90px;
+  }
+  .tool-card .icon {
+    font-size: 28px;
+  }
+  .tool-card .details {
+    min-height: 180px;
+    padding: 8px;
+  }
+  .tool-card .details h4 {
+    font-size: 1rem;
+  }
+  .tool-card .details p {
+    font-size: 0.85rem;
+  }
+  .progress-circle,
+  .progress-circle svg {
+    width: 36px;
+    height: 36px;
+  }
+  .progress-circle span {
+    top: 8px;
+    left: 8px;
+    font-size: 0.7rem;
+  }
+  .devops-tech-section {
+    margin-top: 60px;
+    padding: 20px 2px;
+  }
+  .devops-tech-cards {
+    gap: 12px;
+  }
+  .devops-tech-card {
+    width: 80px;
+    height: 100px;
+    padding: 12px 6px;
+  }
+  .devops-tech-title {
+    font-size: 1.5rem;
+    margin-bottom: 24px;
+  }
+  .devops-tech-card i {
+    font-size: 1.5rem;
+  }
+}
+
+@media (max-width: 600px) {
+  #skills {
+    padding: 1.2rem 0.2rem;
+  }
+  .section-title {
+    font-size: 1.05rem;
+    margin-bottom: 12px;
+  }
+  .tools-subtitle {
+    font-size: 1rem;
+    padding: 0.2rem 0.7rem 0.1rem 0.7rem;
+  }
+  .tool-cards {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+  .tool-card {
+    padding: 10px 4px;
+    height: 70px;
+  }
+  .tool-card .icon {
+    font-size: 20px;
+  }
+  .tool-card .details {
+    min-height: 120px;
+    padding: 5px;
+  }
+  .tool-card .details h4 {
+    font-size: 0.9rem;
+  }
+  .tool-card .details p {
+    font-size: 0.75rem;
+  }
+  .progress-circle,
+  .progress-circle svg {
+    width: 24px;
+    height: 24px;
+  }
+  .progress-circle span {
+    top: 3px;
+    left: 3px;
+    font-size: 0.55rem;
+  }
+  .devops-tech-section {
+    margin-top: 30px;
+    padding: 8px 1px;
+  }
+  .devops-tech-cards {
+    gap: 6px;
+  }
+  .devops-tech-card {
+    width: 60px;
+    height: 75px;
+    padding: 8px 2px;
+  }
+  .devops-tech-title {
+    font-size: 1.1rem;
+    margin-bottom: 16px;
+  }
+  .devops-tech-card i {
+    font-size: 1.1rem;
+  }
 }
 
 @media (max-width: 430px) {
@@ -827,6 +1202,138 @@ canvas#cosmos {
   blockquote.fade-in {
     font-size: 0.9rem;
     padding-left: 0.8rem;
+  }
+
+  /* Skills Section */  
+  #skills {
+    padding: 3rem 1rem;
+  }
+
+  .section-title {
+    font-size: 1.5rem;
+    margin-bottom: 30px;
+  }
+
+  .tools-subtitle {
+    font-size: 1.1rem;
+    margin-bottom: 15px;
+    padding: 0.4rem 1rem 0.2rem 1rem;
+  }
+
+  .tools-subtitle::after {
+    width: 80%;
+  }
+
+  .tool-cards {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .tool-card {
+    padding: 45px 16px;
+    height: auto;
+    /* Remove hover effect for touch, show details on .active */
+  }
+
+  .tool-card .icon {
+    font-size: 40px;
+    transition: none;
+  }
+
+  .tool-card .details {
+    min-height: 280px;
+    padding: 16px;
+    opacity: 0;
+    pointer-events: none;
+    position: absolute;
+    left: 0; top: 0; width: 100%;
+    z-index: 3;
+    background: #e8f0ff;
+    border-radius: 18px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.18);
+    transition: opacity 0.3s;
+  }
+
+  .tool-card.active .icon {
+    transform: translateY(-100px);
+    opacity: 0;
+  }
+  .tool-card.active .details {
+    opacity: 1;
+    pointer-events: auto;
+    /* Remove transition: opacity 5s; so it doesn't auto-close */
+  }
+
+  .tool-card .details h4 {
+    font-size: 1.15rem;
+  }
+
+  .tool-card .details p {
+    font-size: 0.9rem;
+  }
+
+  .progress-circle {
+    width: 50px;
+    height: 50px;
+  }
+
+  .progress-circle svg {
+    width: 50px;
+    height: 50px;
+  }
+
+  .progress-circle circle {
+    stroke-width: 3;
+    cx: 25;
+    cy: 25;
+    r: 23;
+  }
+
+  .progress-circle span {
+    top: 14px;
+    left: 14px;
+    font-size: 0.75rem;
+  }
+
+  .details .experience {
+    font-size: 0.85rem;
+  }
+
+  .details .tag {
+    font-size: 0.7rem;
+    padding: 3px 8px;
+  }
+
+  .devops-tech-section {
+    padding: 40px 10px;
+    margin-top: 80px;
+  }
+
+  .devops-tech-title {
+    font-size: 1.6rem;
+    margin-bottom: 30px;
+  }
+
+  .devops-tech-cards {
+    flex-direction: column;
+    align-items: center;
+    gap: 18px;
+  }
+
+  .devops-tech-card {
+    width: 90%;
+    height: auto;
+    padding: 20px 12px;
+  }
+
+  .devops-tech-card i {
+    font-size: 2rem;
+    margin-bottom: 8px;
+  }
+
+  .devops-tech-card .devops-tech-link {
+    font-size: 0.8rem;
+    padding: 5px 8px;
   }
 }
 

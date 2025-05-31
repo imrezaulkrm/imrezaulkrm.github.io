@@ -3,6 +3,12 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+
+<!-- Devicons -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/devicon.min.css">
+
 <title>DevOps Solar System - Small</title>
 <style>
   body {
@@ -13,6 +19,144 @@
     margin: 0; padding: 0;
     display: flex; justify-content: center; align-items: center; height: 100vh;
   }
+
+#devops-skills {
+  font-family: 'Inter', sans-serif;
+  background-color: #f9fbff;
+  padding: 60px 20px;
+  color: #1f2937;
+}
+
+.section-title {
+  text-align: center;
+  font-size: 2.5rem;
+  margin-bottom: 40px;
+}
+
+.tools-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+}
+
+.tool-card {
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.08);
+  padding: 20px;
+  text-align: center;
+  position: relative;
+  transition: transform 0.3s ease;
+}
+
+.tool-card:hover {
+  transform: scale(1.03);
+}
+
+.tool-card i {
+  font-size: 40px;
+  margin-bottom: 10px;
+}
+
+.tool-card h4 {
+  font-size: 1.2rem;
+  margin: 10px 0 5px;
+}
+
+.skill-bar {
+  background-color: #e5e7eb;
+  border-radius: 10px;
+  overflow: hidden;
+  margin-top: 10px;
+  height: 10px;
+}
+
+.skill-bar .progress {
+  height: 100%;
+  background: linear-gradient(to right, #3b82f6, #60a5fa);
+}
+
+[data-tooltip]::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  background: #111827;
+  color: #fff;
+  font-size: 0.75rem;
+  padding: 4px 8px;
+  border-radius: 6px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+  top: -30px;
+  left: 50%;
+  transform: translateX(-50%);
+  white-space: nowrap;
+}
+
+[data-tooltip]:hover::after {
+  opacity: 1;
+}
+
+.tech-category {
+  margin-top: 30px;
+}
+
+.tech-category h4 {
+  font-size: 1.3rem;
+  margin-bottom: 10px;
+}
+
+.tech-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.tech-tag {
+  background: linear-gradient(to right, #e0f2fe, #bae6fd);
+  padding: 8px 14px;
+  border-radius: 9999px;
+  font-size: 0.85rem;
+  transition: all 0.2s ease;
+  position: relative;
+  cursor: default;
+}
+
+.tech-tag:hover {
+  transform: scale(1.05);
+  background: linear-gradient(to right, #60a5fa, #3b82f6);
+  color: #fff;
+}
+
+.tech-tag::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  background: #1f2937;
+  color: #f9fafb;
+  font-size: 0.75rem;
+  padding: 4px 8px;
+  border-radius: 6px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+  top: -28px;
+  left: 50%;
+  transform: translateX(-50%);
+  white-space: nowrap;
+}
+
+.tech-tag:hover::after {
+  opacity: 1;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .section-title {
+    font-size: 2rem;
+  }
+}
+
+
   svg {
     width: 450px; /* choto kore dilam */
     height: 350px; /* choto kore dilam */
@@ -26,6 +170,82 @@
 </style>
 </head>
 <body>
+  <section id="devops-skills">
+  <div class="container">
+    <h2 class="section-title">DevOps Skills</h2>
+
+    <!-- Tools I Use -->
+    <div class="tools-section">
+      <h3>Tools I Use</h3>
+      <div class="tools-grid">
+        <div class="tool-card" data-tooltip="Containerization platform">
+          <i class="devicon-docker-plain colored"></i>
+          <h4>Docker</h4>
+          <p>Lightweight containerization tool.</p>
+          <div class="skill-bar"><div class="progress" style="width: 80%"></div></div>
+        </div>
+
+        <div class="tool-card" data-tooltip="CI/CD automation">
+          <i class="devicon-jenkins-line colored"></i>
+          <h4>Jenkins</h4>
+          <p>Build and deploy automation.</p>
+          <div class="skill-bar"><div class="progress" style="width: 75%"></div></div>
+        </div>
+
+        <div class="tool-card" data-tooltip="Infrastructure as Code">
+          <i class="devicon-terraform-plain colored"></i>
+          <h4>Terraform</h4>
+          <p>Manage infrastructure declaratively.</p>
+          <div class="skill-bar"><div class="progress" style="width: 70%"></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Technologies I Worked On -->
+    <div class="technologies-section">
+      <h3>Technologies I Worked On</h3>
+
+      <div class="tech-category">
+        <h4>Frontend</h4>
+        <div class="tech-tags">
+          <span class="tech-tag" data-tooltip="Markup Language">HTML</span>
+          <span class="tech-tag" data-tooltip="Style Sheet Language">CSS</span>
+          <span class="tech-tag" data-tooltip="Programming Language">JavaScript</span>
+          <span class="tech-tag" data-tooltip="UI Library">React</span>
+          <span class="tech-tag" data-tooltip="Framework">Angular</span>
+        </div>
+      </div>
+
+      <div class="tech-category">
+        <h4>Backend</h4>
+        <div class="tech-tags">
+          <span class="tech-tag" data-tooltip="Compiled language">Golang</span>
+          <span class="tech-tag" data-tooltip="Java-based framework">Spring Boot</span>
+          <span class="tech-tag" data-tooltip="JavaScript runtime">Node.js</span>
+          <span class="tech-tag" data-tooltip="Web framework">Express</span>
+          <span class="tech-tag" data-tooltip="Python-based microframework">Flask</span>
+          <span class="tech-tag" data-tooltip="Scripting language">PHP</span>
+        </div>
+      </div>
+
+      <div class="tech-category">
+        <h4>Database</h4>
+        <div class="tech-tags">
+          <span class="tech-tag" data-tooltip="Relational DBMS">MySQL</span>
+          <span class="tech-tag" data-tooltip="NoSQL database">MongoDB</span>
+        </div>
+      </div>
+
+      <div class="tech-category">
+        <h4>Web Server</h4>
+        <div class="tech-tags">
+          <span class="tech-tag" data-tooltip="High-performance web server">Nginx</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
 
 <svg id="solarSystem" viewBox="0 0 900 700" xmlns="http://www.w3.org/2000/svg" >
 
@@ -115,6 +335,18 @@
     requestAnimationFrame(animate);
   }
   animate();
+
+// Optional: Initialize animation on scroll
+document.addEventListener('DOMContentLoaded', function () {
+  if (typeof AOS !== 'undefined') {
+    AOS.init({
+      duration: 800,
+      once: true,
+    });
+  }
+});
+
+
 
 </script>
 

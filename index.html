@@ -4,6 +4,12 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Md Rezaul Karim | DevOps Engineer</title>
+  <!-- Font & Devicon -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/devicon.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+
+
+
   <link rel="stylesheet" href="style.css" />
   <link href="https://fonts.googleapis.com/css2?family=Orbitron&family=Poppins&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
@@ -134,65 +140,381 @@
 
 
 <!-- ...existing code... -->
-  <section id="skills">
-    <h1 class="title">My Skills Tree</h1>
-    <div class="tree">
-      <div class="root">DevOps Tools
-        <div class="branch">
-          <span>Docker</span>
-          <span>Kubernetes</span>
-          <span>Jenkins</span>
-          <span>ArgoCD</span>
-          <span>GitHub Actions</span>
+<section id="skills">
+  <div class="container">
+    <h2 class="section-title">Skills & Expertise</h2>
+    <h3 class="tools-subtitle">
+      DevOps Tools I Use
+    </h3>
+    <div class="tool-cards">
+      <!-- Repeat for Ubuntu -->
+      <div class="tool-card">
+        <div class="icon">
+          <i class="devicon-ubuntu-plain colored"></i>
+        </div>
+        <div class="details">
+          <h4>Ubuntu</h4>
+          <p>Popular Linux distribution for servers and desktops.</p>
+
+          <div class="progress-circle" data-percent="90">
+            <svg>
+              <circle cx="30" cy="30" r="28"></circle>
+              <circle cx="30" cy="30" r="28" class="progress"></circle>
+            </svg>
+            <span>90%</span>
+          </div>
+
+          <div class="experience">Experience: 3+ Years</div>
+          <div class="tags">
+            <span class="tag">Linux</span>
+            <span class="tag">Server</span>
+          </div>
         </div>
       </div>
-      <div class="branches">
-        <div class="leaf">
-          <h3>Backend Technologies</h3>
-          <ul>
-            <li>Spring Boot</li>
-            <li>Express.js</li>
-            <li>Node.js</li>
-            <li>Golang</li>
-            <li>Flask</li>
-          </ul>
+      <!-- Example: Docker -->
+      <div class="tool-card">
+        <div class="icon">
+          <i class="devicon-docker-plain colored"></i>
         </div>
-        <div class="leaf">
-          <h3>Frontend Technologies</h3>
-          <ul>
-            <li>Angular</li>
-            <li>Vue.js</li>
-            <li>React</li>
-            <li>HTML/CSS</li>
-            <li>JavaScript</li>
-          </ul>
+        <div class="details">
+          <h4>Docker</h4>
+          <p>Lightweight containerization for app deployment.</p>
+
+          <div class="progress-circle" data-percent="85">
+            <svg>
+              <circle cx="30" cy="30" r="28"></circle>
+              <circle cx="30" cy="30" r="28" class="progress"></circle>
+            </svg>
+            <span>85%</span>
+          </div>
+
+          <div class="experience">Experience: 2+ Years</div>
+
+          <div class="tags">
+            <span class="tag">Container</span>
+            <span class="tag">DevOps</span>
+            <span class="tag">Microservices</span>
+          </div>
         </div>
-        <div class="leaf">
-          <h3>Monitoring & IaC</h3>
-          <ul>
-            <li>Prometheus</li>
-            <li>Grafana</li>
-            <li>Loki</li>
-            <li>Terraform</li>
-          </ul>
+      </div>
+
+      <!-- Repeat for Jenkins -->
+      <div class="tool-card">
+        <div class="icon">
+          <img src="https://www.svgrepo.com/show/373699/jenkins.svg" alt="Jenkins Logo" style="width:40px; height:40px; display:block; margin:auto; background:#fff; border-radius:6px;" />
         </div>
-        <div class="leaf">
-          <h3>Cloud & DB</h3>
-          <ul>
-            <li>AWS</li>
-            <li>MySQL</li>
-            <li>MongoDB</li>
-            <li>phpMyAdmin</li>
-          </ul>
+        <div class="details">
+          <h4>Jenkins</h4>
+          <p>Automate CI/CD pipelines with ease and flexibility.</p>
+
+          <div class="progress-circle" data-percent="80">
+            <svg>
+              <circle cx="30" cy="30" r="28"></circle>
+              <circle cx="30" cy="30" r="28" class="progress"></circle>
+            </svg>
+            <span>80%</span>
+          </div>
+
+          <div class="experience">Experience: 1.5 Years</div>
+
+          <div class="tags">
+            <span class="tag">CI/CD</span>
+            <span class="tag">Automation</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Repeat for Kubernetes -->
+      <div class="tool-card">
+        <div class="icon">
+          <i class="devicon-kubernetes-plain colored"></i>
+        </div>
+        <div class="details">
+          <h4>Kubernetes</h4>
+          <p>Orchestrate containerized applications at scale.</p>
+
+          <div class="progress-circle" data-percent="75">
+            <svg>
+              <circle cx="30" cy="30" r="28"></circle>
+              <circle cx="30" cy="30" r="28" class="progress"></circle>
+            </svg>
+            <span>75%</span>
+          </div>
+
+          <div class="experience">Experience: 1 Year</div>
+          <div class="tags">
+            <span class="tag">Container Orchestration</span>
+            <span class="tag">Scalability</span>
+          </div>
+        </div>
+      </div>
+      <!-- Repeat for Terraform -->
+      <div class="tool-card">
+        <div class="icon">
+          <i class="devicon-terraform-plain colored"></i>
+        </div>
+        <div class="details">
+          <h4>Terraform</h4>
+          <p>Infrastructure as Code for cloud provisioning.</p>
+
+          <div class="progress-circle" data-percent="70">
+            <svg>
+              <circle cx="30" cy="30" r="28"></circle>
+              <circle cx="30" cy="30" r="28" class="progress"></circle>
+            </svg>
+            <span>70%</span>
+          </div>
+
+          <div class="experience">Experience: 1 Year</div>
+          <div class="tags">
+            <span class="tag">Infrastructure as Code</span>
+            <span class="tag">Cloud Provisioning</span>
+          </div>
+        </div>
+      </div>
+      <!-- Repeat for Ansible -->
+      <div class="tool-card">
+        <div class="icon">
+          <i class="devicon-ansible-plain colored"></i>
+        </div>
+        <div class="details">
+          <h4>Ansible</h4>
+          <p>Configuration management and automation tool.</p>
+
+          <div class="progress-circle" data-percent="65">
+            <svg>
+              <circle cx="30" cy="30" r="28"></circle>
+              <circle cx="30" cy="30" r="28" class="progress"></circle>
+            </svg>
+            <span>65%</span>
+          </div>
+
+          <div class="experience">Experience: 1 Year</div>
+          <div class="tags">
+            <span class="tag">Configuration Management</span>
+            <span class="tag">Automation</span>
+          </div>
+        </div>
+      </div>
+      <!-- Repeat for Git -->
+      <div class="tool-card">
+        <div class="icon">
+          <i class="devicon-git-plain colored"></i>
+        </div>
+        <div class="details">
+          <h4>Git</h4>
+          <p>Version control system for tracking changes in code.</p>
+
+          <div class="progress-circle" data-percent="90">
+            <svg>
+              <circle cx="30" cy="30" r="28"></circle>
+              <circle cx="30" cy="30" r="28" class="progress"></circle>
+            </svg>
+            <span>90%</span>
+          </div>
+
+          <div class="experience">Experience: 3+ Years</div>
+          <div class="tags">
+            <span class="tag">Version Control</span>
+            <span class="tag">Collaboration</span>
+          </div>
+        </div>
+      </div>
+      <!-- Repeat for GitHub -->
+      <div class="tool-card">
+        <div class="icon">
+          <i class="devicon-github-original colored"></i>
+        </div>
+        <div class="details">
+          <h4>GitHub</h4>
+          <p>Platform for hosting and collaborating on Git repositories.</p>
+
+          <div class="progress-circle" data-percent="85">
+            <svg>
+              <circle cx="30" cy="30" r="28"></circle>
+              <circle cx="30" cy="30" r="28" class="progress"></circle>
+            </svg>
+            <span>85%</span>
+          </div>
+
+          <div class="experience">Experience: 2+ Years</div>
+          <div class="tags">
+            <span class="tag">Version Control</span>
+            <span class="tag">Collaboration</span>
+          </div>
+        </div>
+      </div>
+      <!-- Repeat for AWS -->
+      <div class="tool-card">
+        <div class="icon">
+          <img src="https://www.svgrepo.com/show/448266/aws.svg" alt="AWS Logo" style="width:40px; height:40px; display:block; margin:auto; background:#fff; border-radius:6px;" />
+        </div>
+        <div class="details">
+          <h4>AWS</h4>
+          <p>Cloud services for scalable and reliable infrastructure.</p>
+
+          <div class="progress-circle" data-percent="80">
+            <svg>
+              <circle cx="30" cy="30" r="28"></circle>
+              <circle cx="30" cy="30" r="28" class="progress"></circle>
+            </svg>
+            <span>80%</span>
+          </div>
+
+          <div class="experience">Experience: 2+ Years</div>
+          <div class="tags">
+            <span class="tag">Cloud Computing</span>
+            <span class="tag">Infrastructure</span>
+          </div>
+        </div>
+      </div>
+      <!-- Repeat for argocd -->
+      <div class="tool-card">
+        <div class="icon">
+          <i class="devicon-argocd-plain colored"></i>
+        </div>
+        <div class="details">
+          <h4>ArgoCD</h4>
+          <p>Declarative GitOps continuous delivery tool for Kubernetes.</p>
+
+          <div class="progress-circle" data-percent="60">
+            <svg>
+              <circle cx="30" cy="30" r="28"></circle>
+              <circle cx="30" cy="30" r="28" class="progress"></circle>
+            </svg>
+            <span>60%</span>
+          </div>
+
+          <div class="experience">Experience: 6 Months</div>
+          <div class="tags">
+            <span class="tag">GitOps</span>
+            <span class="tag">Kubernetes</span>
+          </div>
+        </div>
+      </div>
+      <!-- Repeat for Prometheus -->
+      <div class="tool-card">
+        <div class="icon">
+          <i class="devicon-prometheus-original colored"></i>
+        </div>
+        <div class="details">
+          <h4>Prometheus</h4>
+          <p>Open-source monitoring and alerting toolkit.</p>
+
+          <div class="progress-circle" data-percent="70">
+            <svg>
+              <circle cx="30" cy="30" r="28"></circle>
+              <circle cx="30" cy="30" r="28" class="progress"></circle>
+            </svg>
+            <span>70%</span>
+          </div>
+
+          <div class="experience">Experience: 1 Year</div>
+          <div class="tags">
+            <span class="tag">Monitoring</span>
+            <span class="tag">Alerting</span>
+          </div>
+        </div>
+      </div>
+      <!-- Repeat for Grafana -->
+      <div class="tool-card">
+        <div class="icon">
+          <i class="devicon-grafana-plain colored"></i>
+        </div>
+        <div class="details">
+          <h4>Grafana</h4>
+          <p>Visualize metrics and logs with beautiful dashboards.</p>
+
+          <div class="progress-circle" data-percent="75">
+            <svg>
+              <circle cx="30" cy="30" r="28"></circle>
+              <circle cx="30" cy="30" r="28" class="progress"></circle>
+            </svg>
+            <span>75%</span>
+          </div>
+
+          <div class="experience">Experience: 1 Year</div>
+          <div class="tags">
+            <span class="tag">Visualization</span>
+            <span class="tag">Metrics</span>
+          </div>
         </div>
       </div>
     </div>
-  </section>
+          <!-- Technologies Explored via DevOps -->
+      <div class="devops-tech-section">    
+        <h3 class="tools-subtitle">
+        DevOps Tools I Use
+        </h3>
+        <div class="devops-tech-cards">
+          <!-- HTML -->
+          <a class="devops-tech-card" href="https://github.com/imrezaulkrm?tab=repositories&q=html" target="_blank">
+            <i class="devicon-html5-plain colored"></i>
+          </a>
+          <!-- CSS -->
+          <a class="devops-tech-card" href="https://github.com/imrezaulkrm?tab=repositories&q=css" target="_blank">
+            <i class="devicon-css3-plain colored"></i>
+          </a>
+          <!-- JavaScript -->
+          <a class="devops-tech-card" href="https://github.com/imrezaulkrm?tab=repositories&q=javascript" target="_blank">
+            <i class="devicon-javascript-plain colored"></i>
+          </a>
+          <!-- React -->
+          <a class="devops-tech-card" href="https://github.com/imrezaulkrm?tab=repositories&q=react" target="_blank">
+            <i class="devicon-react-original colored"></i>
+          </a>
+          <!-- Angular -->
+          <a class="devops-tech-card" href="https://github.com/imrezaulkrm?tab=repositories&q=angular" target="_blank">
+            <i class="devicon-angularjs-plain colored"></i>
+          </a>
+          <!-- ExpressJS -->
+          <a class="devops-tech-card" href="https://github.com/imrezaulkrm?tab=repositories&q=express" target="_blank">
+            <i class="devicon-express-original colored"></i>
+          </a>
+          <!-- PHP -->
+          <a class="devops-tech-card" href="https://github.com/imrezaulkrm?tab=repositories&q=php" target="_blank">
+            <i class="devicon-php-plain colored"></i>
+          </a>
+          <!-- Go -->
+          <a class="devops-tech-card" href="https://github.com/imrezaulkrm?tab=repositories&q=go" target="_blank">
+            <i class="devicon-go-plain colored"></i>
+          </a>
+          <!-- Spring Boot -->
+          <a class="devops-tech-card" href="https://github.com/imrezaulkrm?tab=repositories&q=springboot" target="_blank">
+            <i class="devicon-spring-plain colored"></i>
+          </a>
+          <!-- NodeJS -->
+          <a class="devops-tech-card" href="https://github.com/imrezaulkrm?tab=repositories&q=nodejs" target="_blank">
+            <i class="devicon-nodejs-plain colored"></i>
+          </a>
+          <!-- Flask -->
+          <a class="devops-tech-card" href="https://github.com/imrezaulkrm?tab=repositories&q=flask" target="_blank">
+            <i class="devicon-flask-original colored"></i>
+          </a>
+          <!-- MySQL -->
+          <a class="devops-tech-card" href="https://github.com/imrezaulkrm?tab=repositories&q=mysql" target="_blank">
+            <i class="devicon-mysql-plain colored"></i>
+          </a>
+          <!-- MongoDB -->
+          <a class="devops-tech-card" href="https://github.com/imrezaulkrm?tab=repositories&q=mongodb" target="_blank">
+            <i class="devicon-mongodb-plain colored"></i>
+          </a>
+          <!-- Nginx -->
+          <a class="devops-tech-card" href="https://github.com/imrezaulkrm?tab=repositories&q=nginx" target="_blank">
+            <i class="devicon-nginx-original colored"></i>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
 
 
   <section id="projects">
     <h1>Projects</h1>
-    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Perferendis aliquid ut facilis itaque voluptatem eaque sunt neque quasi quam odit, id, ipsa, quibusdam amet atque tempora sapiente! Eius, dicta alias?</p>
+    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. </div>Perferendis aliquid ut facilis itaque voluptatem eaque sunt neque quasi quam odit, id, ipsa, quibusdam amet atque tempora sapiente! Eius, dicta alias?</p>
   </section>
   <section id="experience">
     <h1>Experience</h1>
@@ -208,12 +530,17 @@
   </section>
   <script src="typing.js"></script>
   <script src="script.js"></script>
-
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+<script>AOS.init();</script>
   <script>
-// Optional interactive animation if needed
-document.querySelectorAll('.branch span').forEach(el => {
-  el.addEventListener('click', () => {
-    alert(`You clicked on: ${el.textContent}`);
+document.addEventListener("DOMContentLoaded", () => {
+  const circles = document.querySelectorAll("#skills .progress-circle");
+
+  circles.forEach(circle => {
+    const percent = circle.dataset.percent;
+    const progress = circle.querySelector(".progress");
+    const offset = 175 - (175 * percent) / 100;
+    progress.style.strokeDashoffset = offset;
   });
 });
 
