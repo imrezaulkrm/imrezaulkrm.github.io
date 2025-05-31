@@ -445,7 +445,7 @@ canvas#cosmos {
   margin-bottom: 18px;
   margin-top: -10px;
   font-family: 'Inter', sans-serif;
-  display: inline-block;
+  display: revert-layer;
   padding: 0.5rem 1.5rem 0.2rem 1.5rem;
   border-radius: 0;
   background: none;
@@ -937,7 +937,7 @@ canvas#cosmos {
     width: 100%;
     max-width: 85vw;
     margin: 0 auto;
-    margin-top: 85px;
+    margin-top: 50px;
     height: 80px;
     padding: 1.2rem;
   }
@@ -1087,69 +1087,6 @@ canvas#cosmos {
   }
 }
 
-@media (max-width: 600px) {
-  #skills {
-    padding: 1.2rem 0.2rem;
-  }
-  .section-title {
-    font-size: 1.05rem;
-    margin-bottom: 12px;
-  }
-  .tools-subtitle {
-    font-size: 1rem;
-    padding: 0.2rem 0.7rem 0.1rem 0.7rem;
-  }
-  .tool-cards {
-    grid-template-columns: 1fr;
-    gap: 8px;
-  }
-  .tool-card {
-    padding: 10px 4px;
-    height: 70px;
-  }
-  .tool-card .icon {
-    font-size: 20px;
-  }
-  .tool-card .details {
-    min-height: 120px;
-    padding: 5px;
-  }
-  .tool-card .details h4 {
-    font-size: 0.9rem;
-  }
-  .tool-card .details p {
-    font-size: 0.75rem;
-  }
-  .progress-circle,
-  .progress-circle svg {
-    width: 24px;
-    height: 24px;
-  }
-  .progress-circle span {
-    top: 3px;
-    left: 3px;
-    font-size: 0.55rem;
-  }
-  .devops-tech-section {
-    margin-top: 30px;
-    padding: 8px 1px;
-  }
-  .devops-tech-cards {
-    gap: 6px;
-  }
-  .devops-tech-card {
-    width: 60px;
-    height: 75px;
-    padding: 8px 2px;
-  }
-  .devops-tech-title {
-    font-size: 1.1rem;
-    margin-bottom: 16px;
-  }
-  .devops-tech-card i {
-    font-size: 1.1rem;
-  }
-}
 
 @media (max-width: 430px) {
   .text h1 {
@@ -1315,13 +1252,14 @@ canvas#cosmos {
   }
 
   .devops-tech-cards {
-    flex-direction: column;
+    display: flex;
+    flex-direction: row;
     align-items: center;
     gap: 18px;
   }
 
   .devops-tech-card {
-    width: 90%;
+    width: 25%;
     height: auto;
     padding: 20px 12px;
   }
