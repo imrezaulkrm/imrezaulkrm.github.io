@@ -444,7 +444,7 @@
           <!-- Technologies Explored via DevOps -->
       <div class="devops-tech-section">    
         <h3 class="tools-subtitle">
-        DevOps Tools I Use
+        Technologies Explored with DevOps
         </h3>
         <div class="devops-tech-cards">
           <!-- HTML -->
@@ -543,6 +543,14 @@ document.addEventListener("DOMContentLoaded", () => {
     progress.style.strokeDashoffset = offset;
   });
 });
+  document.querySelectorAll('.tool-card').forEach(card => {
+    card.addEventListener('click', () => {
+      document.querySelectorAll('.tool-card').forEach(c => {
+        if (c !== card) c.classList.remove('active');
+      });
+      card.classList.toggle('active');
+    });
+  });
 
   </script>
 

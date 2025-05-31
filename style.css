@@ -1167,6 +1167,7 @@ canvas#cosmos {
   }
 
   .tool-card {
+    -webkit-tap-highlight-color: transparent;
     padding: 45px 16px;
     height: auto;
     /* Remove hover effect for touch, show details on .active */
