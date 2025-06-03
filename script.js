@@ -171,15 +171,16 @@ const projects = [
     git: 'https://github.com/imrezaulkrm/bartadhara-devops.git'
   },
   {
-    name: 'MediHelp',
+    name: 'Bytelock',
     images: [
-      'https://picsum.photos/id/1019/600/350',
-      'https://picsum.photos/id/1020/600/350'
+      'https://github.com/imrezaulkrm/bytelock/blob/main/image/bytelock-home.png?raw=true',
+      'https://github.com/imrezaulkrm/bytelock/blob/main/image/bytelock-encode.png?raw=true',
+      'https://github.com/imrezaulkrm/bytelock/blob/main/image/bytelock-decode.png?raw=true'
     ],
-    title: 'MediHelp - Your Online Pharmacy',
-    description: 'Trusted online pharmacy for quality healthcare. Features Docker-based deployment and Jenkins automation for CI/CD.',
-    tech: 'Docker, Jenkins, GitHub, Node.js, Express',
-    git: 'https://github.com/imrezaulkrm/MediHelp.git'
+    title: 'Bytelock — Secure Encrypted Messaging Platform',
+    description: 'Bytelock’s backend is built with Express.js and MongoDB, while the frontend is a simple SPA using HTML, CSS, and JavaScript. The system is fully containerized with Docker and deployed on Kubernetes, using Deployments, Services, Ingress, ConfigMaps, and Secrets to manage scalable, secure microservices. Jenkins pipelines automate CI/CD, triggered by GitHub Webhooks, and ArgoCD enables GitOps-based continuous delivery. Secrets management, rollout, and rollback are handled via Kubernetes-native strategies, ensuring reliability.',
+    tech: 'HTML, CSS, JavaScript, ExpressJS, MongoDB, Docker, Jenkins, Kubernetes, GitHub, ArgoCD, Nginx Ingress',
+    git: 'https://github.com/imrezaulkrm/bytelock.git'
   },
   {
     name: 'Portfolio',
