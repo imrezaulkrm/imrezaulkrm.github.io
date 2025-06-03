@@ -181,18 +181,6 @@ const projects = [
     description: 'Bytelock’s backend is built with Express.js and MongoDB, while the frontend is a simple SPA using HTML, CSS, and JavaScript. The system is fully containerized with Docker and deployed on Kubernetes, using Deployments, Services, Ingress, ConfigMaps, and Secrets to manage scalable, secure microservices. Jenkins pipelines automate CI/CD, triggered by GitHub Webhooks, and ArgoCD enables GitOps-based continuous delivery. Secrets management, rollout, and rollback are handled via Kubernetes-native strategies, ensuring reliability.',
     tech: 'HTML, CSS, JavaScript, ExpressJS, MongoDB, Docker, Jenkins, Kubernetes, GitHub, ArgoCD, Nginx Ingress',
     git: 'https://github.com/imrezaulkrm/bytelock.git'
-  },
-  {
-    name: 'Portfolio',
-    images: [
-      'https://picsum.photos/id/1021/600/350',
-      'https://picsum.photos/id/1022/600/350',
-      'https://picsum.photos/id/1023/600/350'
-    ],
-    title: 'Personal Portfolio Website',
-    description: 'A portfolio website showcasing skills, projects, and experiences with smooth animations and responsive design.',
-    tech: 'HTML, CSS, JavaScript, Canvas API',
-    git: '#'
   }
 ];
 

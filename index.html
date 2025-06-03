@@ -512,7 +512,7 @@
 
 
 
-
+<!-- Projects Section -->
   <section id="projects">
     <h1 class="project-title">Projects</h1>
     <nav class="project-nav" aria-label="Project navigation">
@@ -549,41 +549,70 @@
 
   <section id="experience">
     <h1>Experience</h1>
-    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Perferendis aliquid ut facilis itaque voluptatem eaque sunt neque quasi quam odit, id, ipsa, quibusdam amet atque tempora sapiente! Eius, dicta alias?</p>
+    <div class="experience-list">
+      <div class="experience-item">
+      <h2>DevOps Engineer</h2>
+      <h3>XYZ Tech Solutions</h3>
+      <span class="exp-duration">Jan 2022 – Present</span>
+      <ul>
+        <li>Designed and maintained CI/CD pipelines using Jenkins and GitHub Actions.</li>
+        <li>Automated infrastructure provisioning with Terraform and Ansible.</li>
+        <li>Managed Kubernetes clusters for scalable microservices deployments.</li>
+        <li>Implemented monitoring and alerting with Prometheus and Grafana.</li>
+      </ul>
+      </div>
+      <div class="experience-item">
+      <h2>Cloud Intern</h2>
+      <h3>ABC Cloud Services</h3>
+      <span class="exp-duration">Jun 2021 – Dec 2021</span>
+      <ul>
+        <li>Assisted in migrating legacy applications to AWS cloud infrastructure.</li>
+        <li>Wrote automation scripts for routine server management tasks.</li>
+        <li>Collaborated with developers to improve deployment workflows.</li>
+      </ul>
+      </div>
+    </div>
   </section>
   <section id="education">
     <h1>Education & Certification</h1>
-    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Perferendis aliquid ut facilis itaque voluptatem eaque sunt neque quasi quam odit, id, ipsa, quibusdam amet atque tempora sapiente! Eius, dicta alias?</p>
+    <div class="""education-list
+      <div class="education-item">
+      <h2>B.Sc. in Computer Science & Engineering</h2>
+      <h3>Bangladesh University of Engineering and Technology (BUET)</h3>
+      <span class="edu-duration">2017 – 2021</span>
+      <ul>
+        <li>Major in Software Engineering</li>
+        <li>Relevant coursework: Operating Systems, Cloud Computing, Networking</li>
+      </ul>
+      </div>
+      <div class="education-item">
+      <h2>Certification: AWS Certified Solutions Architect – Associate</h2>
+      <h3>Amazon Web Services</h3>
+      <span class="edu-duration">Issued: 2023</span>
+      <ul>
+        <li>Credential ID: ABCD-1234</li>
+      </ul>
+      </div>
+      <div class="education-item">
+      <h2>Certification: Certified Kubernetes Administrator (CKA)</h2>
+      <h3>Cloud Native Computing Foundation</h3>
+      <span class="edu-duration">Issued: 2022</span>
+      <ul>
+        <li>Credential ID: K8S-5678</li>
+      </ul>
+      </div>
+    </div>"></div>
   </section>
   <section id="contact">
     <h1>Contact</h1>
-    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Perferendis aliquid ut facilis itaque voluptatem eaque sunt neque quasi quam odit, id, ipsa, quibusdam amet atque tempora sapiente! Eius, dicta alias?</p>
+    <div class="contact-info">
+      <p><strong>Email:</strong> <a href="mailto:imrezaulkrm@gmail.com">imrezaulkrm@gmail.com</a></p>
+      <p><strong>LinkedIn:</strong> <a href="https://www.linkedin.com/in/imrezaulkrm/" target="_blank" rel="noopener">linkedin.com/in/imrezaulkrm</a></p>
+      <p><strong>GitHub:</strong> <a href="https://github.com/imrezaulkrm" target="_blank" rel="noopener">github.com/imrezaulkrm</a></p>
+      <p><strong>Location:</strong> Dhaka, Bangladesh</p>
+    </div></div>
   </section>
   <script src="typing.js"></script>
   <script src="script.js"></script>
-<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-<script>AOS.init();</script>
-  <script>
-document.addEventListener("DOMContentLoaded", () => {
-  const circles = document.querySelectorAll("#skills .progress-circle");
-
-  circles.forEach(circle => {
-    const percent = circle.dataset.percent;
-    const progress = circle.querySelector(".progress");
-    const offset = 175 - (175 * percent) / 100;
-    progress.style.strokeDashoffset = offset;
-  });
-});
-  document.querySelectorAll('.tool-card').forEach(card => {
-    card.addEventListener('click', () => {
-      document.querySelectorAll('.tool-card').forEach(c => {
-        if (c !== card) c.classList.remove('active');
-      });
-      card.classList.toggle('active');
-    });
-  });
-
-  </script>
-
 </body>
 </html>
