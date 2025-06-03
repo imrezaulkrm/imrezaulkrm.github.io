@@ -147,14 +147,28 @@ const projects = [
   {
     name: 'Studentify',
     images: [
-      "https://github.com/imrezaulkrm/bartadhara-devops/blob/main/image/bartadhara-admin.png?raw=true",
-      "https://github.com/imrezaulkrm/bartadhara-devops/blob/main/image/bartadhara-singlepage.png?raw=true",
-      "https://github.com/imrezaulkrm/bartadhara-devops/blob/main/image/bartadhara-diagram.png?raw=true"
+      "https://github.com/imrezaulkrm/Studentify/blob/frontend/images/home-page.png?raw=true",
+      "https://github.com/imrezaulkrm/Studentify/blob/frontend/images/student-page.png?raw=true",
+      "https://github.com/imrezaulkrm/Studentify/blob/frontend/images/update-page.png?raw=true",
+      "https://github.com/imrezaulkrm/Studentify/blob/main/images/diagram.png?raw=true"
     ],
     title: 'Student Information Management System (Studentify)',
-    description: 'Studentify harnesses Angular 16, Spring Boot, and MySQL for robust CRUD functionalities in student data management. Microservices architecture with CI/CD pipelines.',
-    tech: 'Angular 16, Spring Boot, MySQL, Jenkins, Docker, Kubernetes, ArgoCD',
+    description: 'Studentify is a microservices-based Student Information Management System built with Angular 16, Spring Boot, and MySQL. Each service is containerized using Docker and deployed on Kubernetes with Ingress controllers for routing. Jenkins (Multibranch Pipeline with GitHub Webhooks) automates the CI/CD process, while ArgoCD enables GitOps-based delivery, supporting declarative deployments, version control, and seamless rollbacks. The architecture ensures scalability, modularity, and secure service communication.',
+    tech: 'Angular 16, Spring Boot, MySQL, Jenkins, Docker, Kubernetes, ArgoCD, GitHub',
     git: 'https://github.com/imrezaulkrm/Studentify.git'
+  },
+    {
+    name: 'Bartadhara',
+    images: [
+      "https://github.com/imrezaulkrm/bartadhara-devops/blob/main/image/bartadhara-homepage.png?raw=true",
+      "https://github.com/imrezaulkrm/bartadhara-devops/blob/main/image/bartadhara-singlepage.png?raw=true",
+      "https://github.com/imrezaulkrm/bartadhara-devops/blob/main/image/bartadhara-admin.png?raw=true",
+      "https://github.com/imrezaulkrm/bartadhara-devops/blob/main/image/bartadhara-diagram.png?raw=true"
+    ],
+    title: 'Bartadhara: News Portal Webapp',
+    description: 'Bartadhara is a modern news portal web application featuring a responsive frontend built with HTML, CSS, and JavaScript, and a performant backend developed in GoLang with MySQL for data management. The application is fully containerized using Docker and deployed on Kubernetes for scalability and reliability. CI/CD pipelines are automated with Jenkins and GitHub Webhooks, while ArgoCD implements GitOps for seamless continuous delivery. Kubernetes Ingress handles external traffic routing, ensuring secure and efficient access. This DevOps-focused repository contains all infrastructure manifests and pipeline configurations necessary for smooth deployment and scaling.',
+    tech: 'HTML, CSS, Java Script, GoLang, MySQL, Jenkins, Docker, Kubernetes, ArgoCD, NFS server, AWS, GitHub',
+    git: 'https://github.com/imrezaulkrm/bartadhara-devops.git'
   },
   {
     name: 'MediHelp',
