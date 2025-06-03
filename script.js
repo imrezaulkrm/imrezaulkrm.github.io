@@ -125,21 +125,7 @@ window.addEventListener('scroll', onScroll);
 onScroll(); // initialize
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+//skill section circle progress
 document.addEventListener("DOMContentLoaded", () => {
   const circles = document.querySelectorAll("#skills .progress-circle");
   circles.forEach(circle => {
@@ -153,3 +139,179 @@ document.addEventListener("DOMContentLoaded", () => {
     AOS.init({ duration: 800 });
   }
 });
+
+
+
+// prject section
+const projects = [
+  {
+    name: 'Studentify',
+    images: [
+      "https://github.com/imrezaulkrm/bartadhara-devops/blob/main/image/bartadhara-admin.png?raw=true",
+      "https://github.com/imrezaulkrm/bartadhara-devops/blob/main/image/bartadhara-singlepage.png?raw=true",
+      "https://github.com/imrezaulkrm/bartadhara-devops/blob/main/image/bartadhara-diagram.png?raw=true"
+    ],
+    title: 'Student Information Management System (Studentify)',
+    description: 'Studentify harnesses Angular 16, Spring Boot, and MySQL for robust CRUD functionalities in student data management. Microservices architecture with CI/CD pipelines.',
+    tech: 'Angular 16, Spring Boot, MySQL, Jenkins, Docker, Kubernetes, ArgoCD',
+    git: 'https://github.com/imrezaulkrm/Studentify.git'
+  },
+  {
+    name: 'MediHelp',
+    images: [
+      'https://picsum.photos/id/1019/600/350',
+      'https://picsum.photos/id/1020/600/350'
+    ],
+    title: 'MediHelp - Your Online Pharmacy',
+    description: 'Trusted online pharmacy for quality healthcare. Features Docker-based deployment and Jenkins automation for CI/CD.',
+    tech: 'Docker, Jenkins, GitHub, Node.js, Express',
+    git: 'https://github.com/imrezaulkrm/MediHelp.git'
+  },
+  {
+    name: 'Portfolio',
+    images: [
+      'https://picsum.photos/id/1021/600/350',
+      'https://picsum.photos/id/1022/600/350',
+      'https://picsum.photos/id/1023/600/350'
+    ],
+    title: 'Personal Portfolio Website',
+    description: 'A portfolio website showcasing skills, projects, and experiences with smooth animations and responsive design.',
+    tech: 'HTML, CSS, JavaScript, Canvas API',
+    git: '#'
+  }
+];
+
+// DOM refs
+const navProjectList = document.querySelector('.project-list');
+const leftProjectArrow = document.querySelector('.project-arrow.arrow-left');
+const rightProjectArrow = document.querySelector('.project-arrow.arrow-right');
+
+const slidesContainer = document.querySelector('.image-slider .slides');
+const leftImageArrow = document.querySelector('.image-slider .image-arrow-left');
+const rightImageArrow = document.querySelector('.image-slider .image-arrow-right');
+
+const titleEl = document.getElementById('project-title');
+const descEl = document.getElementById('project-description');
+const techEl = document.getElementById('project-tech');
+const gitEl = document.getElementById('project-git');
+
+// State
+let currentProjectIndex = 0;
+let currentImageIndex = 0;
+let autoSlideInterval;
+
+// Initialize navigation bar projects
+function renderNavProjects() {
+  navProjectList.innerHTML = '';
+  projects.forEach((p, idx) => {
+    const div = document.createElement('div');
+    div.textContent = p.name;
+    div.setAttribute('role', 'listitem');
+    div.dataset.index = idx;
+    if (idx === currentProjectIndex) div.classList.add('active');
+    div.addEventListener('click', () => {
+      changeProject(idx);
+    });
+    navProjectList.appendChild(div);
+  });
+}
+
+// Render images slider for current project
+function renderSlides() {
+  const imgs = projects[currentProjectIndex].images;
+  slidesContainer.innerHTML = '';
+  imgs.forEach((src) => {
+    const slideDiv = document.createElement('div');
+    slideDiv.classList.add('slide');
+    const img = document.createElement('img');
+    img.src = src;
+    img.alt = projects[currentProjectIndex].name + ' Image';
+    slideDiv.appendChild(img);
+    slidesContainer.appendChild(slideDiv);
+  });
+  currentImageIndex = 0;
+  updateSlidePosition();
+}
+
+// Update slider translate
+function updateSlidePosition() {
+  slidesContainer.style.transform = `translateX(-${currentImageIndex * 100}%)`;
+}
+
+// Update project info text
+function updateProjectInfo() {
+  const proj = projects[currentProjectIndex];
+  titleEl.textContent = proj.title;
+  descEl.textContent = proj.description;
+  techEl.textContent = 'Tech: ' + proj.tech;
+  gitEl.href = proj.git;
+}
+
+// Change project
+function changeProject(idx) {
+  if (idx < 0) idx = projects.length - 1;
+  if (idx >= projects.length) idx = 0;
+
+  const card = document.querySelector('.project-card');
+
+  // Add animation class
+  card.classList.add('transition-out');
+
+  setTimeout(() => {
+    currentProjectIndex = idx;
+
+    // Update active nav highlight
+    document.querySelectorAll('.project-list div').forEach((el) => el.classList.remove('active'));
+    document.querySelector(`.project-list div[data-index="${idx}"]`).classList.add('active');
+
+    // Update content
+    renderSlides();
+    updateProjectInfo();
+
+    card.classList.remove('transition-out');
+    card.classList.add('transition-in');
+
+    setTimeout(() => {
+      card.classList.remove('transition-in');
+    }, 400); // match with CSS duration
+  }, 300); // delay for out transition
+
+  resetAutoSlide();
+}
+
+// Image slider navigation
+leftImageArrow.addEventListener('click', () => {
+  currentImageIndex = (currentImageIndex === 0)
+    ? projects[currentProjectIndex].images.length - 1
+    : currentImageIndex - 1;
+  updateSlidePosition();
+  resetAutoSlide();
+});
+
+rightImageArrow.addEventListener('click', () => {
+  currentImageIndex = (currentImageIndex + 1) % projects[currentProjectIndex].images.length;
+  updateSlidePosition();
+  resetAutoSlide();
+});
+
+// Project navigator arrows
+leftProjectArrow.addEventListener('click', () => {
+  changeProject(currentProjectIndex - 1);
+});
+
+rightProjectArrow.addEventListener('click', () => {
+  changeProject(currentProjectIndex + 1);
+});
+
+// Auto slide images every 4s
+function resetAutoSlide() {
+  clearInterval(autoSlideInterval);
+  autoSlideInterval = setInterval(() => {
+    currentImageIndex = (currentImageIndex + 1) % projects[currentProjectIndex].images.length;
+    updateSlidePosition();
+  }, 4000);
+}
+
+// Initialize
+renderNavProjects();
+changeProject(0);

@@ -233,21 +233,6 @@
       height: 250px;
     }
   }
-  /* ====== Smooth Slide Transition for Project Card ====== */
-  .project-card {
-    transition: transform 0.4s ease, opacity 0.4s ease;
-  }
-
-  .project-card.transition-out {
-    opacity: 0;
-    transform: translateX(50px);
-  }
-
-  .project-card.transition-in {
-    opacity: 1;
-    transform: translateX(0);
-  }
-
 </style>
 </head>
 <body>
@@ -383,37 +368,21 @@
   }
 
   // Change project
-function changeProject(idx) {
-  if (idx < 0) idx = projects.length - 1;
-  if (idx >= projects.length) idx = 0;
-
-  const card = document.querySelector('.project-card');
-
-  // Add animation class
-  card.classList.add('transition-out');
-
-  setTimeout(() => {
+  function changeProject(idx) {
+    if (idx < 0) idx = projects.length - 1;
+    if (idx >= projects.length) idx = 0;
     currentProjectIndex = idx;
 
     // Update active nav highlight
     document.querySelectorAll('.project-list div').forEach((el) => el.classList.remove('active'));
     document.querySelector(`.project-list div[data-index="${idx}"]`).classList.add('active');
 
-    // Update content
+    // Update project content
     renderSlides();
     updateProjectInfo();
 
-    card.classList.remove('transition-out');
-    card.classList.add('transition-in');
-
-    setTimeout(() => {
-      card.classList.remove('transition-in');
-    }, 400); // match with CSS duration
-  }, 300); // delay for out transition
-
-  resetAutoSlide();
-}
-
+    resetAutoSlide();
+  }
 
   // Image slider navigation
   leftImageArrow.addEventListener('click', () => {
