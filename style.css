@@ -983,9 +983,10 @@ canvas#cosmos {
 
 
 
+/*
 #experience {
   min-height: 100vh;
-  background: #1e2a2f;  /* আলাদা ব্যাকগ্রাউন্ড কালার */
+  background: #1e2a2f;
   padding: 60px 20px;
   box-sizing: border-box;
   color: #eee;
@@ -1004,31 +1005,165 @@ canvas#cosmos {
   line-height: 1.6;
   color: #bbb;
 }
+*/
 
 
 
 
+/* Section Base */
 #education {
-  min-height: 100vh;
-  background: #1e2a2f;  /* আলাদা ব্যাকগ্রাউন্ড কালার */
-  padding: 60px 20px;
-  box-sizing: border-box;
-  color: #eee;
+  background: linear-gradient(135deg, #f0fdf4 60%, #ffffff 100%);
+  padding: 4rem 1.5rem;
+  font-family: 'Inter', sans-serif;
 }
 
-#education h2 {
-  font-size: 2.5rem;
-  margin-bottom: 20px;
-  color: #78ff96;
-}
-
-#education p {
-  max-width: 700px;
+/* Main Card */
+.education-card {
+  background: #ffffff;
+  max-width: 1200px;
   margin: 0 auto;
-  font-size: 1.2rem;
-  line-height: 1.6;
-  color: #bbb;
+  padding: 2.5rem 2rem;
+  border-radius: 20px;
+  box-shadow: 0 14px 50px rgba(34, 197, 94, 0.15);
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem;
 }
+
+/* Section Title */
+.edu-card-title h2 {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #14532d;
+  text-align: center;
+  position: relative;
+}
+.edu-card-title h2::after {
+  content: "";
+  display: block;
+  width: 80px;
+  height: 4px;
+  background-color: #16a34a;
+  margin: 10px auto 0;
+  border-radius: 2px;
+}
+
+/* Container for Left + Line + Right */
+.education-container {
+  display: flex;
+  gap: 2.5rem;
+  align-items: flex-start;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+/* Left Section */
+.education-left {
+  flex: 1 1 240px;
+  margin: 0 0 0 20px;
+}
+
+.edu-img img {
+  width: 235px;
+  border-radius: 20px;
+  background: #ffffff;
+  box-shadow: 0 4px 25px rgba(34, 197, 94, 0.2);
+  margin: 0px 0px 30px 30px;
+  transition: transform 0.3s ease;
+}
+.edu-img img:hover {
+  transform: scale(1.05);
+}
+
+.edu-details h3 {
+  color: #15803d;
+  font-size: 1.5rem;
+  margin-bottom: 1.2rem;
+  font-weight: 700;
+}
+
+.edu-block {
+  margin-bottom: 1.2rem;
+}
+.edu-block h4 {
+  font-size: 1.1rem;
+  color: #14532d;
+  font-weight: 600;
+}
+.edu-block p {
+  font-size: 0.95rem;
+  color: #475569;
+  margin: 0.2rem 0;
+}
+
+/* Vertical Line */
+.vertical-line {
+  width: 3px;
+  background-color: #16a34a;
+  opacity: 0.3;
+  border-radius: 6px;
+  height: auto;
+}
+
+/* Right Section */
+.education-right {
+  flex: 1 1 300px;
+}
+
+.education-right h3 {
+  color: #15803d;
+  font-size: 1.5rem;
+  margin-bottom: 1.2rem;
+  font-weight: 700;
+}
+
+.cert-block {
+  margin-bottom: 1.5rem;
+}
+.cert-block h4 {
+  font-size: 1.1rem;
+  color: #14532d;
+  font-weight: 600;
+}
+.cert-block p {
+  font-size: 0.95rem;
+  color: #475569;
+  margin: 0.2rem 0;
+  line-height: 1.5;
+}
+.cert-link {
+  color: #16a34a;
+  font-weight: 500;
+  text-decoration: underline;
+  transition: color 0.2s ease;
+}
+.cert-link:hover {
+  color: #0f5132;
+}
+
+.edu-block .cert-block p {
+  font-size: 0.92rem;
+  color: #374151;
+  margin: 0.25rem 0;
+  line-height: 1.5;
+}
+
+.cert-block p strong {
+  color: #1b4332;
+  font-weight: 600;
+}
+
+.cert-block a.cert-link {
+  font-size: 0.9rem;
+  color: #1b4332;
+  font-weight: 500;
+  text-decoration: none;
+  display: inline-block;
+  margin-top: 0.4rem;
+}
+
+
+
 
 
 
@@ -1328,6 +1463,90 @@ canvas#cosmos {
   .devops-tech-card i {
     font-size: 1.5rem;
   }
+  /* Container vertically stacked, centered horizontally */
+  #education {
+    padding: 2rem 1rem;
+  }
+
+  .education-card {
+    padding: 1.5rem 1rem;
+  }
+
+  /* Container becomes vertical */
+  .education-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2rem;
+  }
+
+  /* Left and right sections full width */
+  .education-left,
+  .education-right {
+    width: 100%;
+    padding-left: 1rem;
+    box-sizing: border-box;
+  }
+
+  /* Image centered */
+  .edu-img {
+    text-align: center;
+    margin-bottom: 1rem;
+    padding-left: 0;
+  }
+
+  .edu-img img {
+    width: 160px;
+    max-width: 100%;
+    height: auto;
+    display: inline-block;
+    margin: 0;
+  }
+  .education-left{
+    margin: 0;
+  }
+
+  /* Hide vertical line */
+  .vertical-line {
+    display: none;
+  }
+
+  /* Text alignment */
+  .edu-details h3,
+  .edu-block h4,
+  .edu-block p,
+  .education-right h3,
+  .cert-block h4,
+  .cert-block p,
+  .cert-link {
+    text-align: left;
+    margin-left: 0;
+  }
+
+  /* Section Titles font size */
+  .edu-card-title h2 {
+    font-size: 1.6rem;
+    text-align: center; /* keep section title center */
+  }
+
+  .edu-details h3,
+  .education-right h3 {
+    font-size: 1.3rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .edu-block h4,
+  .cert-block h4 {
+    font-size: 1.1rem;
+    margin-bottom: 0.3rem;
+  }
+
+  .edu-block p,
+  .cert-block p,
+  .cert-link {
+    font-size: 0.9rem;
+    line-height: 1.4;
+  }
 }
 
 
@@ -1596,6 +1815,75 @@ canvas#cosmos {
   .project-info a {
     font-size: 14px;
     padding: 6px 10px;
+  }
+    #education {
+    padding: 3rem 1rem;
+  }
+
+  .education-card {
+    padding: 1.5rem 1rem;
+  }
+
+  .edu-card-title h2 {
+    font-size: 1.5rem;
+  }
+
+  .edu-img img {
+    width: 160px;
+    margin-bottom: 15px;
+  }
+
+  .edu-details h3,
+  .education-right h3 {
+    font-size: 1.2rem;
+  }
+
+  .edu-block h4,
+  .cert-block h4 {
+    font-size: 1rem;
+  }
+
+  .edu-block p,
+  .cert-block p {
+    font-size: 0.85rem;
+  }
+
+  .cert-link {
+    font-size: 0.85rem;
+  }
+  .edu-img img {
+    margin: 0;
+  }
+  .edu-details p,
+  .edu-details .edu-block h4,
+  .edu-details .edu-block p {
+    text-align: left;
+    margin-left: 0; /* Ensure no extra indent */
+  }
+
+  /* ডান সেকশন সব বামে থাকবে */
+  .education-right,
+  .education-right h3,
+  .cert-block,
+  .cert-block h4,
+  .cert-block p,
+  .cert-link {
+    text-align: left;
+  }
+  .edu-img {
+    text-align: center;  /* ছবি সেন্টারে */
+    margin-bottom: 10px; /* নিচে স্পেস */
+  }
+
+  .edu-img img {
+    display: inline-block; /* সেন্টারে ভালো দেখানোর জন্য */
+    width: 160px;
+    margin: 0 auto;
+  }
+
+/* টেক্সট বামে থাকবে */
+  .edu-details {
+    text-align: left;
   }
 }
 
