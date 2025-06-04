@@ -1031,19 +1031,19 @@ canvas#cosmos {
 }
 
 /* Section Title */
-.edu-card-title h2 {
-  font-size: 2rem;
+.edu-card-title h1 {
+  font-size: 2.4rem;
   font-weight: 700;
   color: #14532d;
   text-align: center;
   position: relative;
 }
-.edu-card-title h2::after {
+.edu-card-title h1::after {
   content: "";
   display: block;
   width: 80px;
   height: 4px;
-  background-color: #16a34a;
+  background: linear-gradient(90deg, #1f5734 0%, #14b43c 100%);
   margin: 10px auto 0;
   border-radius: 2px;
 }
@@ -1167,53 +1167,185 @@ canvas#cosmos {
 
 
 
-
 #contact {
-  min-height: 100vh;
-  background: #1e2a2f;  /* আলাদা ব্যাকগ্রাউন্ড কালার */
-  padding: 60px 20px;
-  box-sizing: border-box;
-  color: #eee;
+  background: linear-gradient(135deg, #f0fdf4 60%, #ffffff 100%);
+  padding: 4rem 1.5rem;
+  font-family: 'Inter', sans-serif;
 }
 
-#contact h2 {
-  font-size: 2.5rem;
-  margin-bottom: 20px;
-  color: #78ff96;
+#contact h1 {
+  font-size: 2.4rem;
+  font-weight: 700;
+  color: #14532d;
+  text-align: center;
+  position: relative;
+}
+#contact h1::after {
+  content: "";
+  display: block;
+  width: 80px;
+  height: 4px;
+  background: linear-gradient(90deg, #1f5734 0%, #14b43c 100%);
+  margin: 10px auto 0;
+  border-radius: 2px;
 }
 
-#contact p {
-  max-width: 700px;
-  margin: 0 auto;
-  font-size: 1.2rem;
-  line-height: 1.6;
-  color: #bbb;
+/* Container Layout */
+.contact-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1rem;
+  max-width: 1200px;
+  margin: 50px auto;
 }
 
-
-
-
-#footer {
-  min-height: 100vh;
-  background: #1e2a2f;  /* আলাদা ব্যাকগ্রাউন্ড কালার */
-  padding: 60px 20px;
-  box-sizing: border-box;
-  color: #eee;
+/* Contact Info Styles */
+.contact-info {
+  flex: 1;
+  min-width: 300px;
 }
 
-#footer h2 {
-  font-size: 2.5rem;
-  margin-bottom: 20px;
-  color: #78ff96;
+.contact-card {
+  padding: 0px 30px;
+  border-radius: 12px;
+}
+.contact-card h2{
+  border-radius: 12px;
+  font-size: 1.5rem;
+  color: #14532d;
+  font-weight: 700;
+  margin-bottom: 7px;
+  letter-spacing: 0.5px;
+  text-align: left;
+  position: relative;
 }
 
-#footer p {
-  max-width: 700px;
-  margin: 0 auto;
-  font-size: 1.2rem;
-  line-height: 1.6;
-  color: #bbb;
+.contact-card p {
+  font-size: 1rem;
+  margin-bottom: 12px;
+  color: #1b4332;
 }
+
+.contact-card i {
+  margin-right: 10px;
+  color: #0c2f1c;
+}
+
+.contact-card a {
+  color: #1b4332;
+  text-decoration: none;
+}
+
+/* Social Icons */
+.social-icons {
+  margin-top: 10px;
+  display: flex;
+  gap: 0px;
+}
+
+.social-icons a {
+  font-size: 1.4rem;
+  color: #065f46;
+  transition: transform 0.2s ease;
+}
+
+.social-icons a:hover {
+  transform: scale(1.2);
+}
+
+/* Google Map */
+iframe {
+  margin-top: 20px;
+  border-radius: 10px;
+  border: none;
+  width: 100%;
+  height: 200px;
+}
+
+/* Contact Form Styles */
+.contact-form {
+  flex: 1;
+  min-width: 300px;
+}
+
+.form-card {
+  background-color: #ffffff;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 14px 50px rgba(34, 197, 94, 0.15);
+  
+}
+
+.form-card form {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-card input,
+.form-card textarea {
+  margin-top: 15px;
+  padding: 12px 15px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-size: 1rem;
+  background-color: #f9fafb;
+}
+
+.form-card button {
+  margin-top: 20px;
+  padding: 12px;
+  background-color: #10b981;
+  color: white;
+  font-size: 1rem;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.form-card button:hover {
+  background-color: #059669;
+}
+
+/* Footer */
+.footer {
+  margin-top: 40px;
+  text-align: center;
+  font-size: 0.9rem;
+  color: #0c2f1c;
+}
+
+  #popup {
+    position: fixed;
+    top: -60px; /* Hidden above the viewport */
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #4caf50; /* Green success color */
+    color: white;
+    padding: 15px 30px;
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 16px;
+    opacity: 0;
+    transition: top 0.5s ease, opacity 0.5s ease;
+    z-index: 1000;
+    pointer-events: none; /* Avoid blocking clicks */
+  }
+
+  /* Error popup style */
+  #popup.error {
+    background-color: #f44336; /* Red color for error */
+  }
+
+  /* Show popup */
+  #popup.show {
+    top: 20px;
+    opacity: 1;
+    pointer-events: auto;
+  }
+
 
 /* ----------- Responsive Styles ----------- */
 
