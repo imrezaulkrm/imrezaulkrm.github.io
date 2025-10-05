@@ -23,7 +23,6 @@ body {
 /* ================== Cosmos / Animation CSS ================== */
 
 /* Fullscreen Canvas */
-/* Fullscreen canvas */
 #cosmos {
   position: fixed;
   top: 0;
@@ -31,24 +30,7 @@ body {
   width: 100%;
   height: 100%;
   z-index: -1;
-  background: radial-gradient(circle, #0a0a0a, #000000);
-  overflow: hidden;
-}
-
-/* Glow lines between points */
-.line {
-  stroke: rgba(0, 255, 255, 0.4);
-  stroke-width: 1.5;
-}
-
-/* Glow nodes */
-.node {
-  position: absolute;
-  width: 4px;
-  height: 4px;
-  border-radius: 50%;
-  background: #00ffff;
-  box-shadow: 0 0 6px #00ffff, 0 0 12px rgba(0,255,255,0.5);
+  background: #0b0f0a; /* dark greenish background */
 }
 
 
