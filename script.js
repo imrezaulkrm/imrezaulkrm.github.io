@@ -367,11 +367,3 @@ changeProject(0);
 
 
 // under devolopment code
-const loader = document.getElementById('loader');
-const dots = ['','.', '..', '...'];
-let i = 0;
-
-setInterval(() => {
-    loader.textContent = dots[i % dots.length];
-    i++;
-}, 500);

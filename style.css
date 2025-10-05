@@ -975,27 +975,24 @@ body {
 
 /* under devolopment code here */
 
-.dev-popup {
-    padding: 20px 40px;
-    background: rgba(255, 255, 255, 0.0); /* transparent */
-    border: 3px dashed #ff4d4d;
-    border-radius: 15px;
+.dev-bar {
+    position: fixed;        /* always top */
+    top: 0;
+    left: 0;
+    width: 100%;            /* full window width */
+    background: rgba(255, 69, 0, 0.1); /* halka transparent orange */
     text-align: center;
-    display: inline-block;
+    padding: 10px 0;
+    z-index: 9999;
+    border-bottom: 2px solid #ff4d4d; /* line effect */
+    font-family: 'Poppins', sans-serif;
 }
 
-.dev-popup h1 {
-    font-size: 28px;
+.dev-bar span {
+    font-size: 18px;
+    font-weight: 600;
     color: #ff4d4d;
-    letter-spacing: 2px;
-    margin: 0;
-}
-
-#loader {
-    font-weight: normal;
-    font-size: 24px;
-    color: #ff4d4d;
-    display: inline-block;
+    letter-spacing: 1px;
 }
 
 
