@@ -1,114 +1,83 @@
-
 const canvas = document.getElementById('cosmos');
 const ctx = canvas.getContext('2d');
+
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
-let nodes = [];
-let nodeCount = 60; // Number of nodes
+const nodes = [];
+const nodeCount = 120; // lots of nodes
 
-// Node object
 class Node {
   constructor() {
     this.x = Math.random() * canvas.width;
     this.y = Math.random() * canvas.height;
-    this.radius = 3 + Math.random() * 3;
-    this.vx = (Math.random() - 0.5) * 0.5;
-    this.vy = (Math.random() - 0.5) * 0.5;
-    this.color = 'rgba(0, 200, 255, 0.7)'; // neon tech color
+    this.vx = (Math.random() - 0.5) * 1.5;
+    this.vy = (Math.random() - 0.5) * 1.5;
   }
+
+  move() {
+    this.x += this.vx;
+    this.y += this.vy;
+
+    if (this.x < 0 || this.x > canvas.width) this.vx *= -1;
+    if (this.y < 0 || this.y > canvas.height) this.vy *= -1;
+  }
+
   draw() {
     ctx.beginPath();
-    ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-    ctx.fillStyle = this.color;
+    ctx.arc(this.x, this.y, 2, 0, Math.PI * 2);
+    ctx.fillStyle = '#00ffff';
     ctx.shadowColor = '#00ffff';
     ctx.shadowBlur = 8;
     ctx.fill();
   }
-  update() {
-    this.x += this.vx;
-    this.y += this.vy;
-
-    if(this.x < 0 || this.x > canvas.width) this.vx *= -1;
-    if(this.y < 0 || this.y > canvas.height) this.vy *= -1;
-  }
 }
 
-// Create nodes
-for(let i=0;i<nodeCount;i++){
+// create nodes
+for (let i = 0; i < nodeCount; i++) {
   nodes.push(new Node());
 }
 
-// Draw lines between close nodes
-function connectNodes() {
-  for(let i=0;i<nodeCount;i++){
-    for(let j=i+1;j<nodeCount;j++){
-      let dx = nodes[i].x - nodes[j].x;
-      let dy = nodes[i].y - nodes[j].y;
-      let dist = Math.sqrt(dx*dx + dy*dy);
-      if(dist < 150){
+// draw connections
+function drawConnections() {
+  for (let i = 0; i < nodes.length; i++) {
+    for (let j = i + 1; j < nodes.length; j++) {
+      const dx = nodes[i].x - nodes[j].x;
+      const dy = nodes[i].y - nodes[j].y;
+      const dist = Math.sqrt(dx * dx + dy * dy);
+      if (dist < 120) { // connect nearby nodes
         ctx.beginPath();
-        ctx.strokeStyle = `rgba(0,200,255,${1 - dist/150})`; 
-        ctx.lineWidth = 1;
         ctx.moveTo(nodes[i].x, nodes[i].y);
         ctx.lineTo(nodes[j].x, nodes[j].y);
+        ctx.strokeStyle = `rgba(0,255,255,${1 - dist / 120})`;
+        ctx.lineWidth = 1;
         ctx.stroke();
       }
     }
   }
 }
 
-// Animate "data packets" along random connections
-let packets = [];
-class Packet {
-  constructor(x1, y1, x2, y2) {
-    this.x = x1;
-    this.y = y1;
-    this.x2 = x2;
-    this.y2 = y2;
-    this.t = 0;
-    this.speed = 0.005 + Math.random()*0.005;
-  }
-  draw() {
-    let cx = this.x + (this.x2 - this.x) * this.t;
-    let cy = this.y + (this.y2 - this.y) * this.t;
-    ctx.beginPath();
-    ctx.arc(cx, cy, 2, 0, Math.PI*2);
-    ctx.fillStyle = 'rgba(0,255,100,0.9)';
-    ctx.shadowColor = '#0f0';
-    ctx.shadowBlur = 6;
-    ctx.fill();
-    this.t += this.speed;
-    if(this.t >= 1) this.t = 0; // loop
-  }
-}
-
-// Randomly generate packets between nodes
-function generatePackets() {
-  if(Math.random() < 0.02){
-    let n1 = nodes[Math.floor(Math.random()*nodes.length)];
-    let n2 = nodes[Math.floor(Math.random()*nodes.length)];
-    if(n1 !== n2) packets.push(new Packet(n1.x, n1.y, n2.x, n2.y));
-  }
-}
-
-// Animation loop
+// animate
 function animate() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
-  nodes.forEach(n => { n.update(); n.draw(); });
-  connectNodes();
-  generatePackets();
-  packets.forEach(p => p.draw());
+
+  nodes.forEach(node => {
+    node.move();
+    node.draw();
+  });
+
+  drawConnections();
   requestAnimationFrame(animate);
 }
 
-// Resize canvas
-window.addEventListener('resize', ()=>{
+animate();
+
+// resize
+window.addEventListener('resize', () => {
   canvas.width = window.innerWidth;
   canvas.height = window.innerHeight;
 });
 
-animate();
 
 
 
