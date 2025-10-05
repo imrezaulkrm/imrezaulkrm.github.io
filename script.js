@@ -362,3 +362,13 @@ changeProject(0);
         showPopup("Something went wrong.", true);
       });
   });
+
+
+
+  // under devolopment code here
+  // যদি hostname localhost বা dev server হয়, banner দেখাবে
+  if (window.location.hostname === 'localhost' || window.location.hostname.includes('dev')) {
+    document.getElementById('dev-banner').style.display = 'block';
+  } else {
+    document.getElementById('dev-banner').style.display = 'none';
+  }

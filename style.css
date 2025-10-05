@@ -971,9 +971,22 @@ canvas#cosmos {
 
 
 
+/* under devolopment code here */
 
-
-
+#dev-banner {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background-color: #ff9800;
+  color: #fff;
+  text-align: center;
+  padding: 0.5rem 1rem;
+  font-weight: bold;
+  font-family: 'Poppins', sans-serif;
+  z-index: 9999;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
 
 
 
