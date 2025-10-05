@@ -1,160 +1,47 @@
-const canvas = document.getElementById('cosmos');
-const ctx = canvas.getContext('2d');
-canvas.width = window.innerWidth;
-canvas.height = window.innerHeight;
+const canvas = document.getElementById("cosmos");
+const ctx = canvas.getContext("2d");
+let stars = [];
 
-const nodes = [];
-const streams = [];
-const NODE_COUNT = 80;
-const STREAM_COUNT = 150;
+function resize() {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+}
+resize();
+window.addEventListener("resize", resize);
 
-// Node class (glowing servers/nodes)
-class Node {
-  constructor() {
-    this.x = Math.random() * canvas.width;
-    this.y = Math.random() * canvas.height;
-    this.r = 2 + Math.random() * 3;
-    this.vx = (Math.random() - 0.5) * 0.5;
-    this.vy = (Math.random() - 0.5) * 0.5;
-  }
-
-  move() {
-    this.x += this.vx;
-    this.y += this.vy;
-    if (this.x < 0 || this.x > canvas.width) this.vx *= -1;
-    if (this.y < 0 || this.y > canvas.height) this.vy *= -1;
-  }
-
-  draw() {
-    ctx.beginPath();
-    ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
-    ctx.fillStyle = '#00ff88';
-    ctx.shadowColor = '#00ff88';
-    ctx.shadowBlur = 10;
-    ctx.fill();
+function createStars(count) {
+  stars = [];
+  for (let i = 0; i < count; i++) {
+    stars.push({
+      x: Math.random() * canvas.width,
+      y: Math.random() * canvas.height,
+      radius: Math.random() * 1.5,
+      speed: Math.random() * 0.5 + 0.2,
+    });
   }
 }
+createStars(200);
 
-// Stream class (data flow lines)
-class Stream {
-  constructor() {
-    this.startNode = nodes[Math.floor(Math.random() * NODE_COUNT)];
-    this.endNode = nodes[Math.floor(Math.random() * NODE_COUNT)];
-    this.progress = Math.random();
-    this.speed = 0.002 + Math.random() * 0.003;
-  }
-
-  move() {
-    this.progress += this.speed;
-    if (this.progress >= 1) {
-      this.startNode = nodes[Math.floor(Math.random() * NODE_COUNT)];
-      this.endNode = nodes[Math.floor(Math.random() * NODE_COUNT)];
-      this.progress = 0;
-      this.speed = 0.002 + Math.random() * 0.003;
-    }
-  }
-
-  draw() {
-    const x = this.startNode.x + (this.endNode.x - this.startNode.x) * this.progress;
-    const y = this.startNode.y + (this.endNode.y - this.startNode.y) * this.progress;
-
-    ctx.beginPath();
-    ctx.moveTo(this.startNode.x, this.startNode.y);
-    ctx.lineTo(x, y);
-    ctx.strokeStyle = `rgba(0, 255, 136, ${1 - this.progress})`;
-    ctx.lineWidth = 1.5;
-    ctx.shadowColor = '#00ff88';
-    ctx.shadowBlur = 8;
-    ctx.stroke();
-  }
-}
-
-// Create nodes
-for (let i = 0; i < NODE_COUNT; i++) nodes.push(new Node());
-for (let i = 0; i < STREAM_COUNT; i++) streams.push(new Stream());
-
-// Animate
 function animate() {
-  ctx.fillStyle = 'rgba(11, 15, 10, 0.2)'; // trails effect
+  ctx.fillStyle = "#0a0a0a";
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-  nodes.forEach(n => { n.move(); n.draw(); });
-  streams.forEach(s => { s.move(); s.draw(); });
+  ctx.fillStyle = "#78ff96";
+  stars.forEach((star) => {
+    ctx.beginPath();
+    ctx.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
+    ctx.fill();
 
-  // Connect nodes with faint green lines
-  for (let i = 0; i < NODE_COUNT; i++) {
-    for (let j = i + 1; j < NODE_COUNT; j++) {
-      const dx = nodes[i].x - nodes[j].x;
-      const dy = nodes[i].y - nodes[j].y;
-      const dist = Math.sqrt(dx*dx + dy*dy);
-      if (dist < 150) {
-        ctx.beginPath();
-        ctx.moveTo(nodes[i].x, nodes[i].y);
-        ctx.lineTo(nodes[j].x, nodes[j].y);
-        ctx.strokeStyle = `rgba(0,255,136,${0.1})`;
-        ctx.lineWidth = 0.5;
-        ctx.stroke();
-      }
+    star.y += star.speed;
+    if (star.y > canvas.height) {
+      star.y = 0;
+      star.x = Math.random() * canvas.width;
     }
-  }
+  });
 
   requestAnimationFrame(animate);
 }
-
 animate();
-
-// Resize
-window.addEventListener('resize', () => {
-  canvas.width = window.innerWidth;
-  canvas.height = window.innerHeight;
-});
-
-
-
-//const canvas = document.getElementById("cosmos");
-//const ctx = canvas.getContext("2d");
-//let stars = [];
-
-//function resize() {
-//  canvas.width = window.innerWidth;
-//  canvas.height = window.innerHeight;
-//}
-//resize();
-//window.addEventListener("resize", resize);
-
-//function createStars(count) {
-//  stars = [];
-//  for (let i = 0; i < count; i++) {
-//    stars.push({
-//      x: Math.random() * canvas.width,
-//      y: Math.random() * canvas.height,
-//      radius: Math.random() * 1.5,
-//      speed: Math.random() * 0.5 + 0.2,
-//    });
-//  }
-//}
-//createStars(200);
-
-//function animate() {
-//  ctx.fillStyle = "#0a0a0a";
-//  ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-//  ctx.fillStyle = "#78ff96";
-//  stars.forEach((star) => {
-//    ctx.beginPath();
-//    ctx.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
-//    ctx.fill();
-
-//    star.y += star.speed;
-//    if (star.y > canvas.height) {
-//      star.y = 0;
-//      star.x = Math.random() * canvas.width;
-//    }
-//  });
-
-//  requestAnimationFrame(animate);
-//}
-//animate();
 
 
 
@@ -475,12 +362,3 @@ changeProject(0);
         showPopup("Something went wrong.", true);
       });
   });
-
-
-
-  // under devolopment code here
-  // Automatically remove after 10 seconds (optional)
-  setTimeout(() => {
-    const banner = document.getElementById('dev-banner');
-    if (banner) banner.style.display = 'none';
-  }, 10000);
