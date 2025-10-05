@@ -975,82 +975,102 @@ body {
 
 /* under devolopment code here */
 
+/* Banner */
 #dev-banner {
-  display: flex;
-  align-items: center;
-  gap: 20px;
-  font-size: 1.2rem;
-  font-weight: bold;
-  color: #00ff7f; /* greenish */
-  background: rgba(0, 0, 0, 0.8);
-  padding: 10px 20px;
-  border-radius: 10px;
   position: fixed;
-  top: 20px;
-  right: 20px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(0,0,0,0.85);
+  color: #00ff7f;
+  font-family: 'Poppins', sans-serif;
+  font-weight: bold;
+  font-size: 1.5rem;
+  padding: 20px 40px;
+  border-radius: 15px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   z-index: 9999;
+  gap: 20px;
 }
 
-/* Construction animation container */
-.construction {
+/* Text Pulse */
+.dev-text {
+  text-align: center;
+  animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+  0%,100% { text-shadow: 0 0 10px #00ff7f, 0 0 20px #00ff7f; }
+  50% { text-shadow: 0 0 20px #00ff7f, 0 0 40px #00ff7f; }
+}
+
+/* Animation Container */
+.animation-container {
   position: relative;
-  width: 50px;
-  height: 50px;
+  width: 120px;
+  height: 80px;
 }
 
-/* Crane hook */
-.crane {
+/* Containers */
+.container {
+  width: 25px;
+  height: 25px;
+  background: #00ff7f;
+  border-radius: 5px;
   position: absolute;
-  left: 0;
-  top: 0;
+  bottom: 0;
+  opacity: 0.3;
+  animation: containerMove 2s infinite alternate;
+}
+.container1 { left: 0; animation-delay: 0s; }
+.container2 { left: 35px; animation-delay: 0.3s; }
+.container3 { left: 70px; animation-delay: 0.6s; }
+
+@keyframes containerMove {
+  0% { bottom: 0; opacity: 0.3; transform: scale(0.8); }
+  50% { bottom: 30px; opacity: 1; transform: scale(1); }
+  100% { bottom: 0; opacity: 0.3; transform: scale(0.8); }
+}
+
+/* Pipeline Glow Lines */
+.pipeline-line {
+  width: 2px;
+  height: 40px;
+  background: #00ff7f;
+  position: absolute;
+  bottom: 25px;
+  opacity: 0.3;
+  animation: glowLine 1s infinite alternate;
+}
+.line1 { left: 12px; animation-delay: 0s; }
+.line2 { left: 47px; animation-delay: 0.3s; }
+.line3 { left: 82px; animation-delay: 0.6s; }
+
+@keyframes glowLine {
+  0%,100% { opacity: 0.3; box-shadow: 0 0 5px #00ff7f; }
+  50% { opacity: 1; box-shadow: 0 0 15px #00ff7f; }
+}
+
+/* Deploy Effect Box */
+.deploy-box {
   width: 10px;
-  height: 50px;
-  background: #00ff7f;
-  animation: craneMove 2s infinite alternate;
-}
-
-.hook {
-  width: 20px;
-  height: 5px;
+  height: 10px;
   background: #00ff7f;
   position: absolute;
-  bottom: 0;
-  left: -5px;
+  bottom: 30px;
+  left: 0;
+  border-radius: 3px;
+  animation: deployMove 2s infinite linear;
 }
 
-/* Building blocks */
-.building {
-  position: absolute;
-  bottom: 0;
-  left: 20px;
-  width: 20px;
-  height: 50px;
+@keyframes deployMove {
+  0% { left: 0; opacity: 0.5; transform: scale(0.7); }
+  50% { left: 50px; opacity: 1; transform: scale(1); }
+  100% { left: 100px; opacity: 0.5; transform: scale(0.7); }
 }
 
-.block {
-  width: 100%;
-  height: 0%;
-  background: #00ff7f;
-  margin-bottom: 2px;
-  animation: buildDestroy 2s infinite;
-}
-
-.block1 { animation-delay: 0s; }
-.block2 { animation-delay: 0.4s; }
-.block3 { animation-delay: 0.8s; }
-
-/* Animations */
-@keyframes buildDestroy {
-  0%, 20% { height: 0%; }
-  50%, 70% { height: 30%; }
-  100% { height: 0%; }
-}
-
-@keyframes craneMove {
-  0% { transform: translateY(0); }
-  50% { transform: translateY(10px); }
-  100% { transform: translateY(0); }
-}
 
 
 
