@@ -1,47 +1,161 @@
-const canvas = document.getElementById("cosmos");
-const ctx = canvas.getContext("2d");
-let stars = [];
 
-function resize() {
-  canvas.width = window.innerWidth;
-  canvas.height = window.innerHeight;
-}
-resize();
-window.addEventListener("resize", resize);
+const canvas = document.getElementById('cosmos');
+const ctx = canvas.getContext('2d');
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
 
-function createStars(count) {
-  stars = [];
-  for (let i = 0; i < count; i++) {
-    stars.push({
-      x: Math.random() * canvas.width,
-      y: Math.random() * canvas.height,
-      radius: Math.random() * 1.5,
-      speed: Math.random() * 0.5 + 0.2,
-    });
+let nodes = [];
+let nodeCount = 60; // Number of nodes
+
+// Node object
+class Node {
+  constructor() {
+    this.x = Math.random() * canvas.width;
+    this.y = Math.random() * canvas.height;
+    this.radius = 3 + Math.random() * 3;
+    this.vx = (Math.random() - 0.5) * 0.5;
+    this.vy = (Math.random() - 0.5) * 0.5;
+    this.color = 'rgba(0, 200, 255, 0.7)'; // neon tech color
+  }
+  draw() {
+    ctx.beginPath();
+    ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+    ctx.fillStyle = this.color;
+    ctx.shadowColor = '#00ffff';
+    ctx.shadowBlur = 8;
+    ctx.fill();
+  }
+  update() {
+    this.x += this.vx;
+    this.y += this.vy;
+
+    if(this.x < 0 || this.x > canvas.width) this.vx *= -1;
+    if(this.y < 0 || this.y > canvas.height) this.vy *= -1;
   }
 }
-createStars(200);
 
-function animate() {
-  ctx.fillStyle = "#0a0a0a";
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
+// Create nodes
+for(let i=0;i<nodeCount;i++){
+  nodes.push(new Node());
+}
 
-  ctx.fillStyle = "#78ff96";
-  stars.forEach((star) => {
-    ctx.beginPath();
-    ctx.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
-    ctx.fill();
-
-    star.y += star.speed;
-    if (star.y > canvas.height) {
-      star.y = 0;
-      star.x = Math.random() * canvas.width;
+// Draw lines between close nodes
+function connectNodes() {
+  for(let i=0;i<nodeCount;i++){
+    for(let j=i+1;j<nodeCount;j++){
+      let dx = nodes[i].x - nodes[j].x;
+      let dy = nodes[i].y - nodes[j].y;
+      let dist = Math.sqrt(dx*dx + dy*dy);
+      if(dist < 150){
+        ctx.beginPath();
+        ctx.strokeStyle = `rgba(0,200,255,${1 - dist/150})`; 
+        ctx.lineWidth = 1;
+        ctx.moveTo(nodes[i].x, nodes[i].y);
+        ctx.lineTo(nodes[j].x, nodes[j].y);
+        ctx.stroke();
+      }
     }
-  });
+  }
+}
 
+// Animate "data packets" along random connections
+let packets = [];
+class Packet {
+  constructor(x1, y1, x2, y2) {
+    this.x = x1;
+    this.y = y1;
+    this.x2 = x2;
+    this.y2 = y2;
+    this.t = 0;
+    this.speed = 0.005 + Math.random()*0.005;
+  }
+  draw() {
+    let cx = this.x + (this.x2 - this.x) * this.t;
+    let cy = this.y + (this.y2 - this.y) * this.t;
+    ctx.beginPath();
+    ctx.arc(cx, cy, 2, 0, Math.PI*2);
+    ctx.fillStyle = 'rgba(0,255,100,0.9)';
+    ctx.shadowColor = '#0f0';
+    ctx.shadowBlur = 6;
+    ctx.fill();
+    this.t += this.speed;
+    if(this.t >= 1) this.t = 0; // loop
+  }
+}
+
+// Randomly generate packets between nodes
+function generatePackets() {
+  if(Math.random() < 0.02){
+    let n1 = nodes[Math.floor(Math.random()*nodes.length)];
+    let n2 = nodes[Math.floor(Math.random()*nodes.length)];
+    if(n1 !== n2) packets.push(new Packet(n1.x, n1.y, n2.x, n2.y));
+  }
+}
+
+// Animation loop
+function animate() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  nodes.forEach(n => { n.update(); n.draw(); });
+  connectNodes();
+  generatePackets();
+  packets.forEach(p => p.draw());
   requestAnimationFrame(animate);
 }
+
+// Resize canvas
+window.addEventListener('resize', ()=>{
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+});
+
 animate();
+
+
+
+//const canvas = document.getElementById("cosmos");
+//const ctx = canvas.getContext("2d");
+//let stars = [];
+
+//function resize() {
+//  canvas.width = window.innerWidth;
+//  canvas.height = window.innerHeight;
+//}
+//resize();
+//window.addEventListener("resize", resize);
+
+//function createStars(count) {
+//  stars = [];
+//  for (let i = 0; i < count; i++) {
+//    stars.push({
+//      x: Math.random() * canvas.width,
+//      y: Math.random() * canvas.height,
+//      radius: Math.random() * 1.5,
+//      speed: Math.random() * 0.5 + 0.2,
+//    });
+//  }
+//}
+//createStars(200);
+
+//function animate() {
+//  ctx.fillStyle = "#0a0a0a";
+//  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+//  ctx.fillStyle = "#78ff96";
+//  stars.forEach((star) => {
+//    ctx.beginPath();
+//    ctx.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
+//    ctx.fill();
+
+//    star.y += star.speed;
+//    if (star.y > canvas.height) {
+//      star.y = 0;
+//      star.x = Math.random() * canvas.width;
+//    }
+//  });
+
+//  requestAnimationFrame(animate);
+//}
+//animate();
 
 
 
