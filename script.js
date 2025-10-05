@@ -366,9 +366,8 @@ changeProject(0);
 
 
   // under devolopment code here
-  // যদি hostname localhost বা dev server হয়, banner দেখাবে
-  if (window.location.hostname === 'localhost' || window.location.hostname.includes('dev')) {
-    document.getElementById('dev-banner').style.display = 'block';
-  } else {
-    document.getElementById('dev-banner').style.display = 'none';
-  }
+  // Automatically remove after 10 seconds (optional)
+  setTimeout(() => {
+    const banner = document.getElementById('dev-banner');
+    if (banner) banner.style.display = 'none';
+  }, 10000);
