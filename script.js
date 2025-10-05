@@ -362,3 +362,51 @@ changeProject(0);
         showPopup("Something went wrong.", true);
       });
   });
+
+
+
+
+
+const line = document.getElementById('building-line');
+
+const colors = ['#4d94ff', '#00cc99', '#ff9933', '#ff4d4d']; // Random colors
+
+function createBlock() {
+  const block = document.createElement('div');
+  block.classList.add('block');
+  
+  // Random height between 20px to 80px
+  const height = Math.floor(Math.random() * 60) + 20;
+  
+  // Random color
+  block.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+  block.style.height = '0px';
+  
+  line.appendChild(block);
+
+  let growing = true;
+  const speed = 2 + Math.random() * 3; // Random speed for each block
+
+  const interval = setInterval(() => {
+    let currentHeight = parseFloat(block.style.height);
+    
+    if (growing) {
+      currentHeight += speed;
+      if (currentHeight >= height) growing = false;
+    } else {
+      currentHeight -= speed;
+      if (currentHeight <= 0) {
+        clearInterval(interval);
+        line.removeChild(block);
+        createBlock(); // new block after destroying
+      }
+    }
+    
+    block.style.height = currentHeight + 'px';
+  }, 50);
+}
+
+// Start with 3 blocks, staggered
+for (let i = 0; i < 3; i++) {
+  setTimeout(createBlock, i * 400);
+}

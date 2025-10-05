@@ -975,78 +975,49 @@ body {
 
 /* under devolopment code here */
 
-/* Banner setup */
-#dev-banner {
+/* Fixed popup */
+.dev-popup {
   position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  z-index: 9999;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-/* Vertical Line */
-.vertical-line {
-  position: relative;
-  width: 6px;
-  height: 300px;
-  background: #00ff7f;
-  border-radius: 3px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 10px 0;
-}
-
-/* Vertical Text rotated */
-.dev-text {
-  writing-mode: vertical-rl;
-  transform: rotate(180deg);
-  color: #00ff7f;
-  font-weight: bold;
-  font-family: 'Poppins', sans-serif;
-  margin-bottom: 20px;
+  top: 20px;
+  right: 20px;
+  width: 180px;
+  padding: 12px;
+  background: rgba(255, 255, 255, 0.95);
+  border: 2px solid #333;
+  border-radius: 10px;
   text-align: center;
-  font-size: 1rem;
+  z-index: 9999;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
 }
 
-/* Building Container inside the line */
-.building-container {
+/* Title */
+.dev-popup h3 {
+  margin-bottom: 12px;
+  font-size: 16px;
+  color: #ff4d4d;
+  letter-spacing: 0.5px;
+}
+
+/* Vertical line container */
+.line {
+  width: 25px;
+  height: 120px;
+  background: #333;
+  margin: 0 auto;
   position: relative;
+  overflow: hidden;
+  border-radius: 5px;
+}
+
+/* Each building block */
+.block {
   width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-around;
-  align-items: center;
-}
-
-/* Building blocks */
-.building {
-  width: 12px;
-  height: 20px;
-  background: #00ff7f;
+  position: absolute;
+  bottom: 0;
   border-radius: 2px;
-  opacity: 0.2;
-  animation: buildAnim 2s infinite;
+  opacity: 0.9;
+  transition: height 0.05s linear, background-color 0.2s ease;
 }
-
-/* Different delays for each building */
-.b1 { animation-delay: 0s; }
-.b2 { animation-delay: 0.4s; }
-.b3 { animation-delay: 0.8s; }
-.b4 { animation-delay: 1.2s; }
-.b5 { animation-delay: 1.6s; }
-
-/* Animation: build & destroy effect */
-@keyframes buildAnim {
-  0% { transform: scaleY(0); opacity: 0.1; }
-  50% { transform: scaleY(1); opacity: 1; }
-  100% { transform: scaleY(0); opacity: 0.1; }
-}
-
 
 
 
