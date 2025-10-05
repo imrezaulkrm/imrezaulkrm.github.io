@@ -367,11 +367,11 @@ changeProject(0);
 
 
 // under devolopment code
-const text = document.getElementById('dev-text');
-const chars = ['|', '/', '-', '\\']; // simple spinner effect
+const loader = document.getElementById('loader');
+const dots = ['','.', '..', '...'];
 let i = 0;
 
 setInterval(() => {
-    text.textContent = `UNDER DEVELOPMENT ${chars[i % chars.length]}`;
+    loader.textContent = dots[i % dots.length];
     i++;
-}, 300);
+}, 500);
