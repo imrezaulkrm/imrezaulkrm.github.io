@@ -975,48 +975,21 @@ body {
 
 /* under devolopment code here */
 
-/* Popup container */
 .dev-popup {
-    text-align: center;
     padding: 30px 50px;
     background: #fff;
     border: 3px dashed #ff4d4d;
     border-radius: 15px;
     box-shadow: 0 8px 20px rgba(0,0,0,0.2);
-    position: relative;
+    text-align: center;
 }
 
-/* Centered Title */
 .dev-popup h1 {
-    color: #ff4d4d;
     font-size: 28px;
-    margin-bottom: 20px;
+    color: #ff4d4d;
     letter-spacing: 2px;
+    margin: 0;
 }
-
-/* Construction area */
-.construction-area {
-    width: 100px;
-    height: 120px;
-    position: relative;
-    margin: 0 auto;
-    border-left: 4px solid #333;
-    border-right: 4px solid #333;
-    overflow: hidden;
-    border-radius: 5px;
-    background: #e6e6e6;
-}
-
-/* Each building block */
-.block {
-    width: 100%;
-    position: absolute;
-    bottom: 0;
-    border-radius: 3px;
-    opacity: 0.9;
-    transition: height 0.05s linear, background-color 0.2s ease;
-}
-
 
 
 

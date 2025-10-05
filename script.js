@@ -367,47 +367,11 @@ changeProject(0);
 
 
 // under devolopment code
-const construction = document.getElementById('construction');
+const text = document.getElementById('dev-text');
+const chars = ['|', '/', '-', '\\']; // simple spinner effect
+let i = 0;
 
-const colors = ['#4d94ff', '#00cc99', '#ff9933', '#ff4d4d'];
-
-// Function to create a building block with animation
-function createBlock() {
-    const block = document.createElement('div');
-    block.classList.add('block');
-
-    // Random block height
-    const height = Math.floor(Math.random() * 60) + 20;
-
-    // Random color
-    block.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
-    block.style.height = '0px';
-
-    construction.appendChild(block);
-
-    let growing = true;
-    const speed = 2 + Math.random() * 3;
-
-    const interval = setInterval(() => {
-        let currentHeight = parseFloat(block.style.height);
-
-        if (growing) {
-            currentHeight += speed;
-            if (currentHeight >= height) growing = false;
-        } else {
-            currentHeight -= speed;
-            if (currentHeight <= 0) {
-                clearInterval(interval);
-                construction.removeChild(block);
-                createBlock(); // new block after destroy
-            }
-        }
-
-        block.style.height = currentHeight + 'px';
-    }, 50);
-}
-
-// Start with 4 blocks staggered for smooth effect
-for (let i = 0; i < 4; i++) {
-    setTimeout(createBlock, i * 400);
-}
+setInterval(() => {
+    text.textContent = `UNDER DEVELOPMENT ${chars[i % chars.length]}`;
+    i++;
+}, 300);
