@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Md Rezaul Karim | DevOps Engineer</title>
+  <!-- Font & Devicon -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/devicon.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron&family=Poppins&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/fontawesome.min.css" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+
+</head>
+<body>
+  <!-- Under Development Banner -->
+  <div class="dev-bar">
+      <span>🚧 UNDER DEVELOPMENT 🚧</span>
+  </div>
+
+
+  <!-- Under Development Banner -->
+  <canvas id="cosmos"></canvas>
+  <!-- Vertical Scroll Nav -->
+  <nav class="side-nav" aria-label="Section navigation">
+    <button class="nav-arrow" data-target="#hero" aria-label="Scroll to Hero section">
+      <span class="material-symbols-outlined">arrow_upward</span>
+    </button>
+  
+    <div class="nav-icons">
+      <span class="nav-dot active" data-target="#hero" title="Hero">
+        <span class="material-symbols-outlined">home</span>
+      </span>
+      <span class="nav-dot" data-target="#about" title="About">
+        <span class="material-symbols-outlined">person</span>
+      </span>
+      <span class="nav-dot" data-target="#education" title="Education & Certification">
+        <span class="material-symbols-outlined">school</span>
+      </span>
+      <span class="nav-dot" data-target="#skills" title="Skills">
+        <span class="material-symbols-outlined">build</span>
+      </span>
+      <span class="nav-dot" data-target="#projects" title="Projects">
+        <span class="material-symbols-outlined">work</span>
+      </span>
+      <!--
+      <span class="nav-dot" data-target="#experience" title="Experience">
+        <span class="material-symbols-outlined">calendar_today</span>
+      </span>
+      -->
+      <span class="nav-dot" data-target="#contact" title="Contact">
+        <span class="material-symbols-outlined">mail</span>
+      </span>
+    </div>
+  
+    <button class="nav-arrow" data-target="#footer" aria-label="Scroll to Footer section">
+      <span class="material-symbols-outlined">arrow_downward</span>
+    </button>
+  </nav>
+  
+  
+
+  <section class="hero" id="hero">
+    <div class="hero-content">
+
+      <!-- hero-content এর ভিতরে: -->
+    <div class="text">
+      <h1>Md Rezaul Karim</h1>
+      <h2>Cloud & DevOps Engineer</h2>
+
+      <!-- এখানে terminal div টা নীচে আনলাম -->
+      <div class="terminal-container">
+        <div class="terminal-header">
+          <span class="dot red"></span>
+          <span class="dot yellow"></span>
+          <span class="dot green"></span>
+        </div>
+        <div id="terminal-text">
+          <div id="command-line">
+            <span class="prompt">imrezaulkrm:~$</span><span id="cmd-line"></span>
+          </div>
+          <div id="result-block"></div>
+        </div>
+      </div>
+
+      <p class="highlight-paragraph">
+        From code to cloud, I build systems that scale, ship faster, and never break under pressure.
+      </p>      
+      <a href="file/resumeOfRezaulKarim.pdf" target="_blank" rel="noopener" class="btn-glow">Download CV</a>
+    </div>
+
+    <div class="editor-tab">
+      <div class="tab-header">
+        <span class="tab-dot red"></span>
+        <span class="tab-dot yellow"></span>
+        <span class="tab-dot green"></span>
+      </div>
+      <img class="profile-img" src="img/MdRezaulKarim.png" alt="Profile Image" />
+    </div>
+    </div>
+  </section>
+   
+
+<!-- ...existing code... -->
+<!-- About Section -->
+  <section id="about">
+    <div class="about-container">
+      <div class="about-card">
+        <div class="about-img">
+          <img src="img/imrezaulkrm.jpg" alt="Md Rezaul Karim">
+        </div>
+        <div class="about-details">
+          <h1 class="fade-in delay-1">About Me</h1>
+
+          <p class="fade-in delay-2">
+            <strong>Hey, I’m Md Rezaul Karim</strong> — a DevOps enthusiast from Bangladesh who’s passionate about building automated, scalable, and resilient systems.
+          </p>
+
+          <p class="fade-in delay-3">
+            I’m on a journey to become an advanced-level engineer by exploring the world of infrastructure and automation. I love solving real-world challenges and constantly push myself to grow through hands-on experience and continuous learning.
+          </p>
+
+          <p class="fade-in delay-4">
+            My interests lie in understanding how technology can improve both system reliability and developer experience. I also enjoy sharing knowledge, reflecting on what I learn, and building meaningful projects that make an impact.
+          </p>
+
+          <p class="fade-in delay-5">
+            I’m always eager to connect with like-minded individuals, so feel free to reach out if you share my passion for DevOps, automation, or just want to chat about tech!
+          </p>
+
+          <p class="fade-in delay-6">
+            Outside the world of tech, I find peace in nature, enjoy photography, and unwind with a good cup of coffee.
+          </p>
+
+          <blockquote class="fade-in delay-7">
+            “Engineering is simplifying complexity, automating the mundane, and building trust.”
+          </blockquote>
+
+        </div>
+      </div>
+    </div>
+  </section>
+
+<!-- Education Section -->
+  <section id="education">
+    <div class="education-card">
+      
+      <!-- Section Title inside card -->
+      <div class="edu-card-title">
+        <h1>Education & Certification</h1>
+      </div>
+
+      <div class="education-container">
+        <!-- Left: Image + Academic Info -->
+        <div class="education-left">
+          <div class="edu-img">
+            <img src="img/convocation.jpg" alt="Md Rezaul Karim">
+          </div>
+          <div class="edu-details">
+            <h3>Academic Qualifications</h3>
+
+            <div class="edu-block">
+              <h4>BSc in Computer Science & Engineering</h4>
+              <p>Gono Bishwabidyalay</p>
+              <p>2018 - 2022</p>
+            </div>
+
+            <div class="edu-block">
+              <h4>Higher Secondary Certificate (HSC)</h4>
+              <p>Mirza Golam Hafiz College</p>
+              <p>2016 - 2018</p>
+            </div>
+
+            <div class="edu-block">
+              <h4>Dakhil</h4>
+              <p>Ashulia Hajera Khatun Dakhil Madrasah</p>
+              <p>2014 - 2015</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Middle Line -->
+        <div class="vertical-line"></div>
+
+        <!-- Right: Professional Certifications -->
+        <!--<div class="education-right">
+          <h3>Professional Certifications</h3>
+
+          <div class="cert-block">
+            <h4>Certified Kubernetes Administrator (CKA)</h4>
+            <p><strong>Provider:</strong> Linux Foundation</p>
+            <p><strong>Issued:</strong> May 2024 · No Expiry</p>
+            <p><strong>Skills:</strong> Kubernetes clusters, Pods, Deployments, RBAC, Networking, Troubleshooting</p>
+            <p><strong>Credential ID:</strong> LF-k8s-CKA-202405 <a href="#" style="text-decoration: none; font-size: 1.2rem; color: #1b4332; margin-left: 6px;">🎓</a></p>
+          </div>
+
+          <div class="cert-block">
+            <h4>Google Cloud Associate Cloud Engineer</h4>
+            <p><strong>Provider:</strong> Google Cloud</p>
+            <p><strong>Issued:</strong> December 2023 · Valid for 3 Years</p>
+            <p><strong>Skills:</strong> GCP services, Compute Engine, IAM, Networking, Deployment & Monitoring</p>
+            <p><strong>Credential ID:</strong> GCP-ACE-2023-1221 <a href="#" style="text-decoration: none; font-size: 1.2rem; color: #1b4332; margin-left: 6px;">🎓</a></p>
+          </div>
+
+          <div class="cert-block">
+            <h4>Docker & Kubernetes: The Complete Guide</h4>
+            <p><strong>Provider:</strong> Udemy (Stephen Grider)</p>
+            <p><strong>Completed:</strong> October 2022</p>
+            <p><strong>Topics:</strong> Docker fundamentals, Docker Compose, Kubernetes, CI/CD pipeline setup</p>
+            <p><strong>Certificate ID:</strong> UC-DK-20221028 <a href="#" style="text-decoration: none; font-size: 1.2rem; color: #1b4332; margin-left: 6px;">🎓</a></p>
+          </div>
+        </div>
+      </div>
+    </div>-->
+  </section>
+
+<!-- ...existing code... -->
+  <section id="skills">
+    <div class="container">
+      <h2 class="section-title">Skills & Expertise</h2>
+      <h3 class="tools-subtitle">
+        DevOps Tools I Use
+      </h3>
+      <div class="tool-cards">
+        <!-- Repeat for Ubuntu -->
+        <div class="tool-card">
+          <div class="icon">
+            <i class="devicon-ubuntu-plain colored"></i>
+          </div>
+          <div class="details">
+            <h4>Ubuntu</h4>
+            <p>Popular Linux distribution for servers and desktops.</p>
+
+            <div class="experience">Experience: 3+ Years</div>
+            <div class="tags">
+              <span class="tag">Linux</span>
+              <span class="tag">Server</span>
+            </div>
+          </div>
+        </div>
+        <!-- Example: Docker -->
+        <div class="tool-card">
+          <div class="icon">
+            <i class="devicon-docker-plain colored"></i>
+          </div>
+          <div class="details">
+            <h4>Docker</h4>
+            <p>Lightweight containerization for app deployment.</p>
+
+            <div class="experience">Experience: 2+ Years</div>
+
+            <div class="tags">
+              <span class="tag">Container</span>
+              <span class="tag">DevOps</span>
+              <span class="tag">Microservices</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Repeat for Jenkins -->
+        <div class="tool-card">
+          <div class="icon">
+            <img src="https://www.svgrepo.com/show/373699/jenkins.svg" alt="Jenkins Logo" style="width:40px; height:40px; display:block; margin:auto; background:#fff; border-radius:6px;" />
+          </div>
+          <div class="details">
+            <h4>Jenkins</h4>
+            <p>Automate CI/CD pipelines with ease and flexibility.</p>
+
+            <div class="experience">Experience: 1.5 Years</div>
+
+            <div class="tags">
+              <span class="tag">CI/CD</span>
+              <span class="tag">Automation</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Repeat for Kubernetes -->
+        <div class="tool-card">
+          <div class="icon">
+            <i class="devicon-kubernetes-plain colored"></i>
+          </div>
+          <div class="details">
+            <h4>Kubernetes</h4>
+            <p>Orchestrate containerized applications at scale.</p>
+
+            <div class="experience">Experience: 1 Year</div>
+            <div class="tags">
+              <span class="tag">Container Orchestration</span>
+              <span class="tag">Scalability</span>
+            </div>
+          </div>
+        </div>
+        <!-- Repeat for Terraform -->
+        <div class="tool-card">
+          <div class="icon">
+            <i class="devicon-terraform-plain colored"></i>
+          </div>
+          <div class="details">
+            <h4>Terraform</h4>
+            <p>Infrastructure as Code for cloud provisioning.</p>
+
+            <div class="experience">Experience: 1 Year</div>
+            <div class="tags">
+              <span class="tag">Infrastructure as Code</span>
+              <span class="tag">Cloud Provisioning</span>
+            </div>
+          </div>
+        </div>
+        <!-- Repeat for Ansible -->
+        <div class="tool-card">
+          <div class="icon">
+            <i class="devicon-ansible-plain colored"></i>
+          </div>
+          <div class="details">
+            <h4>Ansible</h4>
+            <p>Configuration management and automation tool.</p>
+
+            <div class="experience">Experience: 1 Year</div>
+            <div class="tags">
+              <span class="tag">Configuration Management</span>
+              <span class="tag">Automation</span>
+            </div>
+          </div>
+        </div>
+        <!-- Repeat for Git -->
+        <div class="tool-card">
+          <div class="icon">
+            <i class="devicon-git-plain colored"></i>
+          </div>
+          <div class="details">
+            <h4>Git</h4>
+            <p>Version control system for tracking changes in code.</p>
+
+            <div class="experience">Experience: 3+ Years</div>
+            <div class="tags">
+              <span class="tag">Version Control</span>
+              <span class="tag">Collaboration</span>
+            </div>
+          </div>
+        </div>
+        <!-- Repeat for GitHub -->
+        <div class="tool-card">
+          <div class="icon">
+            <i class="devicon-github-original colored"></i>
+          </div>
+          <div class="details">
+            <h4>GitHub</h4>
+            <p>Platform for hosting and collaborating on Git repositories.</p>
+
+            <div class="experience">Experience: 2+ Years</div>
+            <div class="tags">
+              <span class="tag">Version Control</span>
+              <span class="tag">Collaboration</span>
+            </div>
+          </div>
+        </div>
+        <!-- Repeat for AWS -->
+        <div class="tool-card">
+          <div class="icon">
+            <img src="https://www.svgrepo.com/show/448266/aws.svg" alt="AWS Logo" style="width:40px; height:40px; display:block; margin:auto; background:#fff; border-radius:6px;" />
+          </div>
+          <div class="details">
+            <h4>AWS</h4>
+            <p>Cloud services for scalable and reliable infrastructure.</p>
+
+            <div class="experience">Experience: 2+ Years</div>
+            <div class="tags">
+              <span class="tag">Cloud Computing</span>
+              <span class="tag">Infrastructure</span>
+            </div>
+          </div>
+        </div>
+        <!-- Repeat for argocd -->
+        <div class="tool-card">
+          <div class="icon">
+            <i class="devicon-argocd-plain colored"></i>
+          </div>
+          <div class="details">
+            <h4>ArgoCD</h4>
+            <p>Declarative GitOps continuous delivery tool for Kubernetes.</p>
+
+            <div class="experience">Experience: 6 Months</div>
+            <div class="tags">
+              <span class="tag">GitOps</span>
+              <span class="tag">Kubernetes</span>
+            </div>
+          </div>
+        </div>
+        <!-- Repeat for Prometheus -->
+        <div class="tool-card">
+          <div class="icon">
+            <i class="devicon-prometheus-original colored"></i>
+          </div>
+          <div class="details">
+            <h4>Prometheus</h4>
+            <p>Open-source monitoring and alerting toolkit.</p>
+
+            <div class="experience">Experience: 1 Year</div>
+            <div class="tags">
+              <span class="tag">Monitoring</span>
+              <span class="tag">Alerting</span>
+            </div>
+          </div>
+        </div>
+        <!-- Repeat for Grafana -->
+        <div class="tool-card">
+          <div class="icon">
+            <i class="devicon-grafana-plain colored"></i>
+          </div>
+          <div class="details">
+            <h4>Grafana</h4>
+            <p>Visualize metrics and logs with beautiful dashboards.</p>
+
+            <div class="experience">Experience: 1 Year</div>
+            <div class="tags">
+              <span class="tag">Visualization</span>
+              <span class="tag">Metrics</span>
+            </div>
+          </div>
+        </div>
+      </div>
+            <!-- Technologies Explored via DevOps -->
+        <div class="devops-tech-section">    
+          <h3 class="tools-subtitle">
+          Technologies Explored with DevOps
+          </h3>
+          <div class="devops-tech-cards">
+            <!-- HTML -->
+            <a class="devops-tech-card" href="https://github.com/imrezaulkrm?tab=repositories&q=html" target="_blank">
+              <i class="devicon-html5-plain colored"></i>
+            </a>
+            <!-- CSS -->
+            <a class="devops-tech-card" href="https://github.com/imrezaulkrm?tab=repositories&q=css" target="_blank">
+              <i class="devicon-css3-plain colored"></i>
+            </a>
+            <!-- JavaScript -->
+            <a class="devops-tech-card" href="https://github.com/imrezaulkrm?tab=repositories&q=javascript" target="_blank">
+              <i class="devicon-javascript-plain colored"></i>
+            </a>
+            <!-- React -->
+            <a class="devops-tech-card" href="https://github.com/imrezaulkrm?tab=repositories&q=react" target="_blank">
+              <i class="devicon-react-original colored"></i>
+            </a>
+            <!-- Angular -->
+            <a class="devops-tech-card" href="https://github.com/imrezaulkrm?tab=repositories&q=angular" target="_blank">
+              <i class="devicon-angularjs-plain colored"></i>
+            </a>
+            <!-- ExpressJS -->
+            <a class="devops-tech-card" href="https://github.com/imrezaulkrm?tab=repositories&q=express" target="_blank">
+              <i class="devicon-express-original colored"></i>
+            </a>
+            <!-- PHP -->
+            <a class="devops-tech-card" href="https://github.com/imrezaulkrm?tab=repositories&q=php" target="_blank">
+              <i class="devicon-php-plain colored"></i>
+            </a>
+            <!-- Go -->
+            <a class="devops-tech-card" href="https://github.com/imrezaulkrm?tab=repositories&q=go" target="_blank">
+              <i class="devicon-go-plain colored"></i>
+            </a>
+            <!-- Spring Boot -->
+            <a class="devops-tech-card" href="https://github.com/imrezaulkrm?tab=repositories&q=springboot" target="_blank">
+              <i class="devicon-spring-plain colored"></i>
+            </a>
+            <!-- NodeJS -->
+            <a class="devops-tech-card" href="https://github.com/imrezaulkrm?tab=repositories&q=nodejs" target="_blank">
+              <i class="devicon-nodejs-plain colored"></i>
+            </a>
+            <!-- Flask -->
+            <a class="devops-tech-card" href="https://github.com/imrezaulkrm?tab=repositories&q=flask" target="_blank">
+              <i class="devicon-flask-original colored"></i>
+            </a>
+            <!-- MySQL -->
+            <a class="devops-tech-card" href="https://github.com/imrezaulkrm?tab=repositories&q=mysql" target="_blank">
+              <i class="devicon-mysql-plain colored"></i>
+            </a>
+            <!-- MongoDB -->
+            <a class="devops-tech-card" href="https://github.com/imrezaulkrm?tab=repositories&q=mongodb" target="_blank">
+              <i class="devicon-mongodb-plain colored"></i>
+            </a>
+            <!-- Nginx -->
+            <a class="devops-tech-card" href="https://github.com/imrezaulkrm?tab=repositories&q=nginx" target="_blank">
+              <i class="devicon-nginx-original colored"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+
+
+<!-- Projects Section -->
+  <section id="projects">
+    <h1 class="project-title">Projects</h1>
+    <nav class="project-nav" aria-label="Project navigation">
+      <div class="project-arrow arrow-left" role="button" aria-label="Previous Project">&#10094;</div>
+      <div class="project-list" role="list">
+        <!-- Projects will be inserted here by JS -->
+      </div>
+      <div class="project-arrow arrow-right" role="button" aria-label="Next Project">&#10095;</div>
+    </nav>
+
+    <div class="project-card" aria-live="polite" aria-atomic="true">
+      <div class="image-slider" aria-label="Project Image Slider">
+        <div class="slides">
+          <!-- Slides inserted by JS -->
+        </div>
+        <div class="image-arrow-left" role="button" aria-label="Previous Image">&#10094;</div>
+        <div class="image-arrow-right" role="button" aria-label="Next Image">&#10095;</div>
+      </div>
+      <div class="project-info">
+        <h2 id="project-title">Project Title</h2>
+        <p id="project-description">Project description will appear here.</p>
+        <p class="tech" id="project-tech">Tech</p>
+        <a href="#" id="project-git" target="_blank" rel="noopener noreferrer">View on GitHub</a>
+      </div>
+    </div>
+
+  </section>
+
+  <!--
+    <section id="experience">
+      <h1>Experience</h1>
+      <div class="experience-list">
+        <div class="experience-item">
+        <h2>DevOps Engineer</h2>
+        <h3>XYZ Tech Solutions</h3>
+        <span class="exp-duration">Jan 2022 – Present</span>
+        <ul>
+          <li>Designed and maintained CI/CD pipelines using Jenkins and GitHub Actions.</li>
+          <li>Automated infrastructure provisioning with Terraform and Ansible.</li>
+          <li>Managed Kubernetes clusters for scalable microservices deployments.</li>
+          <li>Implemented monitoring and alerting with Prometheus and Grafana.</li>
+        </ul>
+        </div>
+        <div class="experience-item">
+        <h2>Cloud Intern</h2>
+        <h3>ABC Cloud Services</h3>
+        <span class="exp-duration">Jun 2021 – Dec 2021</span>
+        <ul>
+          <li>Assisted in migrating legacy applications to AWS cloud infrastructure.</li>
+          <li>Wrote automation scripts for routine server management tasks.</li>
+          <li>Collaborated with developers to improve deployment workflows.</li>
+        </ul>
+        </div>
+      </div>
+    </section>
+  -->
+
+  <section id="contact">
+    <h1>Contact</h1>
+
+    <div class="contact-container">
+      <!-- Contact Info -->
+      <div class="contact-info">
+        <div class="contact-card">
+          <h2>Let’s Connect</h2>
+          <p>Feel free to reach out by email or through social media.</p>
+          <p><i class="fas fa-envelope"></i><a href="mailto:rezaul1203karim@gmail.com">rezaul1203karim@gmail.com</a></p>
+          <p><i class="fas fa-phone-alt"></i><a href="tel:+8801871468781">+88 01871-468781</a></p>
+          <p><i class="fas fa-map-marker-alt"></i><a href="https://maps.app.goo.gl/812f8Cs2ttcxL24W6" target="_blank" rel="noopener">Savar, Dhaka, Bangladesh</a></p>
+
+          <div class="social-icons">
+            <a href="https://github.com/imrezaulkrm" target="_blank"><i class="fab fa-github" style="color: #181717;"></i></a>
+            <a href="https://linkedin.com/in/imrezaulkrm" target="_blank"><i class="fab fa-linkedin" style="color: #0a66c2;"></i></a>
+            <a href="https://facebook.com/imrezaulkrm" target="_blank"><i class="fab fa-facebook" style="color: #1877f3;"></i></a>
+          </div>
+          <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d332.3435014676793!2d90.26248519283683!3d23.832271191942752!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3755eba93611e63b%3A0x2cb8c150cca47aba!2z4KaP4Kau4Kah4Ka_LiDgprDgp4fgppzgpr7gpongprIg4KaV4Ka-4Kaw4Ka_4Kau!5e0!3m2!1sbn!2sbd!4v1759206595417!5m2!1sbn!2sbd" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+        </div>
+      </div>
+
+      <!-- Contact Form -->
+      <div class="contact-form">
+        <div class="form-card">
+          <form action="https://formspree.io/f/xanjnjyb" method="POST">
+            <input type="text" name="name" placeholder="Full Name" required />
+            <input type="email" name="email" placeholder="Email Address" required />
+            <input type="text" name="subject" placeholder="Subject" required />
+            <textarea name="message" rows="5" placeholder="Message" required></textarea>
+            <button type="submit">Send Message</button>
+          </form>
+          <div id="popup"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer">
+      © 2025 Md Rezaul Karim. All rights reserved.
+    </div>
+  </section>
+  <script src="typing.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
