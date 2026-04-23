@@ -1,0 +1,835 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+  <title>A Private Universe</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Dancing+Script:wght@400;600&family=Playfair+Display:ital,wght@0,400;1,300&family=Poppins:wght@300;400&display=swap"
+    rel="stylesheet">
+  <style>
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --pink: #ff5fa2;
+      --lavender: #9b87f5;
+      --glow: #ffd1e8;
+      --deep-night: #140d20;
+    }
+
+    html,
+    body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background: var(--deep-night);
+      font-family: 'Poppins', sans-serif;
+      color: #fff;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+    }
+
+    #universe {
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+    }
+
+    #aurora {
+      position: absolute;
+      inset: 0;
+      background: var(--deep-night);
+    }
+
+    #aurora::before {
+      content: '';
+      position: absolute;
+      inset: -50%;
+      background: radial-gradient(ellipse 80% 60% at 30% 40%, rgba(155, 135, 245, 0.35) 0%, transparent 60%),
+        radial-gradient(ellipse 60% 80% at 70% 60%, rgba(255, 95, 162, 0.3) 0%, transparent 60%),
+        radial-gradient(ellipse 100% 50% at 50% 80%, rgba(42, 27, 61, 0.9) 0%, transparent 70%);
+      animation: auroraShift 12s ease-in-out infinite alternate;
+    }
+
+    @keyframes auroraShift {
+      0% {
+        transform: translate(0, 0) rotate(0deg);
+        opacity: 0.8
+      }
+
+      50% {
+        transform: translate(-3%, 2%) rotate(3deg);
+        opacity: 1
+      }
+
+      100% {
+        transform: translate(3%, -2%) rotate(-2deg);
+        opacity: 0.9
+      }
+    }
+
+    #stars {
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+      opacity: 0;
+      transition: opacity 2s ease;
+    }
+
+    .star {
+      position: absolute;
+      width: 2px;
+      height: 2px;
+      border-radius: 50%;
+      background: #fff;
+      animation: twinkle var(--dur, 3s) ease-in-out infinite;
+      animation-delay: var(--delay, 0s);
+      opacity: 0;
+    }
+
+    @keyframes twinkle {
+
+      0%,
+      100% {
+        opacity: 0;
+        transform: scale(0.5)
+      }
+
+      50% {
+        opacity: 0.8;
+        transform: scale(1.2)
+      }
+    }
+
+    #particle-canvas {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+    }
+
+    .scene {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .scene.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    /* S1 */
+    #scene-entry {
+      text-align: center;
+    }
+
+    .entry-whisper {
+      font-size: clamp(11px, 3vw, 13px);
+      letter-spacing: .35em;
+      text-transform: uppercase;
+      color: rgba(255, 213, 232, .5);
+      margin-bottom: 2.5rem;
+      animation: fadeUp 2s ease .5s both;
+    }
+
+    .entry-headline {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(26px, 7vw, 48px);
+      font-weight: 300;
+      font-style: italic;
+      line-height: 1.4;
+      color: rgba(255, 245, 251, .92);
+      margin-bottom: 3.5rem;
+      animation: fadeUp 2s ease 1s both;
+      text-shadow: 0 0 60px rgba(255, 95, 162, .4);
+    }
+
+    .enter-btn {
+      display: inline-block;
+      padding: 1rem 2.8rem;
+      border: 1px solid rgba(255, 95, 162, .5);
+      border-radius: 100px;
+      font-size: 13px;
+      font-weight: 300;
+      letter-spacing: .2em;
+      color: rgba(255, 213, 232, .9);
+      background: rgba(255, 95, 162, .08);
+      cursor: pointer;
+      animation: fadeUp 2s ease 1.6s both, pulse 3s ease-in-out 3.5s infinite;
+      backdrop-filter: blur(10px);
+      transition: background .3s, border-color .3s, transform .15s;
+    }
+
+    .enter-btn:hover {
+      background: rgba(255, 95, 162, .18);
+      border-color: rgba(255, 95, 162, .8);
+    }
+
+    .enter-btn:active {
+      transform: scale(.97);
+    }
+
+    @keyframes pulse {
+
+      0%,
+      100% {
+        box-shadow: 0 0 0 0 rgba(255, 95, 162, 0)
+      }
+
+      50% {
+        box-shadow: 0 0 0 12px rgba(255, 95, 162, .12)
+      }
+    }
+
+    @keyframes fadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(24px)
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0)
+      }
+    }
+
+    /* S2 */
+    #scene-name {
+      text-align: center;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .name-prelude {
+      font-size: clamp(10px, 2.5vw, 12px);
+      letter-spacing: .4em;
+      text-transform: uppercase;
+      color: rgba(255, 213, 232, .45);
+      opacity: 0;
+      transition: opacity 1.5s ease;
+    }
+
+    .big-name {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(32px, 9vw, 68px);
+      font-weight: 400;
+      font-style: italic;
+      color: transparent;
+      background: linear-gradient(135deg, #ffd1e8 0%, #ff5fa2 40%, #9b87f5 80%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      letter-spacing: .02em;
+      line-height: 1.2;
+      opacity: 0;
+      transform: scale(.92);
+      transition: opacity 1.5s ease, transform 1.5s ease;
+    }
+
+    .name-glow {
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse 60% 40% at 50% 50%, rgba(255, 95, 162, .2), transparent 70%);
+      opacity: 0;
+      transition: opacity 2s ease;
+      pointer-events: none;
+    }
+
+    /* S3 */
+    #scene-dimension {
+      text-align: center;
+    }
+
+    .dim-text {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      font-size: clamp(18px, 5vw, 30px);
+      font-weight: 300;
+      color: rgba(255, 245, 251, .75);
+      line-height: 1.9;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 2s ease, transform 2s ease;
+      max-width: 500px;
+      text-align: center;
+    }
+
+    /* S4 */
+    #scene-letter {
+      padding: 1.5rem 1rem;
+      overflow: hidden;
+    }
+
+    .glass-card {
+      background: rgba(255, 245, 251, .06);
+      backdrop-filter: blur(30px);
+      -webkit-backdrop-filter: blur(30px);
+      border: 1px solid rgba(255, 213, 232, .2);
+      border-radius: 24px;
+      padding: clamp(1.5rem, 5vw, 2.5rem);
+      max-width: 540px;
+      width: 100%;
+      max-height: 72vh;
+      overflow-y: auto;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(255, 95, 162, .3) transparent;
+      animation: floatCard 6s ease-in-out infinite;
+      box-shadow: 0 8px 60px rgba(155, 135, 245, .15), 0 0 0 1px rgba(255, 213, 232, .1) inset;
+      position: relative;
+    }
+
+    .glass-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse 70% 40% at 50% 0%, rgba(255, 213, 232, .08), transparent 60%);
+      border-radius: 24px;
+      pointer-events: none;
+    }
+
+    .glass-card::-webkit-scrollbar {
+      width: 3px;
+    }
+
+    .glass-card::-webkit-scrollbar-thumb {
+      background: rgba(255, 95, 162, .3);
+      border-radius: 3px;
+    }
+
+    @keyframes floatCard {
+
+      0%,
+      100% {
+        transform: translateY(0px)
+      }
+
+      50% {
+        transform: translateY(-6px)
+      }
+    }
+
+    .letter-dear {
+      font-family: 'Dancing Script', cursive;
+      font-size: clamp(20px, 5.5vw, 28px);
+      color: rgba(255, 213, 232, .9);
+      margin-bottom: 1.2rem;
+      font-weight: 600;
+    }
+
+    .letter-body {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(15px, 4.2vw, 19px);
+      font-weight: 300;
+      line-height: 1.95;
+      color: rgba(255, 245, 251, .82);
+      font-style: italic;
+    }
+
+    .letter-body p {
+      margin-bottom: 1.1em;
+    }
+
+    .letter-sig {
+      font-family: 'Dancing Script', cursive;
+      font-size: clamp(18px, 5vw, 24px);
+      color: rgba(255, 95, 162, .85);
+      margin-top: 1.5rem;
+      font-weight: 600;
+    }
+
+    .scroll-hint {
+      font-size: 11px;
+      letter-spacing: .2em;
+      color: rgba(255, 213, 232, .35);
+      text-align: center;
+      margin-top: 1rem;
+      text-transform: uppercase;
+      animation: blink 2s ease-in-out infinite;
+    }
+
+    @keyframes blink {
+
+      0%,
+      100% {
+        opacity: .35
+      }
+
+      50% {
+        opacity: .7
+      }
+    }
+
+    /* S5 */
+    #scene-heart {
+      text-align: center;
+      flex-direction: column;
+      gap: 2rem;
+    }
+
+    #heart-wrapper {
+      position: relative;
+      width: 120px;
+      height: 120px;
+      cursor: pointer;
+      filter: drop-shadow(0 0 30px rgba(255, 95, 162, .6));
+      animation: heartbeat 2.2s ease-in-out infinite;
+      transition: transform .15s;
+    }
+
+    #heart-wrapper:active {
+      transform: scale(.92);
+    }
+
+    @keyframes heartbeat {
+
+      0%,
+      100% {
+        transform: scale(1)
+      }
+
+      14% {
+        transform: scale(1.08)
+      }
+
+      28% {
+        transform: scale(1)
+      }
+
+      42% {
+        transform: scale(1.04)
+      }
+
+      70% {
+        transform: scale(1)
+      }
+    }
+
+    #heart-svg {
+      width: 100%;
+      height: 100%;
+    }
+
+    .heart-label {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      font-size: clamp(16px, 4.5vw, 22px);
+      color: rgba(255, 245, 251, .7);
+      font-weight: 300;
+    }
+
+    .heart-tapped-text {
+      font-family: 'Dancing Script', cursive;
+      font-size: clamp(20px, 6vw, 30px);
+      color: rgba(255, 213, 232, .95);
+      opacity: 0;
+      transform: scale(.8);
+      transition: opacity 1s ease, transform 1s ease;
+      font-weight: 600;
+    }
+
+    .heart-tapped-text.show {
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    /* S6 */
+    #scene-affirmations {
+      overflow: hidden;
+    }
+
+    .affirmation-field {
+      position: relative;
+      width: 100%;
+      height: 100%;
+    }
+
+    .affirmation {
+      position: absolute;
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      font-size: clamp(16px, 5vw, 26px);
+      font-weight: 300;
+      color: rgba(255, 245, 251, .85);
+      text-align: center;
+      max-width: 280px;
+      line-height: 1.5;
+      opacity: 0;
+      pointer-events: none;
+      text-shadow: 0 0 40px rgba(255, 95, 162, .5);
+    }
+
+    /* TOUCH MESSAGES */
+    .touch-msg {
+      position: fixed;
+      pointer-events: none;
+      font-family: 'Dancing Script', cursive;
+      font-weight: 600;
+      font-size: clamp(15px, 4.5vw, 22px);
+      color: rgba(255, 213, 232, .97);
+      text-shadow: 0 0 20px rgba(255, 95, 162, .9), 0 0 50px rgba(155, 135, 245, .6);
+      white-space: nowrap;
+      z-index: 999;
+      transform: translate(-50%, -100%);
+      opacity: 0;
+      transition: none;
+    }
+
+    /* MUSIC BTN */
+    #music-btn {
+      position: fixed;
+      top: 1.2rem;
+      right: 1.2rem;
+      z-index: 200;
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      background: rgba(255, 95, 162, .12);
+      border: 1px solid rgba(255, 213, 232, .25);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      backdrop-filter: blur(10px);
+      opacity: 0;
+      transition: opacity 1.2s ease, background .3s, transform .15s;
+    }
+
+    #music-btn.visible {
+      opacity: 1;
+    }
+
+    #music-btn:hover {
+      background: rgba(255, 95, 162, .25);
+    }
+
+    #music-btn:active {
+      transform: scale(.93);
+    }
+
+    /* STAY BTN */
+    .stay-btn {
+      position: absolute;
+      bottom: 2.5rem;
+      left: 50%;
+      transform: translateX(-50%);
+      padding: .85rem 2.5rem;
+      border: 1px solid rgba(255, 213, 232, .3);
+      border-radius: 100px;
+      font-size: 12px;
+      letter-spacing: .25em;
+      color: rgba(255, 213, 232, .75);
+      background: rgba(255, 95, 162, .07);
+      cursor: pointer;
+      text-transform: uppercase;
+      transition: background .3s, border-color .3s, transform .15s;
+      white-space: nowrap;
+    }
+
+    .stay-btn:hover {
+      background: rgba(255, 95, 162, .15);
+      border-color: rgba(255, 213, 232, .6);
+    }
+
+    .stay-btn:active {
+      transform: translateX(-50%) scale(.97);
+    }
+  </style>
+</head>
+
+<body>
+  <div id="universe">
+    <div id="aurora"></div>
+    <div id="stars"></div>
+    <canvas id="particle-canvas"></canvas>
+    <button id="music-btn">🎵</button>
+
+    <!-- S1 -->
+    <div class="scene active" id="scene-entry">
+      <p class="entry-whisper">For you, and only you</p>
+      <h1 class="entry-headline">A Quiet Place Was Built<br>For Someone Special…</h1>
+      <button class="enter-btn" id="enter-btn">Step Inside &nbsp;💖</button>
+    </div>
+
+    <!-- S2 -->
+    <div class="scene" id="scene-name">
+      <div class="name-glow" id="name-glow"></div>
+      <p class="name-prelude" id="name-prelude">You are the reason this exists</p>
+      <h2 class="big-name" id="big-name">Sandia Ahmed Sinthi</h2>
+    </div>
+
+    <!-- S3 -->
+    <div class="scene" id="scene-dimension">
+      <p class="dim-text" id="dim-text">You are not inside a website anymore…<br>you are inside someone's feelings.</p>
+    </div>
+
+    <!-- S4 -->
+    <div class="scene" id="scene-letter" style="justify-content:center;align-items:center;flex-direction:column;">
+      <div class="glass-card" id="letter-card">
+        <p class="letter-dear">Dear Sandia Ahmed Sinthi,</p>
+        <div class="letter-body">
+          <p>If you are reading this… it means you stepped into a space that was made with care, attention, and emotion.
+          </p>
+          <p>This is not a design. It is a feeling — structured into visuals.</p>
+          <p>Every pixel here carries patience. Every motion carries intention.</p>
+          <p>You are not just important… you are the reason this space exists in the first place.</p>
+          <p>Some things in life are built quickly, without thought. This is not one of them. This was built slowly —
+            the way something is built when the builder keeps stopping just to think of you.</p>
+          <p>Stay here slowly. Do not rush. Let this moment exist for you.</p>
+          <p>Because you deserve moments like this — quiet, warm, and made entirely for you.</p>
+        </div>
+        <p class="letter-sig">— with all sincerity 💖</p>
+      </div>
+      <p class="scroll-hint">scroll inside the letter ↑↓</p>
+      <button class="enter-btn" id="letter-continue"
+        style="margin-top:1.2rem;opacity:0;pointer-events:none;transition:opacity 1.5s ease;">Continue →</button>
+    </div>
+
+    <!-- S5 -->
+    <div class="scene" id="scene-heart">
+      <div id="heart-wrapper">
+        <svg id="heart-svg" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="hg" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#ff8dc7" />
+              <stop offset="50%" stop-color="#ff5fa2" />
+              <stop offset="100%" stop-color="#9b87f5" />
+            </linearGradient>
+          </defs>
+          <path fill="url(#hg)"
+            d="M50 85 C50 85 12 58 12 35 C12 23 21 14 33 14 C40 14 46 18 50 24 C54 18 60 14 67 14 C79 14 88 23 88 35 C88 58 50 85 50 85Z" />
+        </svg>
+      </div>
+      <p class="heart-label">tap the heart…</p>
+      <p class="heart-tapped-text" id="heart-tapped">You are deeply appreciated 💖</p>
+    </div>
+
+    <!-- S6 -->
+    <div class="scene" id="scene-affirmations">
+      <div class="affirmation-field" id="affirmation-field"></div>
+      <button class="stay-btn" id="stay-btn">Stay a little longer ♾</button>
+    </div>
+  </div>
+
+  <script>
+    // ── CANVAS ──────────────────────────────────────────────────
+    const canvas = document.getElementById('particle-canvas');
+    const ctx = canvas.getContext('2d');
+    let W, H, particles = [], timers = [];
+    let currentScene = 1;
+    let bgAudio = null, musicOn = false;
+
+    function resize() { W = canvas.width = window.innerWidth; H = canvas.height = window.innerHeight; }
+    resize(); window.addEventListener('resize', resize);
+
+    // ── STARS ───────────────────────────────────────────────────
+    const starsEl = document.getElementById('stars');
+    for (let i = 0; i < 130; i++) {
+      const s = document.createElement('div'); s.className = 'star';
+      s.style.left = Math.random() * 100 + '%'; s.style.top = Math.random() * 100 + '%';
+      s.style.setProperty('--dur', (2 + Math.random() * 4) + 's');
+      s.style.setProperty('--delay', (Math.random() * 5) + 's');
+      s.style.width = s.style.height = (Math.random() < .3 ? 3 : 2) + 'px';
+      starsEl.appendChild(s);
+    }
+
+    // ── PARTICLE CLASS ───────────────────────────────────────────
+    class Particle {
+      constructor(x, y, type = 'dust') {
+        this.x = x ?? Math.random() * W; this.y = y ?? Math.random() * H; this.type = type; this.reset();
+        if (x === undefined) this.life = Math.random();
+      }
+      reset() {
+        this.size = this.type === 'heart' ? (5 + Math.random() * 9) : (1 + Math.random() * 2.5);
+        this.vx = (Math.random() - .5) * (this.type === 'heart' ? 4.5 : .8);
+        this.vy = this.type === 'heart' ? -(1.5 + Math.random() * 5) : (-.3 - Math.random() * .5);
+        this.life = 1; this.decay = this.type === 'heart' ? (.012 + Math.random() * .018) : (.005 + Math.random() * .008);
+        const hc = ['#ff5fa2', '#ffd1e8', '#9b87f5', '#ff8dc7', '#ffb3d9', '#e8a0ff'];
+        this.color = this.type === 'heart' ? hc[Math.floor(Math.random() * hc.length)] : `hsla(${310 + Math.random() * 60},80%,80%,1)`;
+      }
+      update() { this.x += this.vx; this.vy += .04; this.y += this.vy; this.life -= this.decay; this.vx *= .99; }
+      draw() {
+        ctx.save(); ctx.globalAlpha = Math.max(0, this.life);
+        if (this.type === 'heart') { dh(ctx, this.x, this.y, this.size, this.color); }
+        else { ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2); ctx.fillStyle = this.color; ctx.shadowBlur = 8; ctx.shadowColor = this.color; ctx.fill(); }
+        ctx.restore();
+      }
+    }
+    function dh(c, x, y, r, col) {
+      c.save(); c.translate(x, y); c.scale(r / 8, r / 8); c.beginPath(); c.moveTo(0, -2);
+      c.bezierCurveTo(-8, -10, -16, 2, 0, 10); c.bezierCurveTo(16, 2, 8, -10, 0, -2);
+      c.fillStyle = col; c.shadowBlur = 16; c.shadowColor = col; c.fill(); c.restore();
+    }
+
+    let ambient = [];
+    for (let i = 0; i < 45; i++) ambient.push(new Particle());
+
+    function burst(cx, cy, n = 30) {
+      for (let i = 0; i < n; i++) particles.push(new Particle(cx + (Math.random() - .5) * 90, cy + (Math.random() - .5) * 70, 'heart'));
+    }
+
+    (function loop() {
+      ctx.clearRect(0, 0, W, H);
+      [...ambient, ...particles].forEach(p => { p.update(); p.draw(); });
+      ambient.forEach(p => { if (p.life <= 0) { p.x = Math.random() * W; p.y = H + 20; p.reset(); p.life = .01; } });
+      for (let i = particles.length - 1; i >= 0; i--) if (particles[i].life <= 0) particles.splice(i, 1);
+      requestAnimationFrame(loop);
+    })();
+
+    // ── SCENES ──────────────────────────────────────────────────
+    const SC = { 1: document.getElementById('scene-entry'), 2: document.getElementById('scene-name'), 3: document.getElementById('scene-dimension'), 4: document.getElementById('scene-letter'), 5: document.getElementById('scene-heart'), 6: document.getElementById('scene-affirmations') };
+
+    function goTo(n) {
+      const f = SC[currentScene], t = SC[n]; if (!t) return;
+      f.style.transition = 'opacity 1.2s ease'; f.style.opacity = '0'; f.style.pointerEvents = 'none';
+      setTimeout(() => { f.classList.remove('active'); f.style.cssText = ''; t.classList.add('active'); currentScene = n; onEnter(n); }, 1200);
+    }
+    function onEnter(n) {
+      if (n === 2) s2(); if (n === 3) s3(); if (n === 4) s4(); if (n === 5) s5(); if (n === 6) s6();
+    }
+
+    // ── S1 ──────────────────────────────────────────────────────
+    document.getElementById('enter-btn').addEventListener('click', () => { burst(W / 2, H / 2, 25); goTo(2); });
+
+    // ── S2 ──────────────────────────────────────────────────────
+    function s2() {
+      starsEl.style.opacity = '.5';
+      setTimeout(() => document.getElementById('name-prelude').style.opacity = '1', 600);
+      setTimeout(() => { const n = document.getElementById('big-name'); n.style.opacity = '1'; n.style.transform = 'scale(1)'; document.getElementById('name-glow').style.opacity = '1'; }, 1400);
+      setTimeout(() => goTo(3), 4500);
+    }
+
+    // ── S3 ──────────────────────────────────────────────────────
+    function s3() {
+      starsEl.style.opacity = '1';
+      const t = document.getElementById('dim-text');
+      setTimeout(() => { t.style.opacity = '1'; t.style.transform = 'translateY(0)'; }, 500);
+      setTimeout(() => goTo(4), 4000);
+    }
+
+    // ── S4 ──────────────────────────────────────────────────────
+    function s4() {
+      const btn = document.getElementById('letter-continue');
+      const card = document.getElementById('letter-card');
+      const show = () => { btn.style.opacity = '1'; btn.style.pointerEvents = 'auto'; };
+      card.addEventListener('scroll', function ck() { if (card.scrollHeight - card.scrollTop < card.clientHeight + 120) { show(); card.removeEventListener('scroll', ck); } }, { passive: true });
+      setTimeout(show, 7500);
+      btn.addEventListener('click', () => { startAudio(); goTo(5); }, { once: true });
+    }
+
+    // ── S5 ──────────────────────────────────────────────────────
+    function s5() {
+      const wr = document.getElementById('heart-wrapper');
+      const tp = document.getElementById('heart-tapped');
+      let done = false;
+      wr.addEventListener('click', () => {
+        if (done) return; done = true;
+        const r = wr.getBoundingClientRect();
+        burst(r.left + r.width / 2, r.top + r.height / 2, 75);
+        tp.classList.add('show');
+        wr.style.animation = 'none'; wr.style.transform = 'scale(1.5)'; wr.style.filter = 'drop-shadow(0 0 80px rgba(255,95,162,1))';
+        setTimeout(() => { wr.style.transform = 'scale(1)'; wr.style.animation = 'heartbeat 2.2s ease-in-out infinite'; }, 900);
+        setTimeout(() => goTo(6), 3200);
+      });
+    }
+
+    // ── S6: AFFIRMATIONS + TOUCH BURST ──────────────────────────
+    const AFF = ['I love you', 'You are my everything', 'Always and forever', 'A thousand years…', 'My heart chose you', 'You are my peace', 'Forever yours', 'You are my world', 'Endlessly, you', 'You are safe here', 'You matter deeply', 'Someone thinks of you, always', 'You are valued more than words', 'You are extraordinary', 'You are loved — quietly and completely'];
+    const TMSG = ['I love you 💖', 'Forever 🌸', 'You are mine ✨', 'Always 💫', 'My heart 💕', 'Endlessly 🌙', 'A thousand years 🌹', 'You & me 💝', 'My everything 🦋', 'Stay 💗', 'I choose you 🌷', 'Every single day 💞'];
+
+    function s6() {
+      const field = document.getElementById('affirmation-field');
+      let ai = 0;
+      function spawnAff() {
+        const el = document.createElement('div'); el.className = 'affirmation';
+        el.style.cssText = `left:${8 + Math.random() * 70}%;top:${8 + Math.random() * 72}%;transform:translate(-50%,-50%);font-size:${14 + Math.random() * 11}px;`;
+        const cols = ['rgba(255,245,251,.85)', 'rgba(255,213,232,.85)', 'rgba(155,135,245,.85)', 'rgba(255,95,162,.8)'];
+        el.style.color = cols[Math.floor(Math.random() * cols.length)];
+        el.textContent = AFF[ai++ % AFF.length]; field.appendChild(el);
+        requestAnimationFrame(() => { el.style.transition = 'opacity 2s ease,transform 2s ease'; el.style.opacity = '1'; el.style.transform = 'translate(-50%,-60%)'; });
+        setTimeout(() => { el.style.opacity = '0'; setTimeout(() => el.remove(), 2000); }, 3800);
+        timers.push(setTimeout(spawnAff, 1700 + Math.random() * 1300));
+      }
+      spawnAff();
+
+      // TOUCH → hearts + floating message
+      let mi = 0;
+      function onTouch(e) {
+        if (e.type === 'touchstart') e.preventDefault();
+        const pts = e.touches ? [...e.touches] : [{ clientX: e.clientX, clientY: e.clientY }];
+        pts.forEach(pt => {
+          burst(pt.clientX, pt.clientY, 20);
+          showMsg(pt.clientX, pt.clientY, TMSG[mi++ % TMSG.length]);
+        });
+      }
+      const s6el = document.getElementById('scene-affirmations');
+      s6el.addEventListener('touchstart', onTouch, { passive: false });
+      s6el.addEventListener('click', onTouch);
+    }
+
+    function showMsg(x, y, txt) {
+      const el = document.createElement('div'); el.className = 'touch-msg';
+      el.textContent = txt;
+      el.style.left = x + 'px'; el.style.top = (y - 16) + 'px';
+      document.body.appendChild(el);
+      const frames = [
+        { opacity: '0', transform: `translate(-50%,-100%) scale(0.6)` },
+        { opacity: '1', transform: `translate(-50%,-130%) scale(1)`, offset: .25 },
+        { opacity: '1', transform: `translate(-50%,-160%) scale(1)`, offset: .6 },
+        { opacity: '0', transform: `translate(-50%,-200%) scale(0.85)` }
+      ];
+      const anim = el.animate(frames, { duration: 1800, easing: 'cubic-bezier(0.175,0.885,0.32,1.275)', fill: 'forwards' });
+      anim.onfinish = () => el.remove();
+    }
+
+    document.getElementById('stay-btn').addEventListener('click', () => {
+      timers.forEach(clearTimeout); timers.length = 0; particles.length = 0;
+      const f = document.getElementById('affirmation-field'); if (f) f.innerHTML = '';
+      goTo(4);
+    });
+
+
+    const AUDIO_FILE = 'audio/music.mp3';
+
+    function startAudio() {
+      if (bgAudio) return;
+      bgAudio = new Audio(AUDIO_FILE);
+      bgAudio.loop = true;
+      bgAudio.volume = 0.55;
+      bgAudio.play().then(() => {
+        musicOn = true;
+        document.getElementById('music-btn').classList.add('visible');
+      }).catch(() => {
+        // autoplay blocked — show button anyway so user can tap
+        document.getElementById('music-btn').classList.add('visible');
+      });
+    }
+
+    document.getElementById('music-btn').addEventListener('click', () => {
+      if (!bgAudio) { startAudio(); return; }
+      if (musicOn) {
+        bgAudio.pause(); musicOn = false;
+        document.getElementById('music-btn').textContent = '🔇';
+      } else {
+        bgAudio.play(); musicOn = true;
+        document.getElementById('music-btn').textContent = '🎵';
+      }
+    });
+  </script>
+</body>
+
+</html>
