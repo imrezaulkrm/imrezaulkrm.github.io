@@ -1,0 +1,2091 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rezaul & Sinthi — Our Universe</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=Cinzel:wght@400;600;900&family=EB+Garamond:ital,wght@0,400;1,400&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+    <style>
+        :root {
+            --black: #0a0e27;
+            --dark-blue: #0f1535;
+            --deep: #1a1f3a;
+            --primary-rose: #c4516b;
+            --secondary-rose: #d96b88;
+            --accent-rose: #e8899d;
+            --light-rose: #f0b5c9;
+            --cream: #f5ede8;
+            --silver: #b8b0b8;
+            --white: #f0f0f0;
+            --gold: #c9a86f;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background: var(--black);
+            color: var(--white);
+            font-family: 'EB Garamond', serif;
+            overflow-x: hidden;
+            cursor: none;
+        }
+
+        @media (hover: none) and (pointer: coarse) {
+
+            #cursor,
+            #cursor-dot {
+                display: none !important;
+            }
+
+            body {
+                cursor: auto;
+            }
+        }
+
+        #cursor {
+            position: fixed;
+            width: 24px;
+            height: 24px;
+            border: 2px solid var(--primary-rose);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 99999;
+            transition: transform 0.15s ease;
+            box-shadow: 0 0 12px rgba(196, 81, 107, 0.6);
+        }
+
+        #cursor-dot {
+            position: fixed;
+            width: 4px;
+            height: 4px;
+            background: var(--primary-rose);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 99999;
+            box-shadow: 0 0 6px var(--primary-rose);
+        }
+
+        .music-toggle {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--primary-rose), var(--secondary-rose));
+            border: none;
+            border-radius: 50%;
+            color: var(--white);
+            font-size: 1.3rem;
+            cursor: pointer;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 25px rgba(196, 81, 107, 0.5);
+        }
+
+        .music-toggle:hover {
+            transform: scale(1.15);
+            box-shadow: 0 12px 35px rgba(196, 81, 107, 0.7);
+        }
+
+        .music-toggle.playing {
+            animation: pulse-music 1.5s ease-in-out infinite;
+        }
+
+        @keyframes pulse-music {
+
+            0%,
+            100% {
+                box-shadow: 0 8px 25px rgba(196, 81, 107, 0.5);
+            }
+
+            50% {
+                box-shadow: 0 8px 40px rgba(196, 81, 107, 0.8);
+            }
+        }
+
+        #portal {
+            position: fixed;
+            inset: 0;
+            z-index: 9999;
+            background: var(--black);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 1.8s ease, visibility 1.8s ease;
+        }
+
+        #portal.gone {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+
+        #portal-canvas {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        .portal-content {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2.5rem;
+            padding: 2rem;
+        }
+
+        .portal-subtitle {
+            font-family: 'Cormorant Garamond', serif;
+            font-style: italic;
+            font-size: clamp(0.85rem, 2.5vw, 1.1rem);
+            color: var(--secondary-rose);
+            letter-spacing: 0.5em;
+            text-transform: uppercase;
+            opacity: 0;
+            animation: fadeUp 1s ease 0.5s forwards;
+        }
+
+        .portal-title {
+            font-family: 'Cinzel', serif;
+            font-size: clamp(2.8rem, 8vw, 5.5rem);
+            font-weight: 900;
+            color: var(--white);
+            letter-spacing: 0.1em;
+            line-height: 1.1;
+            opacity: 0;
+            animation: fadeUp 1s ease 1s forwards;
+            text-shadow: 0 0 30px rgba(196, 81, 107, 0.3);
+        }
+
+        .portal-names {
+            font-family: 'Cormorant Garamond', serif;
+            font-style: italic;
+            font-size: clamp(1.3rem, 4vw, 2.3rem);
+            color: var(--light-rose);
+            opacity: 0;
+            animation: fadeUp 1s ease 1.5s forwards;
+            letter-spacing: 0.08em;
+        }
+
+        .portal-divider {
+            width: 120px;
+            height: 1.5px;
+            background: linear-gradient(90deg, transparent, var(--secondary-rose), transparent);
+            opacity: 0;
+            animation: fadeUp 1s ease 1.8s forwards;
+        }
+
+        .enter-btn {
+            position: relative;
+            padding: clamp(1.1rem, 2.5vw, 1.4rem) clamp(2.8rem, 6vw, 4rem);
+            border: 2px solid var(--secondary-rose);
+            background: transparent;
+            color: var(--light-rose);
+            font-family: 'Cinzel', serif;
+            font-size: clamp(0.75rem, 2.2vw, 0.95rem);
+            letter-spacing: 0.5em;
+            text-transform: uppercase;
+            cursor: pointer;
+            overflow: hidden;
+            opacity: 0;
+            animation: fadeUp 1s ease 2.2s forwards;
+            transition: all 0.4s ease;
+        }
+
+        .enter-btn::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, var(--primary-rose), var(--secondary-rose));
+            transform: translateX(-100%);
+            transition: transform 0.5s ease;
+        }
+
+        .enter-btn:hover::before {
+            transform: translateX(0);
+        }
+
+        .enter-btn:hover {
+            color: var(--white);
+            box-shadow: 0 10px 30px rgba(196, 81, 107, 0.4);
+            transform: translateY(-3px);
+        }
+
+        .enter-btn span {
+            position: relative;
+            z-index: 1;
+        }
+
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        #main-site {
+            opacity: 0;
+            transition: opacity 1.5s ease 0.5s;
+        }
+
+        #main-site.visible {
+            opacity: 1;
+        }
+
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            padding: clamp(1.2rem, 2.5vw, 1.8rem) clamp(2rem, 3.5vw, 3.5rem);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: linear-gradient(to bottom, rgba(10, 14, 39, 0.98), transparent);
+            backdrop-filter: blur(8px);
+            border-bottom: 1px solid rgba(196, 81, 107, 0.15);
+        }
+
+        .nav-logo {
+            font-family: 'Cinzel', serif;
+            font-size: clamp(0.8rem, 2.2vw, 1rem);
+            letter-spacing: 0.4em;
+            color: var(--secondary-rose);
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .nav-logo:hover {
+            text-shadow: 0 0 15px rgba(217, 107, 136, 0.5);
+        }
+
+        .nav-links {
+            display: none;
+            gap: 3rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 0.9rem;
+            letter-spacing: 0.25em;
+            text-transform: uppercase;
+            color: var(--silver);
+            text-decoration: none;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 0;
+            height: 1px;
+            background: var(--secondary-rose);
+            transition: width 0.3s;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .nav-links a:hover {
+            color: var(--secondary-rose);
+        }
+
+        @media (min-width: 900px) {
+            .nav-links {
+                display: flex;
+            }
+        }
+
+        #hero {
+            min-height: 100vh;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            padding-top: 3rem;
+            background: linear-gradient(to bottom, rgba(10, 14, 39, 0.9), rgba(26, 31, 58, 0.8));
+        }
+
+        #hero-canvas {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            padding: clamp(1.5rem, 3.5vw, 2.5rem);
+        }
+
+        .hero-label {
+            font-family: 'Cormorant Garamond', serif;
+            font-style: italic;
+            font-size: clamp(0.8rem, 2.2vw, 1.1rem);
+            color: var(--secondary-rose);
+            letter-spacing: 0.6em;
+            text-transform: uppercase;
+            margin-bottom: clamp(1.8rem, 3.5vw, 2.5rem);
+            opacity: 0;
+            animation: heroFade 1.2s ease 0.3s forwards;
+        }
+
+        .hero-main {
+            font-family: 'Cinzel', serif;
+            font-size: clamp(2.8rem, 10vw, 9rem);
+            font-weight: 900;
+            line-height: 0.9;
+            margin-bottom: clamp(1.8rem, 3.5vw, 2.5rem);
+            opacity: 0;
+            animation: heroFade 1.2s ease 0.7s forwards;
+            text-shadow: 0 0 40px rgba(196, 81, 107, 0.2);
+            color: var(--white);
+        }
+
+        .hero-names {
+            font-family: 'Cormorant Garamond', serif;
+            font-style: italic;
+            font-size: clamp(1.3rem, 4.5vw, 3.5rem);
+            color: var(--light-rose);
+            margin-bottom: clamp(2.5rem, 4.5vw, 3.5rem);
+            opacity: 0;
+            animation: heroFade 1.2s ease 1.2s forwards;
+            letter-spacing: 0.05em;
+        }
+
+        .hero-names .amp {
+            color: var(--secondary-rose);
+            font-size: 0.85em;
+            margin: 0 0.3em;
+        }
+
+        .hero-tagline {
+            font-family: 'EB Garamond', serif;
+            font-size: clamp(1rem, 2.8vw, 1.2rem);
+            color: var(--silver);
+            font-style: italic;
+            max-width: 600px;
+            margin: 0 auto clamp(2.5rem, 4.5vw, 3.5rem);
+            line-height: 1.9;
+            opacity: 0;
+            animation: heroFade 1.2s ease 1.6s forwards;
+        }
+
+        @keyframes heroFade {
+            from {
+                opacity: 0;
+                transform: translateY(35px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        section {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .section-label {
+            font-family: 'Cormorant Garamond', serif;
+            font-style: italic;
+            font-size: clamp(0.75rem, 2.2vw, 0.9rem);
+            letter-spacing: 0.6em;
+            text-transform: uppercase;
+            color: var(--secondary-rose);
+            margin-bottom: clamp(1.2rem, 2.5vw, 1.8rem);
+        }
+
+        .section-title {
+            font-family: 'Cinzel', serif;
+            font-size: clamp(2.3rem, 6.5vw, 5rem);
+            font-weight: 900;
+            line-height: 1.1;
+            margin-bottom: clamp(1.8rem, 3.5vw, 2.5rem);
+            color: var(--white);
+            text-shadow: 0 0 30px rgba(196, 81, 107, 0.15);
+        }
+
+        /* ==================== MAP SECTION ==================== */
+        #map-section {
+            min-height: 100vh;
+            background: linear-gradient(135deg, var(--dark-blue), var(--deep));
+            padding: clamp(5rem, 9vw, 9rem) clamp(2rem, 3.5vw, 2.5rem);
+        }
+
+        .map-intro {
+            text-align: center;
+            margin-bottom: clamp(3.5rem, 7vw, 6rem);
+            max-width: 750px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .map-intro p {
+            font-size: clamp(1.05rem, 2.8vw, 1.3rem);
+            line-height: 1.95;
+            color: var(--silver);
+            font-style: italic;
+            font-weight: 300;
+        }
+
+        .map-wrapper {
+            max-width: 1100px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .map-frame {
+            border: 2px solid var(--primary-rose);
+            position: relative;
+            box-shadow: 0 0 80px rgba(196, 81, 107, 0.3), inset 0 0 60px rgba(0, 0, 0, 0.8);
+            background: var(--dark-blue);
+            transition: all 0.5s ease;
+        }
+
+        .map-frame:hover {
+            box-shadow: 0 0 120px rgba(196, 81, 107, 0.4), inset 0 0 60px rgba(0, 0, 0, 0.8);
+            border-color: var(--secondary-rose);
+            transform: translateY(-8px);
+        }
+
+        .map-frame::before,
+        .map-frame::after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            border: 1.5px solid var(--primary-rose);
+            z-index: 10;
+        }
+
+        .map-frame::before {
+            top: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .map-frame::after {
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        #romantic-map {
+            height: clamp(320px, 55vw, 550px);
+            width: 100%;
+            cursor: grab;
+        }
+
+        #romantic-map:active {
+            cursor: grabbing;
+        }
+
+        .distance-card {
+            background: linear-gradient(135deg, rgba(26, 31, 58, 0.7), rgba(15, 21, 53, 0.6));
+            border: 2px solid var(--secondary-rose);
+            padding: clamp(3rem, 5vw, 4.5rem);
+            text-align: center;
+            margin: clamp(4.5rem, 7vw, 6rem) auto;
+            max-width: 800px;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.5s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .distance-card:hover {
+            border-color: var(--accent-rose);
+            transform: translateY(-12px);
+            box-shadow: 0 25px 70px rgba(196, 81, 107, 0.25);
+        }
+
+        .distance-card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(ellipse at center, rgba(196, 81, 107, 0.08), transparent 70%);
+        }
+
+        .distance-number {
+            font-family: 'Cinzel', serif;
+            font-size: clamp(3.5rem, 11vw, 9rem);
+            font-weight: 900;
+            color: var(--secondary-rose);
+            line-height: 1;
+            margin-bottom: 0.5rem;
+            position: relative;
+        }
+
+        .distance-number.counted {
+            animation: kmPop 0.5s ease;
+        }
+
+        @keyframes kmPop {
+            0% {
+                transform: scale(1);
+            }
+
+            40% {
+                transform: scale(1.08);
+            }
+
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        .distance-unit {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(1.3rem, 3.2vw, 1.7rem);
+            color: var(--primary-rose);
+            letter-spacing: 0.35em;
+            text-transform: uppercase;
+            margin-bottom: clamp(1.8rem, 3vw, 2.5rem);
+        }
+
+        .distance-msg {
+            font-family: 'EB Garamond', serif;
+            font-style: italic;
+            font-size: clamp(1rem, 2.5vw, 1.2rem);
+            color: var(--silver);
+            line-height: 2;
+            max-width: 550px;
+            margin: 0 auto;
+            position: relative;
+            font-weight: 300;
+            min-height: 2.4em;
+            transition: opacity 0.4s ease;
+        }
+
+        .location-cards {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: clamp(1.8rem, 3.5vw, 2.5rem);
+            align-items: center;
+            max-width: 950px;
+            margin: clamp(4rem, 7vw, 6rem) auto;
+        }
+
+        @media (min-width: 768px) {
+            .location-cards {
+                grid-template-columns: 1fr auto 1fr;
+            }
+        }
+
+        .loc-card {
+            background: linear-gradient(135deg, rgba(26, 31, 58, 0.6), rgba(15, 21, 53, 0.5));
+            border: 1.5px solid var(--primary-rose);
+            padding: clamp(2rem, 3.5vw, 3.5rem);
+            text-align: center;
+            position: relative;
+            transition: all 0.5s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .loc-card:hover {
+            border-color: var(--secondary-rose);
+            transform: translateY(-8px);
+            background: linear-gradient(135deg, rgba(26, 31, 58, 0.8), rgba(15, 21, 53, 0.7));
+            box-shadow: 0 20px 50px rgba(196, 81, 107, 0.2);
+        }
+
+        .loc-pic-container {
+            width: 120px;
+            height: 120px;
+            margin: 0 auto clamp(1rem, 2vw, 1.5rem);
+            border-radius: 50%;
+            overflow: hidden;
+            border: 2px solid var(--secondary-rose);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 25px rgba(196, 81, 107, 0.3), inset 0 0 20px rgba(0, 0, 0, 0.5);
+            transition: all 0.5s ease;
+            position: relative;
+        }
+
+        .loc-card:hover .loc-pic-container {
+            transform: scale(1.08);
+            box-shadow: 0 0 40px rgba(196, 81, 107, 0.5), inset 0 0 20px rgba(0, 0, 0, 0.5);
+            border-color: var(--accent-rose);
+        }
+
+        .loc-pic {
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+
+        .loc-pic-fallback {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Cinzel', serif;
+            font-size: 2.2rem;
+            font-weight: 900;
+            color: var(--secondary-rose);
+            text-shadow: 0 0 20px rgba(196, 81, 107, 0.5);
+        }
+
+        .loc-pic-fallback.rezaul-fb {
+            background: linear-gradient(135deg, rgba(196, 81, 107, 0.25), rgba(15, 21, 53, 0.6));
+        }
+
+        .loc-pic-fallback.sinthi-fb {
+            background: linear-gradient(135deg, rgba(232, 137, 157, 0.25), rgba(15, 21, 53, 0.6));
+        }
+
+        .loc-card .loc-name {
+            font-family: 'Cinzel', serif;
+            font-size: clamp(0.95rem, 2.2vw, 1.2rem);
+            color: var(--secondary-rose);
+            margin-bottom: 1.2rem;
+            letter-spacing: 0.12em;
+        }
+
+        .loc-card .loc-place {
+            font-family: 'Cormorant Garamond', serif;
+            font-style: italic;
+            font-size: clamp(0.85rem, 2vw, 1rem);
+            color: var(--silver);
+            letter-spacing: 0.15em;
+            min-height: 1.4em;
+        }
+
+        .loc-connector {
+            display: none;
+            text-align: center;
+            color: var(--secondary-rose);
+            font-size: 1.2rem;
+        }
+
+        @media (min-width: 768px) {
+            .loc-connector {
+                display: block;
+            }
+        }
+
+        .loc-connector .heart-line {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .loc-connector .dot {
+            width: 6px;
+            height: 6px;
+            background: var(--secondary-rose);
+            border-radius: 50%;
+            animation: dotPulse 1.5s ease-in-out infinite;
+            box-shadow: 0 0 8px var(--secondary-rose);
+        }
+
+        .loc-connector .dot:nth-child(2) {
+            animation-delay: 0.3s;
+        }
+
+        .loc-connector .dot:nth-child(3) {
+            animation-delay: 0.6s;
+        }
+
+        .loc-connector .heart-symbol {
+            font-size: 1.8rem;
+            animation: heartBeat 1.2s ease-in-out infinite;
+            text-shadow: 0 0 15px rgba(196, 81, 107, 0.8);
+        }
+
+        @keyframes dotPulse {
+
+            0%,
+            100% {
+                opacity: 0.3;
+                transform: scale(1);
+            }
+
+            50% {
+                opacity: 1;
+                transform: scale(1.5);
+            }
+        }
+
+        @keyframes heartBeat {
+
+            0%,
+            100% {
+                transform: scale(1);
+            }
+
+            25% {
+                transform: scale(1.15);
+            }
+
+            50% {
+                transform: scale(1);
+            }
+        }
+
+        /* Map marker pulse ring */
+        @keyframes markerPulse {
+            0% {
+                transform: scale(1);
+                opacity: 0.5;
+            }
+
+            100% {
+                transform: scale(1.8);
+                opacity: 0;
+            }
+        }
+
+        /* ==================== JOURNEY ==================== */
+        #journey {
+            min-height: 100vh;
+            background: linear-gradient(180deg, var(--black), var(--deep));
+            padding: clamp(5rem, 9vw, 9rem) clamp(2rem, 3.5vw, 2.5rem);
+            position: relative;
+        }
+
+        .journey-bg {
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(ellipse at 20% 50%, rgba(196, 81, 107, 0.08), transparent 60%),
+                radial-gradient(ellipse at 80% 50%, rgba(217, 107, 136, 0.05), transparent 60%);
+        }
+
+        .journey-inner {
+            max-width: 950px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 2;
+        }
+
+        .journey-head {
+            text-align: center;
+            margin-bottom: clamp(4.5rem, 7vw, 7rem);
+        }
+
+        .path-visual {
+            position: relative;
+            padding: clamp(2.5rem, 4.5vw, 5rem) 0;
+        }
+
+        .path-line {
+            position: absolute;
+            left: 50%;
+            top: 0;
+            bottom: 0;
+            width: 1.5px;
+            background: linear-gradient(to bottom, var(--secondary-rose), var(--primary-rose), var(--secondary-rose));
+            transform: translateX(-50%);
+            box-shadow: 0 0 20px rgba(196, 81, 107, 0.4);
+        }
+
+        @media (max-width: 768px) {
+            .path-line {
+                display: none;
+            }
+        }
+
+        .path-item {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: clamp(1.8rem, 3.5vw, 2.5rem);
+            align-items: center;
+            margin-bottom: clamp(3.5rem, 4.5vw, 5rem);
+            opacity: 0;
+            transform: translateY(35px);
+            transition: all 0.9s ease;
+        }
+
+        @media (min-width: 769px) {
+            .path-item {
+                grid-template-columns: 1fr 90px 1fr;
+            }
+        }
+
+        .path-item.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        @media (min-width: 769px) {
+            .path-item:nth-child(even) .path-text {
+                grid-column: 3;
+            }
+        }
+
+        .path-node {
+            display: none;
+            grid-column: 2;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.6rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        @media (min-width: 769px) {
+            .path-node {
+                display: flex;
+            }
+        }
+
+        .path-dot {
+            width: 14px;
+            height: 14px;
+            border: 2px solid var(--secondary-rose);
+            border-radius: 50%;
+            background: var(--black);
+            position: relative;
+            box-shadow: 0 0 15px rgba(196, 81, 107, 0.35);
+        }
+
+        .path-dot::after {
+            content: '';
+            position: absolute;
+            inset: 2px;
+            background: var(--secondary-rose);
+            border-radius: 50%;
+        }
+
+        .path-text {
+            background: linear-gradient(135deg, rgba(26, 31, 58, 0.6), rgba(15, 21, 53, 0.5));
+            border: 1.5px solid rgba(196, 81, 107, 0.4);
+            padding: clamp(2rem, 3.5vw, 2.8rem);
+            backdrop-filter: blur(10px);
+            transition: all 0.4s ease;
+        }
+
+        .path-item.visible .path-text {
+            background: linear-gradient(135deg, rgba(26, 31, 58, 0.75), rgba(15, 21, 53, 0.65));
+            border-color: rgba(217, 107, 136, 0.6);
+        }
+
+        .path-text h3 {
+            font-family: 'Cinzel', serif;
+            font-size: clamp(0.95rem, 2.2vw, 1.1rem);
+            color: var(--secondary-rose);
+            letter-spacing: 0.12em;
+            margin-bottom: clamp(1.2rem, 2vw, 1.5rem);
+        }
+
+        .path-text p {
+            font-size: clamp(0.95rem, 2.2vw, 1.05rem);
+            line-height: 1.95;
+            color: var(--silver);
+            font-style: italic;
+            font-weight: 300;
+        }
+
+        .path-num {
+            font-family: 'Cinzel', serif;
+            font-size: clamp(0.65rem, 1.8vw, 0.8rem);
+            color: var(--secondary-rose);
+            letter-spacing: 0.25em;
+        }
+
+        /* ==================== ROSE GARDEN ==================== */
+        #rose-garden {
+            min-height: 100vh;
+            background: linear-gradient(180deg, var(--black), var(--deep));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+            padding: clamp(5rem, 9vw, 9rem) clamp(2rem, 3.5vw, 2.5rem);
+        }
+
+        .rose-bg-grid {
+            position: absolute;
+            inset: 0;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            opacity: 0.04;
+            pointer-events: none;
+        }
+
+        .rose-bg-item {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: clamp(3rem, 6vw, 6rem);
+            filter: grayscale(1) opacity(0.3);
+        }
+
+        .garden-center {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            max-width: 750px;
+        }
+
+        .garden-quote {
+            font-family: 'Cormorant Garamond', serif;
+            font-style: italic;
+            font-size: clamp(1.7rem, 4.5vw, 3.5rem);
+            line-height: 1.8;
+            color: var(--white);
+            margin-bottom: clamp(2.5rem, 4vw, 3.5rem);
+        }
+
+        .garden-quote .highlight {
+            color: var(--secondary-rose);
+        }
+
+        .garden-subtext {
+            font-size: clamp(0.95rem, 2.2vw, 1.1rem);
+            color: var(--silver);
+            line-height: 2;
+            max-width: 550px;
+            margin: 0 auto;
+            font-style: italic;
+            font-weight: 300;
+        }
+
+        /* ==================== LETTERS ==================== */
+        #letters {
+            min-height: 100vh;
+            background: linear-gradient(180deg, var(--black), var(--deep));
+            padding: clamp(5rem, 9vw, 9rem) clamp(2rem, 3.5vw, 2.5rem);
+            position: relative;
+        }
+
+        .letters-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: clamp(2rem, 3.5vw, 2.8rem);
+            max-width: 1200px;
+            margin: clamp(3.5rem, 5vw, 5rem) auto 0;
+        }
+
+        .letter-card {
+            background: linear-gradient(135deg, rgba(26, 31, 58, 0.65), rgba(15, 21, 53, 0.55));
+            border: 1.5px solid rgba(196, 81, 107, 0.45);
+            padding: clamp(2.5rem, 3.5vw, 3.5rem);
+            position: relative;
+            overflow: hidden;
+            transition: all 0.5s ease;
+            cursor: default;
+            backdrop-filter: blur(10px);
+        }
+
+        .letter-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--secondary-rose), transparent);
+            transform: translateX(-100%);
+            transition: transform 0.6s ease;
+        }
+
+        .letter-card:hover::before {
+            transform: translateX(0);
+        }
+
+        .letter-card:hover {
+            border-color: var(--secondary-rose);
+            transform: translateY(-12px);
+            background: linear-gradient(135deg, rgba(26, 31, 58, 0.8), rgba(15, 21, 53, 0.7));
+            box-shadow: 0 20px 50px rgba(196, 81, 107, 0.2);
+        }
+
+        .letter-number {
+            font-family: 'Cinzel', serif;
+            font-size: clamp(0.65rem, 1.8vw, 0.8rem);
+            letter-spacing: 0.5em;
+            color: var(--secondary-rose);
+            margin-bottom: clamp(1.5rem, 2.5vw, 2rem);
+            display: block;
+        }
+
+        .letter-title {
+            font-family: 'Cinzel', serif;
+            font-size: clamp(1rem, 2.2vw, 1.2rem);
+            color: var(--secondary-rose);
+            margin-bottom: clamp(1.5rem, 2.5vw, 2rem);
+            letter-spacing: 0.08em;
+        }
+
+        .letter-body {
+            font-family: 'EB Garamond', serif;
+            font-size: clamp(0.95rem, 2.2vw, 1.1rem);
+            line-height: 2;
+            color: var(--silver);
+            font-style: italic;
+            font-weight: 300;
+        }
+
+        .letter-signature {
+            margin-top: clamp(2rem, 3vw, 2.8rem);
+            padding-top: clamp(1.5rem, 2.5vw, 2rem);
+            border-top: 1px solid rgba(196, 81, 107, 0.3);
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(0.95rem, 2.2vw, 1.1rem);
+            color: var(--secondary-rose);
+            font-style: italic;
+        }
+
+        /* ==================== PROMISES ==================== */
+        #promises {
+            min-height: 100vh;
+            background: linear-gradient(180deg, var(--black), var(--deep));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: clamp(5rem, 9vw, 9rem) clamp(2rem, 3.5vw, 2.5rem);
+            position: relative;
+        }
+
+        .promise-bg {
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(ellipse at center, rgba(196, 81, 107, 0.1), transparent 70%);
+        }
+
+        .promise-inner {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            max-width: 750px;
+        }
+
+        .promise-list {
+            list-style: none;
+            margin: clamp(3.5rem, 5vw, 5rem) 0;
+            display: flex;
+            flex-direction: column;
+            gap: clamp(2rem, 2.8vw, 3rem);
+        }
+
+        .promise-item {
+            display: flex;
+            align-items: flex-start;
+            gap: clamp(1.5rem, 2.5vw, 2rem);
+            text-align: left;
+            opacity: 0;
+            transform: translateX(-35px);
+            transition: all 0.8s ease;
+            padding: clamp(1.5rem, 2.5vw, 2rem) clamp(2rem, 3vw, 3rem);
+            border-left: 2px solid var(--primary-rose);
+        }
+
+        .promise-item.visible {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .promise-item:hover {
+            border-left-color: var(--secondary-rose);
+            background: linear-gradient(90deg, rgba(196, 81, 107, 0.1), transparent);
+            padding-left: clamp(2.5rem, 3.5vw, 3.5rem);
+        }
+
+        .promise-num {
+            font-family: 'Cinzel', serif;
+            font-size: clamp(2.2rem, 5.5vw, 3rem);
+            font-weight: 900;
+            color: var(--secondary-rose);
+            line-height: 1;
+            flex-shrink: 0;
+            min-width: clamp(60px, 10vw, 80px);
+        }
+
+        .promise-text h4 {
+            font-family: 'Cinzel', serif;
+            font-size: clamp(0.85rem, 2.2vw, 1rem);
+            color: var(--secondary-rose);
+            letter-spacing: 0.12em;
+            margin-bottom: 0.8rem;
+        }
+
+        .promise-text p {
+            font-style: italic;
+            color: var(--silver);
+            line-height: 2;
+            font-size: clamp(0.95rem, 2.2vw, 1.05rem);
+            font-weight: 300;
+        }
+
+        /* ==================== CONSTELLATION ==================== */
+        #constellation {
+            min-height: 100vh;
+            background: linear-gradient(180deg, var(--black), var(--deep));
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: clamp(5rem, 9vw, 9rem) clamp(2rem, 3.5vw, 2.5rem);
+        }
+
+        #const-canvas {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        .const-content {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+        }
+
+        .const-content .section-title {
+            font-size: clamp(2.5rem, 6.5vw, 5.5rem);
+            margin-bottom: clamp(1.5rem, 2.5vw, 2rem);
+        }
+
+        .names-display {
+            font-family: 'Cormorant Garamond', serif;
+            font-style: italic;
+            font-size: clamp(2rem, 5.5vw, 4.5rem);
+            color: var(--light-rose);
+            margin-bottom: clamp(2rem, 3vw, 3rem);
+            letter-spacing: 0.06em;
+        }
+
+        .forever-text {
+            font-family: 'EB Garamond', serif;
+            font-size: clamp(1.05rem, 2.8vw, 1.3rem);
+            color: var(--silver);
+            font-style: italic;
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 2;
+            font-weight: 300;
+        }
+
+        /* ==================== FINALE ==================== */
+        #finale {
+            min-height: 100vh;
+            background: linear-gradient(180deg, var(--black), var(--deep));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: clamp(5rem, 9vw, 9rem) clamp(2rem, 3.5vw, 2.5rem);
+            position: relative;
+        }
+
+        .finale-bg {
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(ellipse at center, rgba(196, 81, 107, 0.12), transparent 70%);
+            animation: bgPulse 5.5s ease-in-out infinite;
+        }
+
+        @keyframes bgPulse {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.6;
+            }
+        }
+
+        .finale-content {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            max-width: 800px;
+        }
+
+        .finale-title {
+            font-family: 'Cinzel', serif;
+            font-size: clamp(2.3rem, 6.5vw, 5.5rem);
+            font-weight: 900;
+            color: var(--white);
+            margin-bottom: clamp(1.5rem, 2.5vw, 2rem);
+            text-shadow: 0 0 30px rgba(196, 81, 107, 0.15);
+        }
+
+        .finale-subtitle {
+            font-family: 'Cormorant Garamond', serif;
+            font-style: italic;
+            font-size: clamp(1.3rem, 3.5vw, 1.7rem);
+            color: var(--secondary-rose);
+            margin-bottom: clamp(2rem, 3vw, 3rem);
+        }
+
+        .finale-msg {
+            font-style: italic;
+            color: var(--silver);
+            line-height: 2;
+            font-size: clamp(1rem, 2.8vw, 1.2rem);
+            margin-bottom: clamp(3.5rem, 5vw, 4.5rem);
+            font-weight: 300;
+        }
+
+        .return-btn {
+            display: inline-block;
+            padding: clamp(1.1rem, 2.5vw, 1.4rem) clamp(2.8rem, 5vw, 4rem);
+            border: 2px solid var(--primary-rose);
+            color: var(--light-rose);
+            font-family: 'Cinzel', serif;
+            font-size: clamp(0.75rem, 2.2vw, 0.95rem);
+            letter-spacing: 0.4em;
+            text-transform: uppercase;
+            text-decoration: none;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s;
+        }
+
+        .return-btn::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, var(--primary-rose), var(--secondary-rose));
+            transform: translateX(-100%);
+            transition: transform 0.5s ease;
+        }
+
+        .return-btn:hover::before {
+            transform: translateX(0);
+        }
+
+        .return-btn:hover {
+            color: var(--white);
+            box-shadow: 0 10px 30px rgba(196, 81, 107, 0.4);
+            transform: translateY(-3px);
+        }
+
+        .return-btn span {
+            position: relative;
+            z-index: 1;
+        }
+
+        .leaflet-container {
+            background: #1a1f3a !important;
+        }
+
+        .leaflet-control-zoom {
+            background-color: rgba(15, 21, 53, 0.95) !important;
+            border: 2px solid var(--primary-rose) !important;
+            box-shadow: 0 0 25px rgba(196, 81, 107, 0.4) !important;
+            border-radius: 6px !important;
+        }
+
+        .leaflet-control-zoom-in,
+        .leaflet-control-zoom-out {
+            background-color: rgba(15, 21, 53, 0.9) !important;
+            color: var(--secondary-rose) !important;
+            border-bottom: 2px solid var(--primary-rose) !important;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            font-size: clamp(1rem, 2.5vw, 1.2rem);
+        }
+
+        .leaflet-control-zoom-in:hover,
+        .leaflet-control-zoom-out:hover {
+            background-color: var(--primary-rose) !important;
+            color: var(--white) !important;
+            transform: scale(1.1);
+        }
+
+        ::-webkit-scrollbar {
+            width: 5px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--black);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary-rose);
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--secondary-rose);
+        }
+
+        .reveal {
+            opacity: 0;
+            transform: translateY(45px);
+            transition: opacity 1s ease, transform 1s ease;
+        }
+
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+
+<body>
+
+    <button class="music-toggle" id="musicToggle" title="Play Music">♫</button>
+    <audio id="bg-music" loop preload="auto">
+        <source src="audio/music.mp3" type="audio/mp3">
+    </audio>
+
+    <div id="cursor"></div>
+    <div id="cursor-dot"></div>
+
+    <div id="portal">
+        <canvas id="portal-canvas"></canvas>
+        <div class="portal-content">
+            <div class="portal-subtitle">Welcome to</div>
+            <div class="portal-title">Our Universe</div>
+            <div class="portal-names">Rezaul <span class="amp">&</span> Sinthi</div>
+            <div class="portal-divider"></div>
+            <button class="enter-btn" id="enterBtn"><span>Enter</span></button>
+        </div>
+    </div>
+
+    <div id="main-site">
+
+        <nav>
+            <a href="#" class="nav-logo">Our Universe</a>
+            <ul class="nav-links">
+                <li><a href="#hero">Home</a></li>
+                <li><a href="#map-section">Map</a></li>
+                <li><a href="#journey">Journey</a></li>
+                <li><a href="#letters">Letters</a></li>
+            </ul>
+        </nav>
+
+        <section id="hero">
+            <canvas id="hero-canvas"></canvas>
+            <div class="hero-content">
+                <div class="hero-label">A Love Story</div>
+                <div class="hero-main">Our Universe</div>
+                <div class="hero-names">Rezaul <span class="amp">&</span> Sinthi</div>
+                <div class="hero-tagline">Two hearts, one destiny. A journey written in the stars, destined to meet,
+                    meant to love forever.</div>
+            </div>
+        </section>
+
+        <!-- ==================== MAP SECTION ==================== -->
+        <section id="map-section">
+            <div class="map-intro">
+                <p>Every mile between us strengthens the bond that connects our souls. Distance is merely a number when
+                    love transcends all boundaries.</p>
+            </div>
+
+            <div class="map-wrapper">
+                <div class="map-frame">
+                    <div id="romantic-map"></div>
+                </div>
+            </div>
+
+            <div class="distance-card" id="distance-card">
+                <div class="distance-number" id="distance">—</div>
+                <div class="distance-unit">kilometers apart</div>
+                <div class="distance-msg" id="distance-msg">Calculating the distance between two hearts...</div>
+            </div>
+
+            <div class="location-cards">
+                <div class="loc-card">
+                    <div class="loc-pic-container">
+                        <div class="loc-pic" id="rezaul-pic"></div>
+                    </div>
+                    <div class="loc-name">Rezaul</div>
+                    <div class="loc-place" id="rezaul-place">Detecting location...</div>
+                </div>
+                <div class="loc-connector">
+                    <div class="heart-line">
+                        <div class="dot"></div>
+                        <div class="dot"></div>
+                        <div class="dot"></div>
+                        <div class="heart-symbol">♥</div>
+                    </div>
+                </div>
+                <div class="loc-card">
+                    <div class="loc-pic-container">
+                        <div class="loc-pic" id="sinthi-pic"></div>
+                    </div>
+                    <div class="loc-name">Sinthi</div>
+                    <div class="loc-place" id="sinthi-place">Detecting location...</div>
+                </div>
+            </div>
+        </section>
+
+        <section id="journey">
+            <div class="journey-bg"></div>
+            <div class="journey-inner">
+                <div class="journey-head">
+                    <div class="section-label">Our Story</div>
+                    <div class="section-title">The Journey</div>
+                </div>
+                <div class="path-visual">
+                    <div class="path-line"></div>
+                    <div class="path-item">
+                        <div class="path-empty"></div>
+                        <div class="path-node">
+                            <div class="path-dot"></div>
+                            <div class="path-num">01</div>
+                        </div>
+                        <div class="path-text">
+                            <h3>The Beginning</h3>
+                            <p>Two souls converged at a moment written by fate itself. When the universe conspired, it
+                                knew exactly what we needed. In the chaos of life's infinite possibilities, we found
+                                each other—a meeting that was no accident, but destiny's careful orchestration.</p>
+                        </div>
+                    </div>
+                    <div class="path-item">
+                        <div class="path-text">
+                            <h3>First Spark</h3>
+                            <p>Words became bridges between our worlds. In those endless conversations, we discovered
+                                not just attraction, but profound recognition—the knowing that comes when two halves
+                                finally recognize their missing piece.</p>
+                        </div>
+                        <div class="path-node">
+                            <div class="path-dot"></div>
+                            <div class="path-num">02</div>
+                        </div>
+                    </div>
+                    <div class="path-item">
+                        <div class="path-empty"></div>
+                        <div class="path-node">
+                            <div class="path-dot"></div>
+                            <div class="path-num">03</div>
+                        </div>
+                        <div class="path-text">
+                            <h3>Growing Closer</h3>
+                            <p>Distance became meaningless when measured against the depth of connection we share. Every
+                                moment with you is a thread in the tapestry of our love story. Near or far, you are
+                                woven into the very fabric of my existence.</p>
+                        </div>
+                    </div>
+                    <div class="path-item">
+                        <div class="path-text">
+                            <h3>Forever Begins</h3>
+                            <p>With you, I found my home—not a place, but a person. A sanctuary where my soul rests
+                                completely. You are my greatest adventure, my deepest peace, and my eternal promise.</p>
+                        </div>
+                        <div class="path-node">
+                            <div class="path-dot"></div>
+                            <div class="path-num">04</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="rose-garden">
+            <div class="rose-bg-grid">
+                <div class="rose-bg-item">Rose</div>
+                <div class="rose-bg-item">Rose</div>
+                <div class="rose-bg-item">Rose</div>
+                <div class="rose-bg-item">Rose</div>
+            </div>
+            <div class="garden-center">
+                <div class="garden-quote">In the garden of love, we bloom eternally—<span class="highlight">the most
+                        beautiful testament to devotion</span>.</div>
+                <div class="garden-subtext">Love is not measured by proximity but by the depth of connection that
+                    transcends the physical world. With you, every heartbeat is a vow, every breath is a prayer, and
+                    every moment is sacred.</div>
+            </div>
+        </section>
+
+        <section id="letters">
+            <div style="text-align: center; margin-bottom: clamp(3.5rem, 5vw, 5rem);">
+                <div class="section-label">Words from the Heart</div>
+                <div class="section-title">Love Letters</div>
+            </div>
+            <div class="letters-grid">
+                <div class="letter-card">
+                    <span class="letter-number">Letter 01</span>
+                    <h3 class="letter-title">To My Beloved</h3>
+                    <div class="letter-body">You are the reason my heart knows how to love. In your presence, I discover
+                        who I am meant to be. You are my greatest truth, my deepest longing, and my forever answer.
+                    </div>
+                    <div class="letter-signature">Always Yours</div>
+                </div>
+                <div class="letter-card">
+                    <span class="letter-number">Letter 02</span>
+                    <h3 class="letter-title">Eternity with You</h3>
+                    <div class="letter-body">Every morning I wake grateful that you exist. Every night I sleep peaceful
+                        knowing you're in this world. You've become the home my soul was always seeking.</div>
+                    <div class="letter-signature">Forever Yours</div>
+                </div>
+                <div class="letter-card">
+                    <span class="letter-number">Letter 03</span>
+                    <h3 class="letter-title">My Sacred Vow</h3>
+                    <div class="letter-body">I promise to cherish the beauty in your vulnerability. To stand beside you
+                        through all seasons of life. To love you not because you are perfect, but because loving you
+                        makes me whole.</div>
+                    <div class="letter-signature">With All My Heart</div>
+                </div>
+            </div>
+        </section>
+
+        <section id="promises">
+            <div class="promise-bg"></div>
+            <div class="promise-inner">
+                <div style="margin-bottom: clamp(3.5rem, 5vw, 5rem);">
+                    <div class="section-label">Our Eternal Commitment</div>
+                    <div class="section-title">Sacred Promises</div>
+                </div>
+                <ul class="promise-list">
+                    <li class="promise-item"><span class="promise-num">1</span>
+                        <div class="promise-text">
+                            <h4>To love unconditionally</h4>
+                            <p>Through every season, in every circumstance, without hesitation or reservation—a love as
+                                steady as time itself.</p>
+                        </div>
+                    </li>
+                    <li class="promise-item"><span class="promise-num">2</span>
+                        <div class="promise-text">
+                            <h4>To honor your dreams</h4>
+                            <p>To be your greatest supporter, celebrating every triumph and standing firm during every
+                                challenge.</p>
+                        </div>
+                    </li>
+                    <li class="promise-item"><span class="promise-num">3</span>
+                        <div class="promise-text">
+                            <h4>To remain eternally faithful</h4>
+                            <p>My heart is yours alone, bound by honor and devotion that transcends all temptation.</p>
+                        </div>
+                    </li>
+                    <li class="promise-item"><span class="promise-num">4</span>
+                        <div class="promise-text">
+                            <h4>To grow together</h4>
+                            <p>To evolve as one, becoming better versions of ourselves while lifting each other higher.
+                            </p>
+                        </div>
+                    </li>
+                    <li class="promise-item"><span class="promise-num">5</span>
+                        <div class="promise-text">
+                            <h4>To love forevermore</h4>
+                            <p>You are my eternity, my constant, my reason—beyond this lifetime and beyond infinity
+                                itself.</p>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </section>
+
+        <section id="constellation">
+            <canvas id="const-canvas"></canvas>
+            <div class="const-content">
+                <div class="section-label">Written in the Cosmos</div>
+                <div class="section-title">Our Constellation</div>
+                <div class="names-display">Rezaul ♥ Sinthi</div>
+                <div class="forever-text">In the infinite expanse of creation, we are two luminous souls destined to
+                    orbit together. Our love is written in starlight, eternal and unchanging.</div>
+            </div>
+        </section>
+
+        <section id="finale">
+            <div class="finale-bg"></div>
+            <div class="finale-content">
+                <div class="finale-title">Forever Starts Now</div>
+                <div class="finale-subtitle">Our Universe is Infinite</div>
+                <div class="finale-msg">This is not merely a story—it is our sacred oath. A promise that began the
+                    moment we met and will continue beyond all measure of time.</div>
+                <a href="#hero" class="return-btn"><span>Begin Again</span></a>
+            </div>
+        </section>
+
+    </div>
+
+    <script>
+        /* ================================================================
+           ⬇️ এখানে আপনার আসল ছবির পাথ দিন ⬇️
+           ছবি না থাকলেও সুন্দর letter fallback দেখাবে
+        ================================================================ */
+        var REZAUL_PIC_URL = 'images/rezaul.jpg';
+        var SINTHI_PIC_URL = 'images/sinthi.jpg';
+
+        /* ================================================================
+           COORDINATES — এগুলো আসল, পরিবর্তন করবেন না
+        ================================================================ */
+        var REZAUL = { lat: 23.832169759871338, lng: 90.26251200122493 };
+        var SINTHI = { lat: 24.006344058380716, lng: 90.55354799142552 };
+
+        /* ================================================================
+           HAVERSINE — আসল দূরত্ব ক্যালকুলেট (Earth radius 6371 km)
+        ================================================================ */
+        function haversineDistance(lat1, lon1, lat2, lon2) {
+            var R = 6371;
+            var dLat = (lat2 - lat1) * Math.PI / 180;
+            var dLon = (lon2 - lon1) * Math.PI / 180;
+            var a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+                Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+                Math.sin(dLon / 2) * Math.sin(dLon / 2);
+            return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        }
+
+        var ACTUAL_KM = Math.round(haversineDistance(REZAUL.lat, REZAUL.lng, SINTHI.lat, SINTHI.lng));
+
+        /* ================================================================
+           ROMANTIC MESSAGES — দূরত্ব অনুযায়ী
+        ================================================================ */
+        var DIST_MSGS = [
+            { at: 0, msg: "The beginning of infinity, where hearts learn to dream together." },
+            { at: 5, msg: "Close enough to feel the warmth of each other's presence." },
+            { at: 10, msg: "Distance dissolves when love becomes the only map we need." },
+            { at: 15, msg: "Miles mean nothing when souls are eternally intertwined." },
+            { at: 20, msg: "Twenty kilometers of earth cannot separate what heaven has joined." },
+            { at: 25, msg: "We span landscapes with love, bridging every space between us." },
+            { at: 30, msg: "Thirty kilometers of sky, infinite kilometers of devotion." },
+            { at: 50, msg: "Every kilometer is a testament to the strength of our bond." },
+            { at: 100, msg: "Distance is the price of a love too profound to ignore." }
+        ];
+
+        function getMsgFor(km) {
+            var result = DIST_MSGS[0].msg;
+            for (var i = 0; i < DIST_MSGS.length; i++) {
+                if (km >= DIST_MSGS[i].at) result = DIST_MSGS[i].msg;
+            }
+            return result;
+        }
+
+        /* ================================================================
+           IMAGE PRELOADER — ছবি আছে কি নেই চেক করে
+        ================================================================ */
+        var imgLoaded = { rezaul: false, sinthi: false };
+
+        function preloadImage(key, src) {
+            return new Promise(function (resolve) {
+                var img = new Image();
+                img.onload = function () { imgLoaded[key] = true; resolve(true); };
+                img.onerror = function () { imgLoaded[key] = false; resolve(false); };
+                img.src = src;
+            });
+        }
+
+        /* ================================================================
+           REVERSE GEOCODING — Nominatim (OpenStreetMap) দিয়ে আসল জায়গার নাম
+        ================================================================ */
+        function fetchRealLocation(lat, lng) {
+            return fetch(
+                'https://nominatim.openstreetmap.org/reverse?format=json&lat=' + lat +
+                '&lon=' + lng + '&accept-language=en&zoom=12'
+            )
+                .then(function (r) { return r.json(); })
+                .then(function (data) {
+                    var addr = data.address || {};
+                    var city = addr.city || addr.town || '';
+                    var subdistrict = addr.subdistrict || '';
+                    var district = addr.district || addr.county || '';
+                    var state = addr.state || '';
+
+                    // সুন্দর format করা
+                    if (city && district && city.toLowerCase() !== district.toLowerCase()) {
+                        return city + ', ' + district;
+                    }
+                    if (subdistrict && district && subdistrict.toLowerCase() !== district.toLowerCase()) {
+                        return subdistrict + ', ' + district;
+                    }
+                    if (district && state) {
+                        return district + ', ' + state;
+                    }
+                    if (city) return city + ', Bangladesh';
+                    return data.display_name ? data.display_name.split(',').slice(0, 3).join(', ') : 'Bangladesh';
+                })
+                .catch(function () {
+                    return 'Bangladesh';
+                });
+        }
+
+        /* ================================================================
+           DISTANCE COUNTER — map section visible হলে শুরু
+        ================================================================ */
+        var distanceCounted = false;
+
+        function animateDistance() {
+            if (distanceCounted) return;
+            distanceCounted = true;
+
+            var distEl = document.getElementById('distance');
+            var msgEl = document.getElementById('distance-msg');
+            var current = 0;
+            var step = Math.max(ACTUAL_KM / 80, 0.3);
+
+            function tick() {
+                if (current < ACTUAL_KM) {
+                    current += step;
+                    var show = Math.round(current);
+                    distEl.textContent = show;
+                    msgEl.textContent = getMsgFor(show);
+                    requestAnimationFrame(tick);
+                } else {
+                    distEl.textContent = ACTUAL_KM;
+                    msgEl.textContent = getMsgFor(ACTUAL_KM);
+                    distEl.classList.add('counted');
+                }
+            }
+            tick();
+        }
+
+        /* ================================================================
+           PROFILE PICTURES — card-এ ছবি বা fallback
+        ================================================================ */
+        function renderCardPic(elId, loaded, fbClass, letter) {
+            var el = document.getElementById(elId);
+            if (!el) return;
+            if (loaded) {
+                var src = elId === 'rezaul-pic' ? REZAUL_PIC_URL : SINTHI_PIC_URL;
+                el.style.backgroundImage = 'url("' + src + '")';
+            } else {
+                el.style.backgroundImage = 'none';
+                el.innerHTML = '<div class="loc-pic-fallback ' + fbClass + '">' + letter + '</div>';
+            }
+        }
+
+        /* ================================================================
+           MAP PHOTO MARKER — map-এ circular ছবি মার্কার
+        ================================================================ */
+        function makePhotoIcon(loaded, picUrl, name, fbLetter, color) {
+            var size = 54;
+            var inner = '';
+
+            if (loaded) {
+                inner = '<img src="' + picUrl + '" style="width:100%;height:100%;object-fit:cover;display:block;">';
+            } else {
+                inner = '<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;' +
+                    'font-family:Cinzel,serif;font-size:1.15rem;font-weight:900;color:' + color + ';' +
+                    'text-shadow:0 0 12px ' + color + '80;">' + fbLetter + '</div>';
+            }
+
+            return L.divIcon({
+                className: '',
+                html:
+                    '<div style="display:flex;flex-direction:column;align-items:center;gap:6px;">' +
+                    '<div style="position:relative;width:' + size + 'px;height:' + size + 'px;">' +
+                    /* Pulse ring */
+                    '<div style="position:absolute;inset:-8px;border-radius:50%;border:2px solid ' + color + ';' +
+                    'animation:markerPulse 2s ease-out infinite;"></div>' +
+                    '<div style="position:absolute;inset:-8px;border-radius:50%;border:2px solid ' + color + ';' +
+                    'animation:markerPulse 2s ease-out infinite;animation-delay:0.7s;"></div>' +
+                    /* Photo circle */
+                    '<div style="width:' + size + 'px;height:' + size + 'px;border-radius:50%;' +
+                    'border:3px solid ' + color + ';overflow:hidden;' +
+                    'box-shadow:0 0 18px ' + color + '50, 0 0 40px ' + color + '20;' +
+                    'background:linear-gradient(135deg,rgba(196,81,107,0.15),rgba(15,21,53,0.5));">' +
+                    inner +
+                    '</div>' +
+                    '</div>' +
+                    /* Name label */
+                    '<div style="font-family:Cinzel,serif;font-size:10px;color:' + color + ';' +
+                    'letter-spacing:0.14em;white-space:nowrap;' +
+                    'background:rgba(10,14,39,0.9);padding:3px 10px;border-radius:3px;' +
+                    'border:1px solid ' + color + '40;' +
+                    'text-shadow:0 0 8px ' + color + '60;">' + name + '</div>' +
+                    '</div>',
+                iconAnchor: [size / 2, size / 2]
+            });
+        }
+
+        /* ================================================================
+           LEAFLET MAP INIT
+        ================================================================ */
+        function initMap() {
+            var mapEl = document.getElementById('romantic-map');
+            if (!mapEl) return;
+
+            var map = L.map('romantic-map', {
+                zoomControl: true, attributionControl: false,
+                scrollWheelZoom: true, dragging: true, minZoom: 8, maxZoom: 16
+            });
+
+            L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+                maxZoom: 19
+            }).addTo(map);
+
+            var bounds = L.latLngBounds(
+                [REZAUL.lat, REZAUL.lng], [SINTHI.lat, SINTHI.lng]
+            );
+            map.fitBounds(bounds, { padding: [100, 100], maxZoom: 12 });
+
+            /* Photo markers */
+            L.marker([REZAUL.lat, REZAUL.lng], {
+                icon: makePhotoIcon(imgLoaded.rezaul, REZAUL_PIC_URL, 'Rezaul', 'R', '#c4516b')
+            }).addTo(map);
+
+            L.marker([SINTHI.lat, SINTHI.lng], {
+                icon: makePhotoIcon(imgLoaded.sinthi, SINTHI_PIC_URL, 'Sinthi', 'S', '#e8899d')
+            }).addTo(map);
+
+            /* Animated dashed line */
+            var line = L.polyline(
+                [[REZAUL.lat, REZAUL.lng], [SINTHI.lat, SINTHI.lng]],
+                { color: '#c4516b', weight: 3, opacity: 0.9, dashArray: '8, 8', dashOffset: '0' }
+            ).addTo(map);
+
+            /* Heart at midpoint */
+            var midLat = (REZAUL.lat + SINTHI.lat) / 2;
+            var midLng = (REZAUL.lng + SINTHI.lng) / 2;
+            L.marker([midLat, midLng], {
+                icon: L.divIcon({
+                    className: '',
+                    html: '<div style="font-size:22px;text-shadow:0 0 15px rgba(196,81,107,0.8);animation:heartBeat 1.2s ease-in-out infinite;">♥</div>',
+                    iconAnchor: [11, 11]
+                })
+            }).addTo(map);
+
+            /* Glow circles */
+            L.circle([REZAUL.lat, REZAUL.lng], {
+                radius: 1200, color: '#c4516b', fillColor: '#c4516b', fillOpacity: 0.08, weight: 1.5
+            }).addTo(map);
+            L.circle([SINTHI.lat, SINTHI.lng], {
+                radius: 1200, color: '#e8899d', fillColor: '#e8899d', fillOpacity: 0.08, weight: 1.5
+            }).addTo(map);
+
+            /* Dash animation */
+            var offset = 0;
+            (function animDash() {
+                offset -= 1;
+                if (offset < -16) offset = 0;
+                line.setStyle({ dashOffset: offset.toString() });
+                requestAnimationFrame(animDash);
+            })();
+        }
+
+        /* ================================================================
+           MUSIC
+        ================================================================ */
+        var bgMusic = document.getElementById('bg-music');
+        var musicToggle = document.getElementById('musicToggle');
+        var isPlaying = false;
+
+        document.addEventListener('click', function () {
+            if (!isPlaying) {
+                bgMusic.play().catch(function () { });
+                isPlaying = true;
+                musicToggle.classList.add('playing');
+            }
+        }, { once: true });
+
+        musicToggle.addEventListener('click', function () {
+            if (isPlaying) {
+                bgMusic.pause(); musicToggle.classList.remove('playing'); isPlaying = false;
+            } else {
+                bgMusic.play(); musicToggle.classList.add('playing'); isPlaying = true;
+            }
+        });
+
+        /* ================================================================
+           CURSOR
+        ================================================================ */
+        var cursor = document.getElementById('cursor');
+        var cursorDot = document.getElementById('cursor-dot');
+        document.addEventListener('mousemove', function (e) {
+            cursor.style.left = e.clientX - 12 + 'px';
+            cursor.style.top = e.clientY - 12 + 'px';
+            cursorDot.style.left = e.clientX - 2 + 'px';
+            cursorDot.style.top = e.clientY - 2 + 'px';
+        });
+        document.addEventListener('mousedown', function () { cursor.style.transform = 'scale(0.6)'; });
+        document.addEventListener('mouseup', function () { cursor.style.transform = 'scale(1)'; });
+
+        /* ================================================================
+           PORTAL CANVAS
+        ================================================================ */
+        (function () {
+            var c = document.getElementById('portal-canvas');
+            var ctx = c.getContext('2d');
+            c.width = window.innerWidth; c.height = window.innerHeight;
+            var ps = [];
+            for (var i = 0; i < 100; i++) {
+                ps.push({
+                    x: Math.random() * c.width, y: Math.random() * c.height,
+                    s: Math.random() * 2 + 1, sx: (Math.random() - 0.5) * 2, sy: (Math.random() - 0.5) * 2,
+                    o: Math.random() * 0.5 + 0.2
+                });
+            }
+            (function loop() {
+                ctx.clearRect(0, 0, c.width, c.height);
+                ps.forEach(function (p) {
+                    p.x += p.sx; p.y += p.sy;
+                    if (p.x > c.width) p.x = 0; if (p.x < 0) p.x = c.width;
+                    if (p.y > c.height) p.y = 0; if (p.y < 0) p.y = c.height;
+                    ctx.fillStyle = 'rgba(196,81,107,' + p.o + ')';
+                    ctx.beginPath(); ctx.arc(p.x, p.y, p.s, 0, Math.PI * 2); ctx.fill();
+                });
+                requestAnimationFrame(loop);
+            })();
+            window.addEventListener('resize', function () { c.width = window.innerWidth; c.height = window.innerHeight; });
+        })();
+
+        /* ================================================================
+           ENTER — সব শুরু এখান থেকে
+        ================================================================ */
+        document.getElementById('enterBtn').addEventListener('click', function () {
+            document.getElementById('portal').classList.add('gone');
+            setTimeout(function () {
+                document.getElementById('main-site').classList.add('visible');
+                initHeroCanvas();
+                initConstCanvas();
+                startScrollAnimations();
+
+                /* Map সম্পর্কিত সব কিছু async ভাবে শুরু */
+                initMapSection();
+            }, 500);
+        });
+
+        /* ================================================================
+           MAP SECTION INIT — ছবি preload + geocoding + map + distance
+        ================================================================ */
+        async function initMapSection() {
+            /* ছবি preload */
+            await preloadImage('rezaul', REZAUL_PIC_URL);
+            await preloadImage('sinthi', SINTHI_PIC_URL);
+
+            /* Card-এ ছবি রেন্ডার */
+            renderCardPic('rezaul-pic', imgLoaded.rezaul, 'rezaul-fb', 'R');
+            renderCardPic('sinthi-pic', imgLoaded.sinthi, 'sinthi-fb', 'S');
+
+            /* Map init (এখন জানি ছবি আছে কি নেই) */
+            initMap();
+
+            /* আসল location বের করা */
+            var rLoc = await fetchRealLocation(REZAUL.lat, REZAUL.lng);
+            document.getElementById('rezaul-place').textContent = rLoc;
+
+            /* Nominatim rate limit: 1 req/sec */
+            await new Promise(function (r) { setTimeout(r, 1100); });
+
+            var sLoc = await fetchRealLocation(SINTHI.lat, SINTHI.lng);
+            document.getElementById('sinthi-place').textContent = sLoc;
+
+            /* Distance counter — scroll করে দেখলে শুরু হবে */
+            var distCard = document.getElementById('distance-card');
+            var distObs = new IntersectionObserver(function (entries) {
+                if (entries[0].isIntersecting) {
+                    animateDistance();
+                    distObs.unobserve(distCard);
+                }
+            }, { threshold: 0.5 });
+            distObs.observe(distCard);
+        }
+
+        /* ================================================================
+           HERO CANVAS
+        ================================================================ */
+        function initHeroCanvas() {
+            var c = document.getElementById('hero-canvas');
+            var ctx = c.getContext('2d');
+            c.width = window.innerWidth; c.height = window.innerHeight;
+            var stars = [];
+            for (var i = 0; i < 150; i++) {
+                stars.push({
+                    x: Math.random() * c.width, y: Math.random() * c.height,
+                    s: Math.random() * 1.5, bo: Math.random() * 0.5 + 0.25, o: 0,
+                    sp: Math.random() * 0.03 + 0.01, ph: Math.random() * Math.PI * 2
+                });
+            }
+            (function loop() {
+                ctx.clearRect(0, 0, c.width, c.height);
+                stars.forEach(function (s) {
+                    s.ph += s.sp; s.o = s.bo + Math.sin(s.ph) * 0.3;
+                    ctx.fillStyle = 'rgba(184,176,184,' + Math.max(0, s.o) + ')';
+                    ctx.beginPath(); ctx.arc(s.x, s.y, s.s, 0, Math.PI * 2); ctx.fill();
+                });
+                requestAnimationFrame(loop);
+            })();
+            window.addEventListener('resize', function () { c.width = window.innerWidth; c.height = window.innerHeight; });
+        }
+
+        /* ================================================================
+           CONSTELLATION CANVAS
+        ================================================================ */
+        function initConstCanvas() {
+            var c = document.getElementById('const-canvas');
+            var ctx = c.getContext('2d');
+            c.width = window.innerWidth; c.height = window.innerHeight;
+            var stars = [];
+            for (var i = 0; i < 200; i++) {
+                stars.push({
+                    x: Math.random() * c.width, y: Math.random() * c.height,
+                    s: Math.random() * 1.8, o: Math.random() * 0.5 + 0.2,
+                    ph: Math.random() * Math.PI * 2, sp: Math.random() * 0.02 + 0.005
+                });
+            }
+            (function draw() {
+                ctx.clearRect(0, 0, c.width, c.height);
+                stars.forEach(function (s) {
+                    s.ph += s.sp;
+                    var op = s.o + Math.sin(s.ph) * 0.15;
+                    ctx.fillStyle = 'rgba(184,176,184,' + Math.max(0, op) + ')';
+                    ctx.beginPath(); ctx.arc(s.x, s.y, s.s, 0, Math.PI * 2); ctx.fill();
+                });
+                var rx = c.width * 0.3, ry = c.height * 0.3, sx = c.width * 0.7, sy = c.height * 0.7;
+                ctx.strokeStyle = 'rgba(196,81,107,0.3)'; ctx.lineWidth = 2;
+                ctx.beginPath(); ctx.moveTo(rx, ry); ctx.lineTo(sx, sy); ctx.stroke();
+                ctx.shadowColor = 'rgba(196,81,107,0.6)'; ctx.shadowBlur = 20;
+                ctx.fillStyle = 'rgba(196,81,107,0.9)';
+                ctx.beginPath(); ctx.arc(rx, ry, 9, 0, Math.PI * 2); ctx.fill();
+                ctx.shadowColor = 'rgba(232,137,157,0.6)'; ctx.fillStyle = 'rgba(232,137,157,0.9)';
+                ctx.beginPath(); ctx.arc(sx, sy, 9, 0, Math.PI * 2); ctx.fill();
+                ctx.shadowBlur = 0;
+                requestAnimationFrame(draw);
+            })();
+            window.addEventListener('resize', function () { c.width = window.innerWidth; c.height = window.innerHeight; });
+        }
+
+        /* ================================================================
+           SCROLL ANIMATIONS
+        ================================================================ */
+        function startScrollAnimations() {
+            var obs = new IntersectionObserver(function (entries) {
+                entries.forEach(function (e) {
+                    if (e.isIntersecting) e.target.classList.add('visible');
+                });
+            }, { threshold: 0.2, rootMargin: '0px 0px -80px 0px' });
+            document.querySelectorAll('.path-item, .promise-item, .reveal').forEach(function (el) { obs.observe(el); });
+        }
+    </script>
+
+</body>
+
+</html>
