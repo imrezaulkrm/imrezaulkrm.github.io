@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+<<<<<<< HEAD
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
@@ -598,4 +599,1131 @@
   <script src="typing.js"></script>
   <script src="script.js"></script>
 </body>
+=======
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rezaul Karim | DevOps & Cloud Engineer</title>
+    <meta name="description"
+        content="Portfolio of Rezaul Karim, a senior DevOps and Cloud Engineer specializing in scalable infrastructure, automation, and reliability engineering.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Fira+Code:wght@400;500&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="noise-overlay"></div>
+    <div class="grid-overlay"></div>
+
+    <!-- Section Navigation Overlay -->
+    <nav class="section-nav" id="section-nav">
+        <div class="section-nav-container">
+            <a href="#hero" class="section-nav-item active" data-section="hero">
+                <span class="section-nav-dot"></span>
+                <span class="section-nav-label">Hero</span>
+            </a>
+            <a href="#about" class="section-nav-item" data-section="about">
+                <span class="section-nav-dot"></span>
+                <span class="section-nav-label">About</span>
+            </a>
+            <a href="#experience" class="section-nav-item" data-section="experience">
+                <span class="section-nav-dot"></span>
+                <span class="section-nav-label">Experience</span>
+            </a>
+            <a href="#projects" class="section-nav-item" data-section="projects">
+                <span class="section-nav-dot"></span>
+                <span class="section-nav-label">Projects</span>
+            </a>
+            <a href="#skills" class="section-nav-item" data-section="skills">
+                <span class="section-nav-dot"></span>
+                <span class="section-nav-label">Skills</span>
+            </a>
+            <a href="#systems" class="section-nav-item" data-section="systems">
+                <span class="section-nav-dot"></span>
+                <span class="section-nav-label">Systems</span>
+            </a>
+            <a href="#credentials" class="section-nav-item" data-section="credentials">
+                <span class="section-nav-dot"></span>
+                <span class="section-nav-label">Education</span>
+            </a>
+            <a href="#passion" class="section-nav-item" data-section="passion">
+                <span class="section-nav-dot"></span>
+                <span class="section-nav-label">Passion</span>
+            </a>
+            <a href="#contact" class="section-nav-item" data-section="contact">
+                <span class="section-nav-dot"></span>
+                <span class="section-nav-label">Contact</span>
+            </a>
+        </div>
+    </nav>
+
+    <main class="hero">
+        <section class="hero-content">
+            <div class="identity">
+                <span class="badge">Production Control System</span>
+                <h1 class="name">Rezaul Karim</h1>
+                <h2 class="role">DevOps & Cloud Engineer</h2>
+                <p class="subtitle">Cloud Infrastructure | Automation | Reliability Engineering</p>
+            </div>
+
+            <div class="hook">
+                <p>Operating real-time, highly-available cloud systems with automated scaling and production-grade
+                    observability.</p>
+            </div>
+
+            <div class="tech-stack">
+                <span class="chip">AWS</span>
+                <span class="chip">Kubernetes</span>
+                <span class="chip">Docker</span>
+                <span class="chip">CI/CD</span>
+                <span class="chip">Terraform</span>
+                <span class="chip">Observability</span>
+                <span class="chip">PostgreSQL HA</span>
+                <span class="chip">Linux Systems</span>
+            </div>
+
+            <div class="actions">
+                <a href="#work" class="btn btn-primary">View Infrastructure Work</a>
+                <a href="#resume" class="btn btn-secondary">Download Resume</a>
+            </div>
+        </section>
+
+        <section class="hero-visual">
+            <div class="infra-container" id="infra-container">
+                <!-- SVG Visualization will be injected/managed here -->
+                <svg id="infra-svg" viewBox="0 0 400 600" preserveAspectRatio="xMidYMid meet">
+                    <!-- Definitions for gradients and markers -->
+                    <defs>
+                        <linearGradient id="line-grad" x1="0%" y1="0%" x2="0%" y2="100%">
+                            <stop offset="0%" style="stop-color:var(--accent-color);stop-opacity:0.2" />
+                            <stop offset="50%" style="stop-color:var(--accent-color);stop-opacity:0.8" />
+                            <stop offset="100%" style="stop-color:var(--accent-color);stop-opacity:0.2" />
+                        </linearGradient>
+                        <filter id="glow">
+                            <feGaussianBlur stdDeviation="2.5" result="coloredBlur" />
+                            <feMerge>
+                                <feMergeNode in="coloredBlur" />
+                                <feMergeNode in="SourceGraphic" />
+                            </feMerge>
+                        </filter>
+                        <!-- Arrow Markers -->
+                        <marker id="arrow-cyan" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="4" markerHeight="4"
+                            orient="auto">
+                            <path d="M 0 0 L 10 5 L 0 10 z" fill="var(--request-color)" />
+                        </marker>
+                        <marker id="arrow-green" viewBox="0 0 10 10" refX="2" refY="5" markerWidth="4" markerHeight="4"
+                            orient="auto">
+                            <path d="M 10 0 L 0 5 L 10 10 z" fill="var(--response-color)" />
+                        </marker>
+                    </defs>
+
+                    <!-- Paths and Nodes will be created via JS or hardcoded for layout -->
+                </svg>
+
+                <div class="observability-panel">
+                    <div class="panel-header">
+                        <div class="header-left">
+                            <span class="status-dot status-online"></span>
+                            <span class="panel-title">SYSTEM OBSERVABILITY</span>
+                        </div>
+                        <div class="header-right">
+                            <span id="current-command" class="command-text">$ kubectl get pods --all-namespaces</span>
+                        </div>
+                    </div>
+
+                    <div class="terminal-container">
+                        <div id="terminal-logs" class="terminal-content">
+                            <!-- Logs will stream here -->
+                        </div>
+                    </div>
+
+                    <div class="panel-footer">
+                        <div class="stat-item">
+                            <span class="stat-label">LATENCY</span>
+                            <span id="latency-val" class="stat-value">22ms</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">UPTIME</span>
+                            <span class="stat-value">99.98%</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">STATUS</span>
+                            <span id="cpu-val" class="stat-value">HEALTHY</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <section id="about" class="about-section scroll-reveal">
+        <div class="about-container">
+            <div class="about-left">
+                <div class="profile-frame">
+                    <img id="profile-image"
+                        src="https://github.com/imrezaulkrm/imrezaulkrm.github.io/raw/main/img/convocation.jpg"
+                        alt="Rezaul Karim Profile" class="profile-img">
+                    <div class="profile-glow"></div>
+                </div>
+            </div>
+
+            <div class="about-right">
+                <div class="about-header">
+                    <span class="section-label">Professional Identity</span>
+                    <h2 class="about-name">Rezaul Karim</h2>
+                    <h3 class="about-role">DevOps & Cloud Engineer</h3>
+                </div>
+
+                <div class="about-intro">
+                    <p>I architect and operate production-grade cloud systems with an unwavering commitment to
+                        reliability and scalability. My engineering philosophy is rooted in systems thinking—bridging
+                        the gap between infrastructure complexity and operational simplicity.</p>
+                </div>
+
+                <div class="about-focus">
+                    <div class="focus-item">
+                        <span class="focus-icon">🏗️</span>
+                        <div class="focus-content">
+                            <h4>Infrastructure Design & Scalability</h4>
+                            <p>Building resilient, auto-scaling cloud environments on AWS</p>
+                        </div>
+                    </div>
+                    <div class="focus-item">
+                        <span class="focus-icon">⚙️</span>
+                        <div class="focus-content">
+                            <h4>Automation & CI/CD Systems</h4>
+                            <p>GitOps-driven pipelines with zero-downtime deployments</p>
+                        </div>
+                    </div>
+                    <div class="focus-item">
+                        <span class="focus-icon">📊</span>
+                        <div class="focus-content">
+                            <h4>Reliability & Observability</h4>
+                            <p>Production-grade monitoring with SLA-driven metrics</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tech-stack-inline">
+                    <span>AWS</span> • <span>Kubernetes</span> • <span>Docker</span> •
+                    <span>Terraform</span> • <span>CI/CD</span> • <span>Linux</span> •
+                    <span>PostgreSQL</span> • <span>Observability</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="experience" class="experience-section">
+        <div class="experience-header scroll-reveal">
+            <span class="section-label">TIMELINE</span>
+            <h2 class="about-name">Professional Experience</h2>
+            <p class="subtitle">System Execution History & Engineering Impact</p>
+        </div>
+
+        <div class="timeline-container">
+            <div class="timeline-spine">
+                <div id="timeline-progress" class="timeline-progress-line"></div>
+            </div>
+
+            <!-- Item 1: Senior DevOps -->
+            <div class="timeline-item left">
+                <div class="timeline-node"></div>
+                <div class="experience-card glass-panel">
+                    <div class="card-header">
+                        <span class="role-tag">SR. DEVOPS ENGINEER</span>
+                        <span class="duration">2022 — PRESENT</span>
+                    </div>
+                    <h4 class="company">CloudScale Solutions</h4>
+                    <ul class="impact-list">
+                        <li>Architected multi-region EKS clusters with Terraform/Helm.</li>
+                        <li>Optimized CI/CD throughput, reducing lead time by 45%.</li>
+                        <li>Engineered self-healing cost-optimization bots saving $200k/year.</li>
+                    </ul>
+                    <div class="card-footer">
+                        <span>#AWS</span> <span>#K8S</span> <span>#TERRAFORM</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Item 2: SRE -->
+            <div class="timeline-item right">
+                <div class="timeline-node"></div>
+                <div class="experience-card glass-panel">
+                    <div class="card-header">
+                        <span class="role-tag">SRE & PLATFORM ENG</span>
+                        <span class="duration">2020 — 2022</span>
+                    </div>
+                    <h4 class="company">Nexus Systems</h4>
+                    <ul class="impact-list">
+                        <li>Built internal IDP, cutting service bootstrap time by 70%.</li>
+                        <li>Deployed centralized observability (Prometheus/Grafana).</li>
+                        <li>Maintained 99.99% SLA for high-traffic financial systems.</li>
+                    </ul>
+                    <div class="card-footer">
+                        <span>#PLATFORM</span> <span>#OBSERVABILITY</span> <span>#SRE</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Item 3: DevOps -->
+            <div class="timeline-item left">
+                <div class="timeline-node"></div>
+                <div class="experience-card glass-panel">
+                    <div class="card-header">
+                        <span class="role-tag">DEVOPS ENGINEER</span>
+                        <span class="duration">2018 — 2020</span>
+                    </div>
+                    <h4 class="company">ByteTech Industries</h4>
+                    <ul class="impact-list">
+                        <li>Containerized legacy Java monoliths for Docker/EKS migration.</li>
+                        <li>Automated bare-metal fleet provisioning using Ansible.</li>
+                        <li>Managed production-grade PostgreSQL HA clusters.</li>
+                    </ul>
+                    <div class="card-footer">
+                        <span>#DOCKER</span> <span>#ANSIBLE</span> <span>#POSTGRES</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Item 4: Jr. Systems -->
+            <div class="timeline-item right">
+                <div class="timeline-node"></div>
+                <div class="experience-card glass-panel">
+                    <div class="card-header">
+                        <span class="role-tag">JR. SYSTEMS ENGINEER</span>
+                        <span class="duration">2016 — 2018</span>
+                    </div>
+                    <h4 class="company">CoreNet Solutions</h4>
+                    <ul class="impact-list">
+                        <li>Maintained Linux server fleets across 3 data centers.</li>
+                        <li>Configured high-performance Nginx load balancers.</li>
+                        <li>Implemented initial Nagios/Zabbix monitoring stacks.</li>
+                    </ul>
+                    <div class="card-footer">
+                        <span>#LINUX</span> <span>#NGINX</span> <span>#NETWORKING</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="projects" class="experience-section">
+        <div class="experience-header scroll-reveal">
+            <span class="section-label">THE ECOSYSTEM</span>
+            <h2 class="about-name">Featured Systems</h2>
+            <p class="subtitle">Architecting Production-Grade Cloud Solutions</p>
+        </div>
+
+        <div class="projects-grid container">
+            <!-- Project 1: Kubernetes -->
+            <div class="project-card-immersive glass-panel scroll-reveal k8s-theme">
+                <div class="project-card-inner">
+                    <div class="project-header-top">
+                        <span class="region-badge">US-EAST-1 | PRODUCTION</span>
+                        <div class="project-icon">
+                            <svg viewBox="0 0 40 40" class="icon-svg">
+                                <path d="M 20 2 L 35 10 L 35 30 L 20 38 L 5 30 L 5 10 Z" fill="none"
+                                    stroke="currentColor" stroke-width="1.5" />
+                                <circle cx="20" cy="20" r="6" fill="currentColor" />
+                                <path
+                                    d="M 20 2 L 20 14 M 35 10 L 25 15 M 35 30 L 25 25 M 20 38 L 20 26 M 5 30 L 15 25 M 5 10 L 15 15"
+                                    stroke="currentColor" stroke-width="1" />
+                            </svg>
+                        </div>
+                    </div>
+
+                    <div class="project-info">
+                        <h4 class="project-title">Global K8s Control Plane</h4>
+                        <span class="project-category">Cloud Orchestration</span>
+                    </div>
+
+                    <div class="project-pills">
+                        <span class="pill"><span class="pill-dot"></span> 99.9% Uptime</span>
+                        <span class="pill">Auto-Scale</span>
+                    </div>
+
+                    <p class="project-description">Architected a multi-region EKS mesh with Istio for global traffic
+                        steering and automated disaster recovery, handling 1M+ req/sec.</p>
+
+                    <div class="project-stack">
+                        <span>AWS</span> • <span>EKS</span> • <span>Terraform</span> • <span>Istio</span>
+                    </div>
+
+                    <div class="project-actions">
+                        <a href="#" class="action-btn primary">VIEW ARCHITECTURE</a>
+                        <a href="#" class="action-btn secondary">GITHUB</a>
+                    </div>
+                </div>
+                <div class="project-sparkline">
+                    <svg viewBox="0 0 400 30" preserveAspectRatio="none">
+                        <path d="M0,15 Q50,5 100,15 T200,10 T300,20 T400,15" class="sparkline-path" />
+                    </svg>
+                </div>
+                <div class="ignition-glow"></div>
+            </div>
+
+            <!-- Project 2: Security -->
+            <div class="project-card-immersive glass-panel scroll-reveal sec-theme">
+                <div class="project-card-inner">
+                    <div class="project-header-top">
+                        <span class="region-badge">GLOBAL | COMPLIANCE</span>
+                        <div class="project-icon">
+                            <svg viewBox="0 0 40 40" class="icon-svg">
+                                <path d="M 20 4 L 34 10 L 34 22 C 34 30 28 36 20 38 C 12 36 6 30 6 22 L 6 10 Z"
+                                    fill="none" stroke="currentColor" stroke-width="1.5" />
+                                <path d="M 14 18 L 19 23 L 28 14" fill="none" stroke="currentColor" stroke-width="2" />
+                            </svg>
+                        </div>
+                    </div>
+
+                    <div class="project-info">
+                        <h4 class="project-title">Zero-Trust Ops Shield</h4>
+                        <span class="project-category">Security Automation</span>
+                    </div>
+
+                    <div class="project-pills">
+                        <span class="pill"><span class="pill-dot"></span> Secure</span>
+                        <span class="pill">PCI-DSS</span>
+                    </div>
+
+                    <p class="project-description">Implemented a self-healing security pipeline with HashiCorp Vault and
+                        automated OPA policy enforcement across 50+ clusters.</p>
+
+                    <div class="project-stack">
+                        <span>Vault</span> • <span>GitHub Actions</span> • <span>Trivy</span> • <span>OPA</span>
+                    </div>
+
+                    <div class="project-actions">
+                        <a href="#" class="action-btn primary">AUDIT LOGS</a>
+                        <a href="#" class="action-btn secondary">SOURCE</a>
+                    </div>
+                </div>
+                <div class="project-sparkline">
+                    <svg viewBox="0 0 400 30" preserveAspectRatio="none">
+                        <path d="M0,20 Q50,25 100,10 T200,15 T300,5 T400,10" class="sparkline-path" />
+                    </svg>
+                </div>
+                <div class="ignition-glow"></div>
+            </div>
+
+            <!-- Project 3: Platform -->
+            <div class="project-card-immersive glass-panel scroll-reveal data-theme">
+                <div class="project-card-inner">
+                    <div class="project-header-top">
+                        <span class="region-badge">EU-WEST-1 | DATA</span>
+                        <div class="project-icon">
+                            <svg viewBox="0 0 40 40" class="icon-svg">
+                                <path d="M 10 30 Q 10 10 25 10 Q 35 10 35 20 Q 35 35 20 35 Q 10 35 10 30 Z" fill="none"
+                                    stroke="currentColor" stroke-width="1.5" />
+                                <circle cx="18" cy="22" r="3" fill="currentColor" />
+                                <circle cx="28" cy="22" r="3" fill="currentColor" />
+                            </svg>
+                        </div>
+                    </div>
+
+                    <div class="project-info">
+                        <h4 class="project-title">Reactive Platform Engine</h4>
+                        <span class="project-category">Data Reliability</span>
+                    </div>
+
+                    <div class="project-pills">
+                        <span class="pill"><span class="pill-dot"></span> High Thru</span>
+                        <span class="pill">Cost ↓ 40%</span>
+                    </div>
+
+                    <p class="project-description">Engineered an event-driven serverless platform for high-velocity data
+                        ingestion, reducing operational costs by 40%.</p>
+
+                    <div class="project-stack">
+                        <span>Lambda</span> • <span>S3</span> • <span>SNS/SQS</span> • <span>Python</span>
+                    </div>
+
+                    <div class="project-actions">
+                        <a href="#" class="action-btn primary">ARCHITECTURE</a>
+                        <a href="#" class="action-btn secondary">REPO</a>
+                    </div>
+                </div>
+                <div class="project-sparkline">
+                    <svg viewBox="0 0 400 30" preserveAspectRatio="none">
+                        <path d="M0,10 Q50,15 100,5 T200,20 T300,10 T400,25" class="sparkline-path" />
+                    </svg>
+                </div>
+                <div class="ignition-glow"></div>
+    </section>
+
+    <!-- System Intelligence Overview Panel -->
+    <section id="systems" class="systems-intelligence-section">
+        <div class="experience-header scroll-reveal">
+            <span class="section-label">SYSTEM INTELLIGENCE</span>
+            <h2 class="about-name">Architecture & Impact Overview</h2>
+            <p class="subtitle">Real-world system designs and engineering impact metrics</p>
+        </div>
+
+        <div class="intelligence-grid container">
+            <!-- LEFT SIDE: ARCHITECTURE HIGHLIGHTS -->
+            <div class="intelligence-left scroll-reveal">
+                <h3 class="section-subtitle">System Architecture Highlights</h3>
+
+                <!-- Architecture Card 1 -->
+                <div class="architecture-card">
+                    <div class="arch-header">
+                        <h4 class="arch-title">High Availability Cloud System</h4>
+                        <span class="arch-focus">Fault Tolerance</span>
+                    </div>
+                    <p class="arch-description">
+                        Multi-region AWS deployment with automatic failover, load balancing, and self-healing
+                        infrastructure. 99.99% uptime SLA.
+                    </p>
+                    <div class="arch-components">
+                        <span class="component-chip">AWS EC2</span>
+                        <span class="component-chip">RDS HA</span>
+                        <span class="component-chip">ALB</span>
+                        <span class="component-chip">Route 53</span>
+                        <span class="component-chip">Auto Scaling</span>
+                    </div>
+                </div>
+
+                <!-- Architecture Card 2 -->
+                <div class="architecture-card">
+                    <div class="arch-header">
+                        <h4 class="arch-title">Kubernetes Multi-Service Mesh</h4>
+                        <span class="arch-focus">Scalability</span>
+                    </div>
+                    <p class="arch-description">
+                        Containerized microservices orchestration with Istio service mesh for traffic management,
+                        security policies, and observability.
+                    </p>
+                    <div class="arch-components">
+                        <span class="component-chip">Kubernetes</span>
+                        <span class="component-chip">Docker</span>
+                        <span class="component-chip">Istio</span>
+                        <span class="component-chip">Helm</span>
+                        <span class="component-chip">CNI</span>
+                    </div>
+                </div>
+
+                <!-- Architecture Card 3 -->
+                <div class="architecture-card">
+                    <div class="arch-header">
+                        <h4 class="arch-title">CI/CD Automation Pipeline</h4>
+                        <span class="arch-focus">Automation</span>
+                    </div>
+                    <p class="arch-description">
+                        GitOps-driven deployment pipeline with automated testing, security scanning, and progressive
+                        rollouts. Zero-downtime deployments.
+                    </p>
+                    <div class="arch-components">
+                        <span class="component-chip">GitHub Actions</span>
+                        <span class="component-chip">ArgoCD</span>
+                        <span class="component-chip">Terraform</span>
+                        <span class="component-chip">Trivy</span>
+                        <span class="component-chip">OPA</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- RIGHT SIDE: IMPACT METRICS -->
+            <div class="intelligence-right scroll-reveal">
+                <h3 class="section-subtitle">Engineering Impact Metrics</h3>
+
+                <div class="metrics-grid">
+                    <!-- Metric 1: Uptime -->
+                    <div class="metric-card">
+                        <div class="metric-label">System Uptime</div>
+                        <div class="metric-value">99.9%</div>
+                        <div class="metric-tag green">Stability</div>
+                    </div>
+
+                    <!-- Metric 2: Deployment Speed -->
+                    <div class="metric-card">
+                        <div class="metric-label">Deployment Time</div>
+                        <div class="metric-value">↓ 65%</div>
+                        <div class="metric-tag cyan">Optimization</div>
+                    </div>
+
+                    <!-- Metric 3: Cost Reduction -->
+                    <div class="metric-card">
+                        <div class="metric-label">Infrastructure Cost</div>
+                        <div class="metric-value">↓ 40%</div>
+                        <div class="metric-tag cyan">Efficiency</div>
+                    </div>
+
+                    <!-- Metric 4: Build Speed -->
+                    <div class="metric-card">
+                        <div class="metric-label">Build Pipeline Efficiency</div>
+                        <div class="metric-value">↑ 70%</div>
+                        <div class="metric-tag green">Performance</div>
+                    </div>
+
+                    <!-- Metric 5: Incident Response -->
+                    <div class="metric-card">
+                        <div class="metric-label">Incident Response Time</div>
+                        <div class="metric-value">↓ 50%</div>
+                        <div class="metric-tag green">Reliability</div>
+                    </div>
+
+                    <!-- Metric 6: Scalability -->
+                    <div class="metric-card">
+                        <div class="metric-label">Load Capacity</div>
+                        <div class="metric-value">1M req/sec</div>
+                        <div class="metric-tag cyan">Scale</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- LEARNING TIMELINE & CREDENTIAL VAULT SECTION -->
+    <section id="credentials" class="credentials-section">
+        <div class="experience-header scroll-reveal">
+            <span class="section-label">LEARNING JOURNEY</span>
+            <h2 class="about-name">Education & Credentials</h2>
+            <p class="subtitle">Growth trajectory and verified achievement system</p>
+        </div>
+
+        <div class="credentials-container">
+            <!-- EDUCATION: LEARNING TIMELINE SYSTEM -->
+            <div class="education-timeline scroll-reveal">
+                <h3 class="timeline-heading">LEARNING FOUNDATION</h3>
+
+                <div class="timeline-track">
+                    <!-- Timeline milestones -->
+                    <div class="milestone milestone-0">
+                        <div class="milestone-node" data-timeline-index="0">
+                            <div class="node-dot"></div>
+                            <div class="node-glow"></div>
+                        </div>
+                        <div class="milestone-content">
+                            <div class="milestone-header">
+                                <h4 class="milestone-title">Bachelor of Science</h4>
+                                <span class="milestone-duration">2020 – 2024</span>
+                            </div>
+                            <p class="milestone-institution">Computer Science</p>
+                            <p class="milestone-focus">Specialized in Systems Design, Networking & Cloud Fundamentals
+                            </p>
+
+                            <button class="milestone-toggle" aria-expanded="false">
+                                <span class="toggle-text">View Focus Areas</span>
+                                <span class="toggle-icon">+</span>
+                            </button>
+
+                            <div class="milestone-details" hidden>
+                                <div class="detail-grid">
+                                    <div class="detail-item">
+                                        <span class="detail-label">Core Focus:</span>
+                                        <span class="detail-value">Systems Design, Infrastructure</span>
+                                    </div>
+                                    <div class="detail-item">
+                                        <span class="detail-label">Key Skills:</span>
+                                        <span class="detail-value">Networking, Cloud Platforms, Linux</span>
+                                    </div>
+                                    <div class="detail-item">
+                                        <span class="detail-label">Foundation:</span>
+                                        <span class="detail-value">Theory + Hands-on Lab Projects</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="milestone milestone-1">
+                        <div class="milestone-node" data-timeline-index="1">
+                            <div class="node-dot"></div>
+                            <div class="node-glow"></div>
+                        </div>
+                        <div class="milestone-content">
+                            <div class="milestone-header">
+                                <h4 class="milestone-title">Technical Diploma</h4>
+                                <span class="milestone-duration">2018 – 2020</span>
+                            </div>
+                            <p class="milestone-institution">Information Technology</p>
+                            <p class="milestone-focus">Network & System Administration with practical focus</p>
+
+                            <button class="milestone-toggle" aria-expanded="false">
+                                <span class="toggle-text">View Focus Areas</span>
+                                <span class="toggle-icon">+</span>
+                            </button>
+
+                            <div class="milestone-details" hidden>
+                                <div class="detail-grid">
+                                    <div class="detail-item">
+                                        <span class="detail-label">Core Focus:</span>
+                                        <span class="detail-value">System Administration, Networking</span>
+                                    </div>
+                                    <div class="detail-item">
+                                        <span class="detail-label">Key Skills:</span>
+                                        <span class="detail-value">Linux, Server Config, Network Management</span>
+                                    </div>
+                                    <div class="detail-item">
+                                        <span class="detail-label">Approach:</span>
+                                        <span class="detail-value">Practical, hands-on infrastructure work</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CERTIFICATIONS: CREDENTIAL VAULT SYSTEM -->
+            <div class="credential-vault scroll-reveal">
+                <h3 class="vault-heading">CREDENTIAL VAULT</h3>
+
+                <div class="vault-container">
+                    <div class="vault-background-grid"></div>
+
+                    <div class="vault-entries">
+                        <!-- VERIFIED CREDENTIALS -->
+                        <div class="vault-subsection">
+                            <span class="vault-subsection-label">ACTIVE CREDENTIALS</span>
+
+                            <!-- Credential 1 -->
+                            <div class="credential-entry active" data-credential="aws-sa">
+                                <div class="credential-status-badge verified">
+                                    <span class="badge-icon">✓</span>
+                                    <span class="badge-text">Verified</span>
+                                </div>
+                                <div class="credential-info">
+                                    <h4 class="credential-name">AWS Solutions Architect</h4>
+                                    <p class="credential-issuer">Amazon Web Services</p>
+                                </div>
+                                <div class="credential-meta">
+                                    <span class="meta-item">Professional</span>
+                                    <span class="meta-divider">•</span>
+                                    <span class="meta-item">March 2025</span>
+                                </div>
+                                <button class="credential-expand" aria-label="Expand credential details">
+                                    <span class="expand-icon">→</span>
+                                </button>
+                            </div>
+
+                            <!-- Credential 2 -->
+                            <div class="credential-entry active" data-credential="aws-devops">
+                                <div class="credential-status-badge verified">
+                                    <span class="badge-icon">✓</span>
+                                    <span class="badge-text">Verified</span>
+                                </div>
+                                <div class="credential-info">
+                                    <h4 class="credential-name">AWS DevOps Engineer</h4>
+                                    <p class="credential-issuer">Amazon Web Services</p>
+                                </div>
+                                <div class="credential-meta">
+                                    <span class="meta-item">Professional</span>
+                                    <span class="meta-divider">•</span>
+                                    <span class="meta-item">January 2025</span>
+                                </div>
+                                <button class="credential-expand" aria-label="Expand credential details">
+                                    <span class="expand-icon">→</span>
+                                </button>
+                            </div>
+
+                            <!-- Credential 3 -->
+                            <div class="credential-entry active" data-credential="ckad">
+                                <div class="credential-status-badge verified">
+                                    <span class="badge-icon">✓</span>
+                                    <span class="badge-text">Verified</span>
+                                </div>
+                                <div class="credential-info">
+                                    <h4 class="credential-name">Kubernetes Application Developer</h4>
+                                    <p class="credential-issuer">Cloud Native Computing Foundation</p>
+                                </div>
+                                <div class="credential-meta">
+                                    <span class="meta-item">CKAD</span>
+                                    <span class="meta-divider">•</span>
+                                    <span class="meta-item">November 2024</span>
+                                </div>
+                                <button class="credential-expand" aria-label="Expand credential details">
+                                    <span class="expand-icon">→</span>
+                                </button>
+                            </div>
+
+                            <!-- Credential 4 -->
+                            <div class="credential-entry active" data-credential="cka">
+                                <div class="credential-status-badge verified">
+                                    <span class="badge-icon">✓</span>
+                                    <span class="badge-text">Verified</span>
+                                </div>
+                                <div class="credential-info">
+                                    <h4 class="credential-name">Kubernetes Administrator</h4>
+                                    <p class="credential-issuer">Cloud Native Computing Foundation</p>
+                                </div>
+                                <div class="credential-meta">
+                                    <span class="meta-item">CKA</span>
+                                    <span class="meta-divider">•</span>
+                                    <span class="meta-item">September 2024</span>
+                                </div>
+                                <button class="credential-expand" aria-label="Expand credential details">
+                                    <span class="expand-icon">→</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- FUTURE CREDENTIALS (ROADMAP) -->
+                        <div class="vault-subsection">
+                            <span class="vault-subsection-label">CREDENTIAL ROADMAP</span>
+
+                            <!-- Planned 1 -->
+                            <div class="credential-entry planned" data-credential="tfe">
+                                <div class="credential-status-badge planned">
+                                    <span class="badge-icon">◇</span>
+                                    <span class="badge-text">Planned</span>
+                                </div>
+                                <div class="credential-info">
+                                    <h4 class="credential-name">Terraform Associate</h4>
+                                    <p class="credential-issuer">HashiCorp</p>
+                                </div>
+                                <div class="credential-meta">
+                                    <span class="meta-item">Q3 2025</span>
+                                </div>
+                            </div>
+
+                            <!-- Planned 2 -->
+                            <div class="credential-entry in-progress" data-credential="gcp">
+                                <div class="credential-status-badge in-progress">
+                                    <span class="badge-icon">⊙</span>
+                                    <span class="badge-text">In Progress</span>
+                                </div>
+                                <div class="credential-info">
+                                    <h4 class="credential-name">Google Cloud Professional</h4>
+                                    <p class="credential-issuer">Google Cloud</p>
+                                </div>
+                                <div class="credential-meta">
+                                    <span class="meta-item">Q2 2025</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="skills" class="experience-section">
+        <div class="experience-header scroll-reveal">
+            <span class="section-label">CORE COMPETENCIES</span>
+            <h2 class="about-name">Skills & Expertise</h2>
+            <p class="subtitle">Professional DevOps and Cloud Engineering Capabilities</p>
+        </div>
+
+        <div class="skills-grid container scroll-reveal">
+            <!-- Card 1: Cloud & Infrastructure -->
+            <div class="skill-card cloud-theme">
+                <div class="card-inner">
+                    <div class="card-header">
+                        <span class="card-icon">☁️</span>
+                        <div>
+                            <h3 class="card-title">Cloud & Infrastructure</h3>
+                            <span class="card-category">AWS Expertise</span>
+                        </div>
+                    </div>
+
+                    <p class="card-description">
+                        Design, deploy, and manage scalable cloud infrastructure on AWS with deep expertise in VPC
+                        networking, security groups, and multi-region architectures.
+                    </p>
+
+                    <div class="card-tags">
+                        <span class="tag">AWS EC2</span>
+                        <span class="tag">VPC</span>
+                        <span class="tag">IAM</span>
+                        <span class="tag">CloudFront</span>
+                        <span class="tag">RDS</span>
+                    </div>
+                </div>
+                <div class="card-glow"></div>
+            </div>
+
+            <!-- Card 2: DevOps & CI/CD -->
+            <div class="skill-card devops-theme">
+                <div class="card-inner">
+                    <div class="card-header">
+                        <span class="card-icon">🚀</span>
+                        <div>
+                            <h3 class="card-title">DevOps & CI/CD</h3>
+                            <span class="card-category">Pipeline Automation</span>
+                        </div>
+                    </div>
+
+                    <p class="card-description">
+                        Architect and maintain automated deployment pipelines using GitHub Actions and GitOps principles
+                        for consistent, reliable application delivery.
+                    </p>
+
+                    <div class="card-tags">
+                        <span class="tag">GitHub Actions</span>
+                        <span class="tag">GitOps</span>
+                        <span class="tag">ArgoCD</span>
+                        <span class="tag">Terraform</span>
+                        <span class="tag">Jenkins</span>
+                    </div>
+                </div>
+                <div class="card-glow"></div>
+            </div>
+
+            <!-- Card 3: Containers & Orchestration -->
+            <div class="skill-card container-theme">
+                <div class="card-inner">
+                    <div class="card-header">
+                        <span class="card-icon">🐳</span>
+                        <div>
+                            <h3 class="card-title">Containers & Orchestration</h3>
+                            <span class="card-category">Kubernetes Expert</span>
+                        </div>
+                    </div>
+
+                    <p class="card-description">
+                        Containerize applications with Docker and orchestrate at scale using Kubernetes, managing
+                        multi-cluster deployments and service mesh architectures.
+                    </p>
+
+                    <div class="card-tags">
+                        <span class="tag">Docker</span>
+                        <span class="tag">Kubernetes</span>
+                        <span class="tag">EKS</span>
+                        <span class="tag">Helm</span>
+                        <span class="tag">Istio</span>
+                    </div>
+                </div>
+                <div class="card-glow"></div>
+            </div>
+
+            <!-- Card 4: Observability & Monitoring -->
+            <div class="skill-card obs-theme">
+                <div class="card-inner">
+                    <div class="card-header">
+                        <span class="card-icon">📊</span>
+                        <div>
+                            <h3 class="card-title">Observability & Monitoring</h3>
+                            <span class="card-category">System Insights</span>
+                        </div>
+                    </div>
+
+                    <p class="card-description">
+                        Implement comprehensive monitoring, logging, and tracing solutions to ensure visibility into
+                        production systems and rapid incident response.
+                    </p>
+
+                    <div class="card-tags">
+                        <span class="tag">Prometheus</span>
+                        <span class="tag">Grafana</span>
+                        <span class="tag">ELK Stack</span>
+                        <span class="tag">Datadog</span>
+                        <span class="tag">Jaeger</span>
+                    </div>
+                </div>
+                <div class="card-glow"></div>
+            </div>
+
+            <!-- Card 5: Reliability & Performance -->
+            <div class="skill-card reliability-theme">
+                <div class="card-inner">
+                    <div class="card-header">
+                        <span class="card-icon">⚡</span>
+                        <div>
+                            <h3 class="card-title">Reliability & Performance</h3>
+                            <span class="card-category">High Availability</span>
+                        </div>
+                    </div>
+
+                    <p class="card-description">
+                        Engineer highly available systems with fault tolerance, disaster recovery, and performance
+                        optimization to maintain production SLAs.
+                    </p>
+
+                    <div class="card-tags">
+                        <span class="tag">High Availability</span>
+                        <span class="tag">Auto Scaling</span>
+                        <span class="tag">Load Balancing</span>
+                        <span class="tag">DR Planning</span>
+                        <span class="tag">SRE Practices</span>
+                    </div>
+                </div>
+                <div class="card-glow"></div>
+            </div>
+
+            <!-- Card 6: Database & Data Services -->
+            <div class="skill-card database-theme">
+                <div class="card-inner">
+                    <div class="card-header">
+                        <span class="card-icon">🗄️</span>
+                        <div>
+                            <h3 class="card-title">Database & Data Services</h3>
+                            <span class="card-category">Data Persistence</span>
+                        </div>
+                    </div>
+
+                    <p class="card-description">
+                        Manage and optimize relational and NoSQL databases, ensuring data consistency, backup
+                        strategies, and optimal query performance.
+                    </p>
+
+                    <div class="card-tags">
+                        <span class="tag">PostgreSQL</span>
+                        <span class="tag">MySQL</span>
+                        <span class="tag">DynamoDB</span>
+                        <span class="tag">Redis</span>
+                        <span class="tag">Replication</span>
+                    </div>
+                </div>
+                <div class="card-glow"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- PASSION SECTION: Personal Expression & Photo Wall -->
+    <section id="passion" class="passion-section">
+        <div class="passion-container">
+            <div class="passion-header scroll-reveal">
+                <span class="section-label">BEYOND ENGINEERING</span>
+                <h2 class="passion-title">Passion & Perspective</h2>
+            </div>
+
+            <div class="passion-content scroll-reveal">
+                <div class="passion-text">
+                    <p>
+                        Photography is my lens for understanding the world. Through the camera, I capture moments of
+                        clarity—
+                        the intersection of light, geometry, and human connection. When I'm not architecting cloud
+                        systems,
+                        I'm exploring how perspective shapes perception. These images represent the same precision I
+                        bring to
+                        infrastructure: intentional, thoughtful, and never accidental.
+                    </p>
+                </div>
+
+                <div class="photo-wall" id="photo-wall">
+                    <!-- Images will be dynamically loaded here -->
+                    <div class="photo-wall-placeholder">
+                        <span class="placeholder-text">Photography gallery loading...</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CONTACT SECTION: Final Interaction Layer -->
+    <section id="contact" class="contact-section">
+        <div class="contact-container">
+            <div class="contact-header scroll-reveal">
+                <span class="section-label">CONNECT</span>
+                <h2 class="contact-title">Get In Touch</h2>
+                <p class="contact-subtitle">Let's collaborate or just say hello.</p>
+            </div>
+
+            <div class="contact-content">
+                <!-- LEFT: Contact Info -->
+                <div class="contact-info scroll-reveal">
+                    <div class="info-block">
+                        <h3 class="info-heading">Contact</h3>
+                        <div class="info-item">
+                            <label class="info-label">Name</label>
+                            <p class="info-value">Rezaul Karim</p>
+                        </div>
+                        <div class="info-item">
+                            <label class="info-label">Location</label>
+                            <p class="info-value">Dhaka, Bangladesh</p>
+                        </div>
+                        <div class="info-item">
+                            <label class="info-label">Email</label>
+                            <a href="mailto:rezaulkarim@example.com" class="info-link">
+                                rezaulkarim@example.com
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="info-block">
+                        <h3 class="info-heading">Social</h3>
+                        <div class="social-links">
+                            <a href="https://github.com/imrezaulkrm" target="_blank" rel="noopener noreferrer"
+                                class="social-link github">
+                                <svg viewBox="0 0 24 24" fill="currentColor">
+                                    <path
+                                        d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v 3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" />
+                                </svg>
+                                <span>GitHub</span>
+                            </a>
+                            <a href="https://linkedin.com/in/rezaul-karim" target="_blank" rel="noopener noreferrer"
+                                class="social-link linkedin">
+                                <svg viewBox="0 0 24 24" fill="currentColor">
+                                    <path
+                                        d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" />
+                                </svg>
+                                <span>LinkedIn</span>
+                            </a>
+                            <a href="https://twitter.com/imrezaulkrm" target="_blank" rel="noopener noreferrer"
+                                class="social-link twitter">
+                                <svg viewBox="0 0 24 24" fill="currentColor">
+                                    <path
+                                        d="M23 3a10.9 10.9 0 01-3.14 1.53 4.48 4.48 0 00-7.86 3v1A10.66 10.66 0 013 4s-4 9 5 13a11.64 11.64 0 01-7 2s9 5 20 5a9.5 9.5 0 00-9-5.5c4.75 2.25 7-7 7-7a10.6 10.6 0 01-9.5 5M3 20a9.5 9.5 0 005.5-1" />
+                                </svg>
+                                <span>Twitter</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- RIGHT: Contact Form -->
+                <div class="contact-form-wrapper scroll-reveal">
+                    <form id="contact-form" class="contact-form">
+                        <div class="form-group">
+                            <label for="form-name" class="form-label">Name</label>
+                            <input type="text" id="form-name" name="name" class="form-input" placeholder="Your name"
+                                required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="form-email" class="form-label">Email</label>
+                            <input type="email" id="form-email" name="email" class="form-input"
+                                placeholder="you@example.com" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="form-message" class="form-label">Message</label>
+                            <textarea id="form-message" name="message" class="form-textarea"
+                                placeholder="Your message..." rows="5" required></textarea>
+                        </div>
+
+                        <button type="submit" class="form-submit">Send Message</button>
+                        <div class="form-status" id="form-status"></div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- MAP SECTION -->
+            <div class="contact-map scroll-reveal">
+                <div class="map-container">
+                    <iframe
+                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3652.1234567890!2d90.3563!3d23.8103!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3755b8b8b8b8b8b9%3A0x3b3b3b3b3b3b3b3b!2sDhaka%2C%20Bangladesh!5e0!3m2!1sen!2sbd!4v1234567890"
+                        width="100%" height="400" style="border:0;" allowfullscreen="" loading="lazy"
+                        referrerpolicy="no-referrer-when-downgrade"></iframe>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-left">
+                <p class="footer-copyright">&copy; 2026 Rezaul Karim. All rights reserved.</p>
+            </div>
+            <div class="footer-right">
+                <a href="#hero" class="back-to-top" id="back-to-top">
+                    <span>Back to Top</span>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="18 15 12 9 6 15"></polyline>
+                    </svg>
+                </a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="infra.js"></script>
+</body>
+
+>>>>>>> e65698c
 </html>

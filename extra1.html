@@ -1,0 +1,1506 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Rezaul Karim — DevOps & Cloud Engineer</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet" />
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        mono: ['JetBrains Mono', 'monospace'],
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'JetBrains Mono', monospace;
+            background: #0a0e17;
+            color: #c9d1d9;
+            overflow-x: hidden;
+        }
+
+        ::-webkit-scrollbar {
+            width: 5px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #0a0e17;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #1f6feb33;
+            border-radius: 3px;
+        }
+
+        /* TERMINAL */
+        .term {
+            background: #0d1117;
+            border: 1px solid #21262d;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .term-bar {
+            background: #161b22;
+            border-bottom: 1px solid #21262d;
+            padding: 10px 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .term-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .term-body {
+            padding: 20px;
+            font-size: 13px;
+            line-height: 1.8;
+            overflow-x: auto;
+        }
+
+        .term-body .prompt {
+            color: #58a6ff;
+        }
+
+        .term-body .cmd {
+            color: #7ee787;
+        }
+
+        .term-body .flag {
+            color: #d2a8ff;
+        }
+
+        .term-body .str {
+            color: #a5d6ff;
+        }
+
+        .term-body .comment {
+            color: #484f58;
+        }
+
+        .term-body .key {
+            color: #ff7b72;
+        }
+
+        .term-body .val {
+            color: #79c0ff;
+        }
+
+        .term-body .num {
+            color: #79c0ff;
+        }
+
+        .term-body .warn {
+            color: #d29922;
+        }
+
+        .term-body .ok {
+            color: #3fb950;
+        }
+
+        .term-body .err {
+            color: #f85149;
+        }
+
+        .term-body .dim {
+            color: #484f58;
+        }
+
+        .term-body .branch {
+            color: #f0883e;
+        }
+
+        /* CURSOR BLINK */
+        @keyframes blink {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0;
+            }
+        }
+
+        .cursor {
+            display: inline-block;
+            width: 8px;
+            height: 16px;
+            background: #7ee787;
+            animation: blink 1s step-end infinite;
+            vertical-align: middle;
+            margin-left: 2px;
+        }
+
+        /* TYPING */
+        @keyframes typing {
+            from {
+                width: 0;
+            }
+
+            to {
+                width: 100%;
+            }
+        }
+
+        .type-line {
+            overflow: hidden;
+            white-space: nowrap;
+            width: 0;
+        }
+
+        .type-line.on {
+            animation: typing 2s steps(50) forwards;
+        }
+
+        .type-line.on2 {
+            animation: typing 2.5s steps(60) 0.5s forwards;
+        }
+
+        .type-line.on3 {
+            animation: typing 3s steps(70) 1s forwards;
+        }
+
+        /* STATUS DOT */
+        @keyframes pulse-dot {
+
+            0%,
+            100% {
+                box-shadow: 0 0 0 0 rgba(63, 185, 80, 0.4);
+            }
+
+            50% {
+                box-shadow: 0 0 0 6px rgba(63, 185, 80, 0);
+            }
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #3fb950;
+            animation: pulse-dot 2s ease infinite;
+        }
+
+        /* REVEAL */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.7s ease;
+        }
+
+        .reveal.vis {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* SKILL BAR */
+        .sk-fill {
+            width: 0;
+            transition: width 1.5s ease;
+        }
+
+        /* PIPELINE ANIM */
+        @keyframes flow {
+            0% {
+                background-position: 0% 0;
+            }
+
+            100% {
+                background-position: 200% 0;
+            }
+        }
+
+        .pipe-flow {
+            background: linear-gradient(90deg, #21262d, #1f6feb, #21262d);
+            background-size: 200% 100%;
+            animation: flow 2s linear infinite;
+            height: 2px;
+        }
+
+        /* GRID BG */
+        .grid-bg {
+            background-image:
+                linear-gradient(rgba(31, 111, 235, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(31, 111, 235, 0.03) 1px, transparent 1px);
+            background-size: 40px 40px;
+        }
+
+        /* CARD */
+        .card {
+            background: #0d1117;
+            border: 1px solid #21262d;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            border-color: #1f6feb44;
+            box-shadow: 0 0 20px rgba(31, 111, 235, 0.05);
+        }
+
+        /* BADGE */
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 500;
+        }
+
+        .badge-green {
+            background: #12261e;
+            color: #3fb950;
+            border: 1px solid #1f6feb22;
+        }
+
+        .badge-blue {
+            background: #0c1929;
+            color: #58a6ff;
+            border: 1px solid #1f6feb22;
+        }
+
+        .badge-yellow {
+            background: #1c1708;
+            color: #d29922;
+            border: 1px solid #d2992222;
+        }
+
+        .badge-red {
+            background: #1c0a0a;
+            color: #f85149;
+            border: 1px solid #f8514922;
+        }
+
+        .badge-purple {
+            background: #150d22;
+            color: #bc8cff;
+            border: 1px solid #bc8cff22;
+        }
+
+        /* MOBILE NAV */
+        .mob-nav {
+            transform: translateX(100%);
+            transition: transform 0.3s ease;
+        }
+
+        .mob-nav.open {
+            transform: translateX(0);
+        }
+
+        /* TOAST */
+        .toast {
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+
+        .toast.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        /* ARCHITECTURE */
+        .arch-node {
+            background: #161b22;
+            border: 1px solid #21262d;
+            border-radius: 8px;
+            padding: 10px 14px;
+            text-align: center;
+            font-size: 11px;
+            transition: all 0.3s;
+        }
+
+        .arch-node:hover {
+            border-color: #1f6feb;
+            background: #0d1117;
+        }
+
+        .arch-line {
+            stroke: #21262d;
+            stroke-width: 1.5;
+        }
+
+        .arch-line-active {
+            stroke: #1f6feb;
+            stroke-width: 1.5;
+            stroke-dasharray: 5 3;
+        }
+
+        /* METRIC CARD */
+        .metric {
+            background: #0d1117;
+            border: 1px solid #21262d;
+            border-radius: 8px;
+            padding: 16px;
+        }
+
+        .metric:hover {
+            border-color: #3fb95033;
+        }
+
+        /* NAV LINK */
+        .nav-a {
+            color: #8b949e;
+            font-size: 12px;
+            text-decoration: none;
+            transition: color 0.2s;
+            padding: 4px 0;
+        }
+
+        .nav-a:hover,
+        .nav-a.active {
+            color: #58a6ff;
+        }
+
+        @keyframes spin-slow {
+            from {
+                transform: rotate(0deg);
+            }
+
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .spin-slow {
+            animation: spin-slow 20s linear infinite;
+        }
+    </style>
+</head>
+
+<body class="grid-bg">
+
+    <!-- ==================== NAVBAR ==================== -->
+    <nav class="fixed top-0 left-0 right-0 z-50 bg-[#0a0e17]/90 backdrop-blur-md border-b border-[#21262d]">
+        <div class="max-w-6xl mx-auto px-4 h-14 flex items-center justify-between">
+            <!-- Left: Logo + Status -->
+            <div class="flex items-center gap-3">
+                <div class="flex items-center gap-2">
+                    <svg class="w-5 h-5 text-[#3fb950]" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="2">
+                        <path d="M12 2L2 7l10 5 10-5-10-5z" />
+                        <path d="M2 17l10 5 10-5" />
+                        <path d="M2 12l10 5 10-5" />
+                    </svg>
+                    <span class="text-[13px] font-semibold text-white hidden sm:inline">rezaul<span
+                            class="text-[#58a6ff]">:</span>~</span>
+                </div>
+                <div class="hidden md:flex items-center gap-1.5 text-[10px] text-[#3fb950]">
+                    <span class="status-dot"></span>
+                    <span>systems operational</span>
+                </div>
+            </div>
+            <!-- Center: Nav -->
+            <div class="hidden md:flex items-center gap-6">
+                <a href="#about" class="nav-a">about</a>
+                <a href="#stack" class="nav-a">stack</a>
+                <a href="#infra" class="nav-a">infrastructure</a>
+                <a href="#deployments" class="nav-a">deployments</a>
+                <a href="#contact" class="nav-a">contact</a>
+            </div>
+            <!-- Right -->
+            <div class="flex items-center gap-3">
+                <a href="https://github.com/imrezaulkrm" target="_blank"
+                    class="flex items-center gap-1.5 text-[11px] text-[#8b949e] hover:text-white transition-colors">
+                    <i data-lucide="github" class="w-4 h-4"></i>
+                    <span class="hidden sm:inline">github</span>
+                </a>
+                <button id="menuBtn" class="md:hidden text-[#8b949e] hover:text-white transition-colors">
+                    <i data-lucide="menu" class="w-5 h-5"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Mobile Nav -->
+    <div id="mobNav" class="mob-nav fixed inset-0 z-[60] bg-[#0a0e17]/98 backdrop-blur-xl flex flex-col p-6 pt-20">
+        <button id="mobClose" class="absolute top-5 right-5 text-[#8b949e] hover:text-white"><i data-lucide="x"
+                class="w-5 h-5"></i></button>
+        <div class="flex flex-col gap-5 text-sm font-mono">
+            <a href="#about" class="mob-link text-[#8b949e] hover:text-[#58a6ff] transition-colors">$ cat about.md</a>
+            <a href="#stack" class="mob-link text-[#8b949e] hover:text-[#58a6ff] transition-colors">$ ls stack/</a>
+            <a href="#infra" class="mob-link text-[#8b949e] hover:text-[#58a6ff] transition-colors">$ terraform plan</a>
+            <a href="#deployments" class="mob-link text-[#8b949e] hover:text-[#58a6ff] transition-colors">$ kubectl get
+                deployments</a>
+            <a href="#contact" class="mob-link text-[#8b949e] hover:text-[#58a6ff] transition-colors">$ ssh
+                contact@rezaul</a>
+        </div>
+    </div>
+
+    <!-- ==================== HERO ==================== -->
+    <section id="hero" class="min-h-screen flex items-center justify-center pt-14 px-4">
+        <div class="max-w-4xl w-full">
+            <!-- Main Terminal -->
+            <div class="term">
+                <div class="term-bar">
+                    <div class="term-dot" style="background:#f85149"></div>
+                    <div class="term-dot" style="background:#d29922"></div>
+                    <div class="term-dot" style="background:#3fb950"></div>
+                    <span class="text-[11px] text-[#484f58] ml-2">rezaul@devops:~</span>
+                    <span class="text-[11px] text-[#484f58] ml-auto">zsh — 80×24</span>
+                </div>
+                <div class="term-body" id="heroTerm">
+                    <div class="mb-1"><span class="prompt">rezaul@devops</span><span
+                            class="text-[#484f58]">:</span><span class="cmd">~</span><span
+                            class="text-[#484f58]">$</span> <span class="cmd type-line on">whoami</span></div>
+                    <div class="mb-4 pl-4 text-white font-semibold text-base type-line on" style="animation-delay:0.3s">
+                        Rezaul Karim — DevOps & Cloud Engineer</div>
+
+                    <div class="mb-1"><span class="prompt">rezaul@devops</span><span
+                            class="text-[#484f58]">:</span><span class="cmd">~</span><span
+                            class="text-[#484f58]">$</span> <span class="cmd type-line on2">cat role.yml</span></div>
+                    <div class="mb-4 pl-4 type-line on2" style="animation-delay:0.8s">
+                        <span class="key">role</span><span class="text-[#484f58]">:</span> <span class="val">DevOps &
+                            Cloud Engineer</span><br>
+                        <span class="key">location</span><span class="text-[#484f58]">:</span> <span class="val">Dhaka,
+                            Bangladesh</span><br>
+                        <span class="key">experience</span><span class="text-[#484f58]">:</span> <span
+                            class="num">4+</span> <span class="val">years</span><br>
+                        <span class="key">cloud</span><span class="text-[#484f58]">:</span> <span class="val">[AWS,
+                            Azure, GCP]</span><br>
+                        <span class="key">focus</span><span class="text-[#484f58]">:</span> <span class="val">CI/CD,
+                            K8s, IaC, Automation</span><br>
+                        <span class="key">status</span><span class="text-[#484f58]">:</span> <span class="ok">●
+                            OPEN_TO_WORK</span>
+                    </div>
+
+                    <div class="mb-1"><span class="prompt">rezaul@devops</span><span
+                            class="text-[#484f58]">:</span><span class="cmd">~</span><span
+                            class="text-[#484f58]">$</span> <span class="cmd type-line on3">kubectl get nodes -o
+                            wide</span></div>
+                    <div class="pl-4 type-line on3" style="animation-delay:1.5s">
+                        <div class="text-[#484f58] text-[11px] mb-1">NAME STATUS ROLES AGE VERSION</div>
+                        <div><span class="ok">●</span> aws-prod-01 <span class="ok">Ready</span> control-plane 365d
+                            v1.28.4</div>
+                        <div><span class="ok">●</span> aws-prod-02 <span class="ok">Ready</span> worker 365d v1.28.4
+                        </div>
+                        <div><span class="ok">●</span> aws-prod-03 <span class="ok">Ready</span> worker 365d v1.28.4
+                        </div>
+                        <div><span class="ok">●</span> azure-staging-01 <span class="ok">Ready</span> worker 180d
+                            v1.27.8</div>
+                    </div>
+
+                    <div class="mt-4 flex items-center gap-1">
+                        <span class="prompt">rezaul@devops</span><span class="text-[#484f58]">:</span><span
+                            class="cmd">~</span><span class="text-[#484f58]">$</span> <span class="cursor"></span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Status Bar -->
+            <div class="mt-6 grid grid-cols-2 sm:grid-cols-4 gap-3">
+                <div class="metric text-center">
+                    <div class="text-[10px] text-[#484f58] uppercase tracking-wider mb-1">Uptime</div>
+                    <div class="text-lg font-bold text-[#3fb950]">99.99%</div>
+                </div>
+                <div class="metric text-center">
+                    <div class="text-[10px] text-[#484f58] uppercase tracking-wider mb-1">Deployments</div>
+                    <div class="text-lg font-bold text-[#58a6ff]">2,847</div>
+                </div>
+                <div class="metric text-center">
+                    <div class="text-[10px] text-[#484f58] uppercase tracking-wider mb-1">Containers</div>
+                    <div class="text-lg font-bold text-[#bc8cff]">156</div>
+                </div>
+                <div class="metric text-center">
+                    <div class="text-[10px] text-[#484f58] uppercase tracking-wider mb-1">Incidents</div>
+                    <div class="text-lg font-bold text-[#3fb950]">0 <span class="text-[10px] text-[#484f58]">this
+                            month</span></div>
+                </div>
+            </div>
+
+            <!-- CTA -->
+            <div class="mt-6 flex flex-col sm:flex-row items-center gap-3">
+                <a href="#deployments"
+                    class="w-full sm:w-auto flex items-center justify-center gap-2 bg-[#238636] hover:bg-[#2ea043] text-white text-[12px] font-semibold px-6 py-2.5 rounded-md transition-colors">
+                    <i data-lucide="terminal" class="w-3.5 h-3.5"></i>
+                    view deployments
+                </a>
+                <a href="#contact"
+                    class="w-full sm:w-auto flex items-center justify-center gap-2 border border-[#30363d] hover:border-[#58a6ff] text-[#c9d1d9] hover:text-white text-[12px] font-semibold px-6 py-2.5 rounded-md transition-all">
+                    <i data-lucide="mail" class="w-3.5 h-3.5"></i>
+                    contact me
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== ABOUT ==================== -->
+    <section id="about" class="py-20 px-4">
+        <div class="max-w-4xl mx-auto">
+            <div class="reveal">
+                <div class="term">
+                    <div class="term-bar">
+                        <div class="term-dot" style="background:#f85149"></div>
+                        <div class="term-dot" style="background:#d29922"></div>
+                        <div class="term-dot" style="background:#3fb950"></div>
+                        <span class="text-[11px] text-[#484f58] ml-2">about.md</span>
+                    </div>
+                    <div class="term-body text-[13px] leading-relaxed">
+                        <p class="comment"># About Me</p>
+                        <p class="mt-3">I'm a <span class="val">DevOps & Cloud Engineer</span> with <span class="num">4+
+                                years</span> of experience building and managing production-grade infrastructure. I
+                            automate everything — from provisioning servers to deploying containers to monitoring the
+                            entire stack.</p>
+                        <p class="mt-3">My daily workflow involves writing <span class="key">Terraform</span> modules,
+                            building <span class="key">CI/CD pipelines</span>, managing <span class="key">Kubernetes
+                                clusters</span>, and making sure nothing breaks at 3 AM. I've worked across <span
+                                class="val">AWS</span>, <span class="val">Azure</span>, and <span class="val">GCP</span>
+                            — deploying everything from simple web apps to complex microservice architectures.</p>
+                        <p class="mt-3">I believe in <span class="ok">Infrastructure as Code</span>, <span
+                                class="ok">GitOps</span>, and the principle: <span class="warn">"If you do it twice,
+                                automate it."</span></p>
+
+                        <p class="mt-5 comment"># System Info</p>
+                        <p class="mt-2"><span class="key">os</span><span class="text-[#484f58]">:</span> <span
+                                class="val">Arch Linux / Ubuntu LTS</span></p>
+                        <p><span class="key">editor</span><span class="text-[#484f58]">:</span> <span class="val">Neovim
+                                + Tmux</span></p>
+                        <p><span class="key">shell</span><span class="text-[#484f58]">:</span> <span class="val">Zsh +
+                                Starship</span></p>
+                        <p><span class="key">education</span><span class="text-[#484f58]">:</span> <span
+                                class="val">B.Sc in Computer Science & Engineering</span></p>
+                        <p><span class="key">languages</span><span class="text-[#484f58]">:</span> <span
+                                class="val">Bengali (native), English (fluent)</span></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== TECH STACK ==================== -->
+    <section id="stack" class="py-20 px-4">
+        <div class="max-w-6xl mx-auto">
+            <div class="reveal mb-10">
+                <p class="text-[11px] text-[#484f58] uppercase tracking-[0.2em] mb-2">// tech_stack.yml</p>
+                <h2 class="text-xl font-semibold text-white font-sans">$ ls -la stack/</h2>
+            </div>
+
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <!-- Cloud -->
+                <div class="reveal card p-5">
+                    <div class="flex items-center gap-2 mb-4">
+                        <span class="text-[#58a6ff] text-lg">☁️</span>
+                        <span class="text-[12px] font-semibold text-white uppercase tracking-wider">Cloud
+                            Platforms</span>
+                    </div>
+                    <div class="space-y-3">
+                        <div>
+                            <div class="flex justify-between text-[12px] mb-1"><span>Amazon Web Services</span><span
+                                    class="text-[#58a6ff]">90%</span></div>
+                            <div class="h-1.5 bg-[#161b22] rounded overflow-hidden">
+                                <div class="sk-fill h-full bg-[#58a6ff] rounded" data-width="90%"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between text-[12px] mb-1"><span>Microsoft Azure</span><span
+                                    class="text-[#58a6ff]">78%</span></div>
+                            <div class="h-1.5 bg-[#161b22] rounded overflow-hidden">
+                                <div class="sk-fill h-full bg-[#1f6feb] rounded" data-width="78%"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between text-[12px] mb-1"><span>Google Cloud</span><span
+                                    class="text-[#58a6ff]">68%</span></div>
+                            <div class="h-1.5 bg-[#161b22] rounded overflow-hidden">
+                                <div class="sk-fill h-full bg-[#388bfd] rounded" data-width="68%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Containers -->
+                <div class="reveal card p-5">
+                    <div class="flex items-center gap-2 mb-4">
+                        <span class="text-[#bc8cff] text-lg">🐳</span>
+                        <span class="text-[12px] font-semibold text-white uppercase tracking-wider">Containers</span>
+                    </div>
+                    <div class="space-y-3">
+                        <div>
+                            <div class="flex justify-between text-[12px] mb-1"><span>Docker</span><span
+                                    class="text-[#bc8cff]">95%</span></div>
+                            <div class="h-1.5 bg-[#161b22] rounded overflow-hidden">
+                                <div class="sk-fill h-full bg-[#bc8cff] rounded" data-width="95%"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between text-[12px] mb-1"><span>Kubernetes</span><span
+                                    class="text-[#bc8cff]">88%</span></div>
+                            <div class="h-1.5 bg-[#161b22] rounded overflow-hidden">
+                                <div class="sk-fill h-full bg-[#a371f7] rounded" data-width="88%"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between text-[12px] mb-1"><span>Helm / ArgoCD</span><span
+                                    class="text-[#bc8cff]">80%</span></div>
+                            <div class="h-1.5 bg-[#161b22] rounded overflow-hidden">
+                                <div class="sk-fill h-full bg-[#8957e5] rounded" data-width="80%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CI/CD -->
+                <div class="reveal card p-5">
+                    <div class="flex items-center gap-2 mb-4">
+                        <span class="text-[#3fb950] text-lg">🔄</span>
+                        <span class="text-[12px] font-semibold text-white uppercase tracking-wider">CI/CD</span>
+                    </div>
+                    <div class="space-y-3">
+                        <div>
+                            <div class="flex justify-between text-[12px] mb-1"><span>GitHub Actions</span><span
+                                    class="text-[#3fb950]">93%</span></div>
+                            <div class="h-1.5 bg-[#161b22] rounded overflow-hidden">
+                                <div class="sk-fill h-full bg-[#3fb950] rounded" data-width="93%"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between text-[12px] mb-1"><span>Jenkins</span><span
+                                    class="text-[#3fb950]">88%</span></div>
+                            <div class="h-1.5 bg-[#161b22] rounded overflow-hidden">
+                                <div class="sk-fill h-full bg-[#2ea043] rounded" data-width="88%"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between text-[12px] mb-1"><span>GitLab CI</span><span
+                                    class="text-[#3fb950]">80%</span></div>
+                            <div class="h-1.5 bg-[#161b22] rounded overflow-hidden">
+                                <div class="sk-fill h-full bg-[#238636] rounded" data-width="80%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- IaC -->
+                <div class="reveal card p-5">
+                    <div class="flex items-center gap-2 mb-4">
+                        <span class="text-[#d29922] text-lg">🏗️</span>
+                        <span class="text-[12px] font-semibold text-white uppercase tracking-wider">IaC</span>
+                    </div>
+                    <div class="space-y-3">
+                        <div>
+                            <div class="flex justify-between text-[12px] mb-1"><span>Terraform</span><span
+                                    class="text-[#d29922]">92%</span></div>
+                            <div class="h-1.5 bg-[#161b22] rounded overflow-hidden">
+                                <div class="sk-fill h-full bg-[#d29922] rounded" data-width="92%"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between text-[12px] mb-1"><span>Ansible</span><span
+                                    class="text-[#d29922]">85%</span></div>
+                            <div class="h-1.5 bg-[#161b22] rounded overflow-hidden">
+                                <div class="sk-fill h-full bg-[#bb8009] rounded" data-width="85%"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between text-[12px] mb-1"><span>CloudFormation</span><span
+                                    class="text-[#d29922]">75%</span></div>
+                            <div class="h-1.5 bg-[#161b22] rounded overflow-hidden">
+                                <div class="sk-fill h-full bg-[#9e6a03] rounded" data-width="75%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Monitoring -->
+                <div class="reveal card p-5">
+                    <div class="flex items-center gap-2 mb-4">
+                        <span class="text-[#f85149] text-lg">📊</span>
+                        <span class="text-[12px] font-semibold text-white uppercase tracking-wider">Monitoring</span>
+                    </div>
+                    <div class="space-y-3">
+                        <div>
+                            <div class="flex justify-between text-[12px] mb-1"><span>Prometheus + Grafana</span><span
+                                    class="text-[#f85149]">90%</span></div>
+                            <div class="h-1.5 bg-[#161b22] rounded overflow-hidden">
+                                <div class="sk-fill h-full bg-[#f85149] rounded" data-width="90%"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between text-[12px] mb-1"><span>ELK Stack</span><span
+                                    class="text-[#f85149]">82%</span></div>
+                            <div class="h-1.5 bg-[#161b22] rounded overflow-hidden">
+                                <div class="sk-fill h-full bg-[#da3633] rounded" data-width="82%"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between text-[12px] mb-1"><span>Datadog</span><span
+                                    class="text-[#f85149]">75%</span></div>
+                            <div class="h-1.5 bg-[#161b22] rounded overflow-hidden">
+                                <div class="sk-fill h-full bg-[#b62324] rounded" data-width="75%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Scripting -->
+                <div class="reveal card p-5">
+                    <div class="flex items-center gap-2 mb-4">
+                        <span class="text-[#79c0ff] text-lg">💻</span>
+                        <span class="text-[12px] font-semibold text-white uppercase tracking-wider">Scripting &
+                            OS</span>
+                    </div>
+                    <div class="space-y-3">
+                        <div>
+                            <div class="flex justify-between text-[12px] mb-1"><span>Linux Administration</span><span
+                                    class="text-[#79c0ff]">95%</span></div>
+                            <div class="h-1.5 bg-[#161b22] rounded overflow-hidden">
+                                <div class="sk-fill h-full bg-[#79c0ff] rounded" data-width="95%"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between text-[12px] mb-1"><span>Bash / Shell</span><span
+                                    class="text-[#79c0ff]">92%</span></div>
+                            <div class="h-1.5 bg-[#161b22] rounded overflow-hidden">
+                                <div class="sk-fill h-full bg-[#58a6ff] rounded" data-width="92%"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between text-[12px] mb-1"><span>Python</span><span
+                                    class="text-[#79c0ff]">78%</span></div>
+                            <div class="h-1.5 bg-[#161b22] rounded overflow-hidden">
+                                <div class="sk-fill h-full bg-[#388bfd] rounded" data-width="78%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tool Tags -->
+            <div class="reveal mt-8 flex flex-wrap gap-2 justify-center">
+                <span class="badge badge-blue">Nginx</span>
+                <span class="badge badge-purple">ArgoCD</span>
+                <span class="badge badge-green">SonarQube</span>
+                <span class="badge badge-yellow">HashiCorp Vault</span>
+                <span class="badge badge-red">Trivy</span>
+                <span class="badge badge-blue">OPA/Gatekeeper</span>
+                <span class="badge badge-purple">Istio</span>
+                <span class="badge badge-green">Terragrunt</span>
+                <span class="badge badge-yellow">Prometheus</span>
+                <span class="badge badge-red">Grafana</span>
+                <span class="badge badge-blue">Loki</span>
+                <span class="badge badge-purple">Restic</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== INFRASTRUCTURE DIAGRAM ==================== -->
+    <section id="infra" class="py-20 px-4">
+        <div class="max-w-5xl mx-auto">
+            <div class="reveal mb-10">
+                <p class="text-[11px] text-[#484f58] uppercase tracking-[0.2em] mb-2">// infrastructure.tf</p>
+                <h2 class="text-xl font-semibold text-white font-sans">$ terraform graph</h2>
+            </div>
+
+            <div class="reveal term">
+                <div class="term-bar">
+                    <div class="term-dot" style="background:#f85149"></div>
+                    <div class="term-dot" style="background:#d29922"></div>
+                    <div class="term-dot" style="background:#3fb950"></div>
+                    <span class="text-[11px] text-[#484f58] ml-2">architecture-diagram</span>
+                </div>
+                <div class="term-body">
+                    <!-- Architecture Diagram -->
+                    <div class="font-sans">
+                        <!-- Row 1: Users -->
+                        <div class="flex justify-center mb-3">
+                            <div class="arch-node flex items-center gap-2">
+                                <i data-lucide="users" class="w-4 h-4 text-[#8b949e]"></i>
+                                <span class="text-[#c9d1d9]">Users / Traffic</span>
+                            </div>
+                        </div>
+                        <div class="flex justify-center mb-3"><span class="text-[#484f58]">│</span></div>
+
+                        <!-- Row 2: CDN + WAF -->
+                        <div class="flex justify-center gap-4 mb-3 flex-wrap">
+                            <div class="arch-node flex items-center gap-2 border-[#f0883e33]">
+                                <span>🌐</span>
+                                <span class="text-[#f0883e]">CloudFront CDN</span>
+                            </div>
+                            <div class="arch-node flex items-center gap-2 border-[#f8514933]">
+                                <span>🛡️</span>
+                                <span class="text-[#f85149]">AWS WAF</span>
+                            </div>
+                        </div>
+                        <div class="flex justify-center mb-3"><span class="text-[#484f58]">│</span></div>
+
+                        <!-- Row 3: ALB -->
+                        <div class="flex justify-center mb-3">
+                            <div class="arch-node flex items-center gap-2 border-[#58a6ff33]">
+                                <span>⚖️</span>
+                                <span class="text-[#58a6ff]">Application Load Balancer</span>
+                            </div>
+                        </div>
+                        <div class="flex justify-center mb-3"><span class="text-[#484f58]">│</span></div>
+
+                        <!-- Row 4: K8s Cluster -->
+                        <div class="border border-[#1f6feb33] rounded-lg p-4 mb-3">
+                            <div class="text-center text-[11px] text-[#58a6ff] mb-3 uppercase tracking-wider">────
+                                Kubernetes Cluster (EKS) ────</div>
+                            <div class="grid grid-cols-3 gap-3 mb-3">
+                                <div class="arch-node border-[#3fb95033]">
+                                    <div class="text-lg mb-1">🟢</div>
+                                    <div class="text-[10px] text-[#3fb950]">Pod: api-svc</div>
+                                    <div class="text-[9px] text-[#484f58]">3 replicas</div>
+                                </div>
+                                <div class="arch-node border-[#bc8cff33]">
+                                    <div class="text-lg mb-1">🟣</div>
+                                    <div class="text-[10px] text-[#bc8cff]">Pod: auth-svc</div>
+                                    <div class="text-[9px] text-[#484f58]">2 replicas</div>
+                                </div>
+                                <div class="arch-node border-[#d2992233]">
+                                    <div class="text-lg mb-1">🟡</div>
+                                    <div class="text-[10px] text-[#d29922]">Pod: worker-svc</div>
+                                    <div class="text-[9px] text-[#484f58]">5 replicas</div>
+                                </div>
+                            </div>
+                            <div class="grid grid-cols-2 gap-3">
+                                <div class="arch-node border-[#f8514933]">
+                                    <div class="text-[10px] text-[#f85149]">🛡️ Ingress Controller</div>
+                                </div>
+                                <div class="arch-node border-[#79c0ff33]">
+                                    <div class="text-[10px] text-[#79c0ff]">🔐 cert-manager (TLS)</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Row 5: Data Layer -->
+                        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                            <div class="arch-node border-[#58a6ff33]">
+                                <div class="text-lg mb-1">🐘</div>
+                                <div class="text-[10px] text-[#58a6ff]">RDS PostgreSQL</div>
+                                <div class="text-[9px] text-[#484f58]">Multi-AZ</div>
+                            </div>
+                            <div class="arch-node border-[#f8514933]">
+                                <div class="text-lg mb-1">🔴</div>
+                                <div class="text-[10px] text-[#f85149]">ElastiCache Redis</div>
+                                <div class="text-[9px] text-[#484f58]">Cluster Mode</div>
+                            </div>
+                            <div class="arch-node border-[#d2992233]">
+                                <div class="text-lg mb-1">📦</div>
+                                <div class="text-[10px] text-[#d29922]">S3 Bucket</div>
+                                <div class="text-[9px] text-[#484f58]">Encrypted</div>
+                            </div>
+                            <div class="arch-node border-[#3fb95033]">
+                                <div class="text-lg mb-1">🐇</div>
+                                <div class="text-[10px] text-[#3fb950]">RabbitMQ</div>
+                                <div class="text-[9px] text-[#484f58]">Message Queue</div>
+                            </div>
+                        </div>
+
+                        <!-- Row 6: Monitoring -->
+                        <div class="mt-3 border border-[#21262d] rounded-lg p-3">
+                            <div class="text-center text-[11px] text-[#484f58] mb-2 uppercase tracking-wider">
+                                Observability Stack</div>
+                            <div class="flex justify-center gap-3 flex-wrap">
+                                <span class="badge badge-red">Prometheus</span>
+                                <span class="badge badge-yellow">Grafana</span>
+                                <span class="badge badge-blue">Loki</span>
+                                <span class="badge badge-purple">Tempo</span>
+                                <span class="badge badge-green">AlertManager</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== CI/CD PIPELINE ==================== -->
+    <section class="py-20 px-4">
+        <div class="max-w-5xl mx-auto">
+            <div class="reveal mb-10">
+                <p class="text-[11px] text-[#484f58] uppercase tracking-[0.2em] mb-2">// .github/workflows/deploy.yml
+                </p>
+                <h2 class="text-xl font-semibold text-white font-sans">CI/CD Pipeline</h2>
+            </div>
+
+            <div class="reveal term">
+                <div class="term-bar">
+                    <div class="term-dot" style="background:#f85149"></div>
+                    <div class="term-dot" style="background:#d29922"></div>
+                    <div class="term-dot" style="background:#3fb950"></div>
+                    <span class="text-[11px] text-[#484f58] ml-2">pipeline-run #2847</span>
+                    <span class="badge badge-green ml-auto text-[10px]"><span class="status-dot"
+                            style="width:6px;height:6px;"></span> passed</span>
+                </div>
+                <div class="term-body text-[12px] space-y-1">
+                    <p><span class="ok">✓</span> <span class="dim">[00:03]</span> <span class="val">checkout</span> —
+                        cloned repository</p>
+                    <p><span class="ok">✓</span> <span class="dim">[00:12]</span> <span class="val">setup-node</span> —
+                        installed Node 20.x</p>
+                    <p><span class="ok">✓</span> <span class="dim">[00:45]</span> <span class="val">install-deps</span>
+                        — npm ci — 342 packages</p>
+                    <p><span class="ok">✓</span> <span class="dim">[01:23]</span> <span class="val">lint</span> — eslint
+                        . — 0 errors, 0 warnings</p>
+                    <p><span class="ok">✓</span> <span class="dim">[02:15]</span> <span class="val">unit-tests</span> —
+                        jest — 248 passed, 0 failed</p>
+                    <p><span class="ok">✓</span> <span class="dim">[03:01]</span> <span
+                            class="val">integration-tests</span> — 56 passed, 0 failed</p>
+                    <p><span class="ok">✓</span> <span class="dim">[03:45]</span> <span class="val">docker-build</span>
+                        — image: app:v2.8.4 (142MB)</p>
+                    <p><span class="ok">✓</span> <span class="dim">[04:12]</span> <span class="val">trivy-scan</span> —
+                        0 critical, 0 high, 2 low</p>
+                    <p><span class="ok">✓</span> <span class="dim">[04:30]</span> <span class="val">push-ecr</span> —
+                        pushed to 123456.dkr.ecr.us-east-1.amazonaws.com</p>
+                    <p><span class="ok">✓</span> <span class="dim">[05:01]</span> <span class="val">helm-upgrade</span>
+                        — release api-prod upgraded (rolling update)</p>
+                    <p><span class="ok">✓</span> <span class="dim">[05:15]</span> <span class="val">health-check</span>
+                        — all pods healthy, endpoints responding</p>
+                    <p><span class="ok">✓</span> <span class="dim">[05:18]</span> <span class="val">slack-notify</span>
+                        — deployment notified to #releases</p>
+                    <p class="mt-2 text-[#484f58]">──────────────────────────────────────────</p>
+                    <p class="ok font-semibold">Pipeline completed in 5m 18s — 0 failures</p>
+                </div>
+            </div>
+
+            <!-- Pipeline Visual -->
+            <div class="reveal mt-6 grid grid-cols-2 sm:grid-cols-5 gap-2">
+                <div class="metric text-center">
+                    <div class="text-[10px] text-[#484f58] mb-1">BUILD</div><span
+                        class="badge badge-green text-[10px]"><span class="status-dot"
+                            style="width:5px;height:5px;"></span> ok</span>
+                </div>
+                <div class="metric text-center">
+                    <div class="text-[10px] text-[#484f58] mb-1">TEST</div><span
+                        class="badge badge-green text-[10px]"><span class="status-dot"
+                            style="width:5px;height:5px;"></span> ok</span>
+                </div>
+                <div class="metric text-center">
+                    <div class="text-[10px] text-[#484f58] mb-1">SCAN</div><span
+                        class="badge badge-green text-[10px]"><span class="status-dot"
+                            style="width:5px;height:5px;"></span> ok</span>
+                </div>
+                <div class="metric text-center">
+                    <div class="text-[10px] text-[#484f58] mb-1">DEPLOY</div><span
+                        class="badge badge-green text-[10px]"><span class="status-dot"
+                            style="width:5px;height:5px;"></span> ok</span>
+                </div>
+                <div class="metric text-center">
+                    <div class="text-[10px] text-[#484f58] mb-1">VERIFY</div><span
+                        class="badge badge-green text-[10px]"><span class="status-dot"
+                            style="width:5px;height:5px;"></span> ok</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== DEPLOYMENTS / PROJECTS ==================== -->
+    <section id="deployments" class="py-20 px-4">
+        <div class="max-w-5xl mx-auto">
+            <div class="reveal mb-10">
+                <p class="text-[11px] text-[#484f58] uppercase tracking-[0.2em] mb-2">// deployments</p>
+                <h2 class="text-xl font-semibold text-white font-sans">$ kubectl get deployments -A</h2>
+            </div>
+
+            <!-- Table-style -->
+            <div class="reveal term overflow-x-auto">
+                <div class="term-bar">
+                    <div class="term-dot" style="background:#f85149"></div>
+                    <div class="term-dot" style="background:#d29922"></div>
+                    <div class="term-dot" style="background:#3fb950"></div>
+                    <span class="text-[11px] text-[#484f58] ml-2">kubectl output</span>
+                </div>
+                <div class="p-0">
+                    <table class="w-full text-[12px]">
+                        <thead>
+                            <tr class="border-b border-[#21262d] text-[#484f58] text-[11px] uppercase tracking-wider">
+                                <th class="text-left p-3 font-medium">Namespace</th>
+                                <th class="text-left p-3 font-medium">Name</th>
+                                <th class="text-left p-3 font-medium">Ready</th>
+                                <th class="text-left p-3 font-medium">Status</th>
+                                <th class="text-left p-3 font-medium">Stack</th>
+                                <th class="text-left p-3 font-medium">Links</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="border-b border-[#161b22] hover:bg-[#161b22] transition-colors">
+                                <td class="p-3 text-[#58a6ff]">production</td>
+                                <td class="p-3 text-white font-medium">k8s-platform</td>
+                                <td class="p-3">3/3</td>
+                                <td class="p-3"><span class="badge badge-green text-[10px]"><span class="status-dot"
+                                            style="width:5px;height:5px;"></span> running</span></td>
+                                <td class="p-3"><span class="text-[#484f58]">K8s, ArgoCD, Istio</span></td>
+                                <td class="p-3"><a href="#" class="text-[#58a6ff] hover:underline">repo</a></td>
+                            </tr>
+                            <tr class="border-b border-[#161b22] hover:bg-[#161b22] transition-colors">
+                                <td class="p-3 text-[#58a6ff]">production</td>
+                                <td class="p-3 text-white font-medium">cicd-framework</td>
+                                <td class="p-3">1/1</td>
+                                <td class="p-3"><span class="badge badge-green text-[10px]"><span class="status-dot"
+                                            style="width:5px;height:5px;"></span> running</span></td>
+                                <td class="p-3"><span class="text-[#484f58]">GH Actions, Docker</span></td>
+                                <td class="p-3"><a href="#" class="text-[#58a6ff] hover:underline">repo</a></td>
+                            </tr>
+                            <tr class="border-b border-[#161b22] hover:bg-[#161b22] transition-colors">
+                                <td class="p-3 text-[#bc8cff]">staging</td>
+                                <td class="p-3 text-white font-medium">aws-terraform-infra</td>
+                                <td class="p-3">—</td>
+                                <td class="p-3"><span class="badge badge-blue text-[10px]">● applied</span></td>
+                                <td class="p-3"><span class="text-[#484f58]">Terraform, AWS</span></td>
+                                <td class="p-3"><a href="#" class="text-[#58a6ff] hover:underline">repo</a></td>
+                            </tr>
+                            <tr class="border-b border-[#161b22] hover:bg-[#161b22] transition-colors">
+                                <td class="p-3 text-[#bc8cff]">staging</td>
+                                <td class="p-3 text-white font-medium">monitoring-stack</td>
+                                <td class="p-3">5/5</td>
+                                <td class="p-3"><span class="badge badge-green text-[10px]"><span class="status-dot"
+                                            style="width:5px;height:5px;"></span> running</span></td>
+                                <td class="p-3"><span class="text-[#484f58]">Prometheus, Grafana</span></td>
+                                <td class="p-3"><a href="#" class="text-[#58a6ff] hover:underline">repo</a></td>
+                            </tr>
+                            <tr class="hover:bg-[#161b22] transition-colors">
+                                <td class="p-3 text-[#d29922]">dev</td>
+                                <td class="p-3 text-white font-medium">ansible-playbooks</td>
+                                <td class="p-3">—</td>
+                                <td class="p-3"><span class="badge badge-yellow text-[10px]">● maintained</span></td>
+                                <td class="p-3"><span class="text-[#484f58]">Ansible, Bash</span></td>
+                                <td class="p-3"><a href="#" class="text-[#58a6ff] hover:underline">repo</a></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Project Details Cards -->
+            <div class="grid md:grid-cols-2 gap-4 mt-6">
+                <div class="reveal card p-5">
+                    <div class="flex items-center justify-between mb-3">
+                        <div class="flex items-center gap-2">
+                            <span class="badge badge-green text-[10px]"><span class="status-dot"
+                                    style="width:5px;height:5px;"></span> prod</span>
+                            <span class="text-white text-[13px] font-semibold">k8s-platform</span>
+                        </div>
+                        <a href="#" class="text-[#8b949e] hover:text-white"><i data-lucide="github"
+                                class="w-4 h-4"></i></a>
+                    </div>
+                    <p class="text-[12px] text-[#8b949e] leading-relaxed mb-3">Production Kubernetes platform on EKS
+                        with Istio service mesh, ArgoCD GitOps, auto-scaling (HPA/VPA), and comprehensive monitoring.
+                    </p>
+                    <div class="flex flex-wrap gap-1.5">
+                        <span class="badge badge-blue text-[9px]">K8s</span>
+                        <span class="badge badge-purple text-[9px]">ArgoCD</span>
+                        <span class="badge badge-yellow text-[9px]">Istio</span>
+                        <span class="badge badge-green text-[9px]">Terraform</span>
+                        <span class="badge badge-red text-[9px]">Prometheus</span>
+                    </div>
+                </div>
+                <div class="reveal card p-5">
+                    <div class="flex items-center justify-between mb-3">
+                        <div class="flex items-center gap-2">
+                            <span class="badge badge-green text-[10px]"><span class="status-dot"
+                                    style="width:5px;height:5px;"></span> prod</span>
+                            <span class="text-white text-[13px] font-semibold">cicd-framework</span>
+                        </div>
+                        <a href="#" class="text-[#8b949e] hover:text-white"><i data-lucide="github"
+                                class="w-4 h-4"></i></a>
+                    </div>
+                    <p class="text-[12px] text-[#8b949e] leading-relaxed mb-3">Reusable GitHub Actions workflow
+                        templates — build, test, security scan (Trivy), push to ECR, Helm deploy to K8s with Slack
+                        notifications.</p>
+                    <div class="flex flex-wrap gap-1.5">
+                        <span class="badge badge-green text-[9px]">GH Actions</span>
+                        <span class="badge badge-blue text-[9px]">Docker</span>
+                        <span class="badge badge-red text-[9px]">Trivy</span>
+                        <span class="badge badge-purple text-[9px]">Helm</span>
+                        <span class="badge badge-yellow text-[9px]">SonarQube</span>
+                    </div>
+                </div>
+                <div class="reveal card p-5">
+                    <div class="flex items-center justify-between mb-3">
+                        <div class="flex items-center gap-2">
+                            <span class="badge badge-blue text-[10px]">● staging</span>
+                            <span class="text-white text-[13px] font-semibold">aws-terraform-infra</span>
+                        </div>
+                        <a href="#" class="text-[#8b949e] hover:text-white"><i data-lucide="github"
+                                class="w-4 h-4"></i></a>
+                    </div>
+                    <p class="text-[12px] text-[#8b949e] leading-relaxed mb-3">Modular Terraform code for AWS — VPC, ECS
+                        Fargate, RDS Multi-AZ, S3, CloudFront, IAM — with security best practices and cost optimization.
+                    </p>
+                    <div class="flex flex-wrap gap-1.5">
+                        <span class="badge badge-blue text-[9px]">AWS</span>
+                        <span class="badge badge-yellow text-[9px]">Terraform</span>
+                        <span class="badge badge-green text-[9px]">ECS</span>
+                        <span class="badge badge-red text-[9px]">RDS</span>
+                    </div>
+                </div>
+                <div class="reveal card p-5">
+                    <div class="flex items-center justify-between mb-3">
+                        <div class="flex items-center gap-2">
+                            <span class="badge badge-green text-[10px]"><span class="status-dot"
+                                    style="width:5px;height:5px;"></span> prod</span>
+                            <span class="text-white text-[13px] font-semibold">monitoring-stack</span>
+                        </div>
+                        <a href="#" class="text-[#8b949e] hover:text-white"><i data-lucide="github"
+                                class="w-4 h-4"></i></a>
+                    </div>
+                    <p class="text-[12px] text-[#8b949e] leading-relaxed mb-3">Full observability: Prometheus metrics,
+                        Grafana dashboards (50+), Loki logs, Tempo traces — deployed on K8s with custom alerting rules.
+                    </p>
+                    <div class="flex flex-wrap gap-1.5">
+                        <span class="badge badge-red text-[9px]">Prometheus</span>
+                        <span class="badge badge-yellow text-[9px]">Grafana</span>
+                        <span class="badge badge-blue text-[9px]">Loki</span>
+                        <span class="badge badge-purple text-[9px]">Tempo</span>
+                        <span class="badge badge-green text-[9px]">K8s</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== EXPERIENCE (Changelog Style) ==================== -->
+    <section id="experience" class="py-20 px-4">
+        <div class="max-w-4xl mx-auto">
+            <div class="reveal mb-10">
+                <p class="text-[11px] text-[#484f58] uppercase tracking-[0.2em] mb-2">// CHANGELOG.md</p>
+                <h2 class="text-xl font-semibold text-white font-sans">$ git log --oneline career</h2>
+            </div>
+
+            <div class="reveal term">
+                <div class="term-bar">
+                    <div class="term-dot" style="background:#f85149"></div>
+                    <div class="term-dot" style="background:#d29922"></div>
+                    <div class="term-dot" style="background:#3fb950"></div>
+                    <span class="text-[11px] text-[#484f58] ml-2">git log</span>
+                </div>
+                <div class="term-body text-[12px] space-y-0">
+                    <!-- Commit 1 -->
+                    <div class="pb-4 mb-4 border-b border-[#161b22]">
+                        <div class="flex items-center gap-2 mb-1 flex-wrap">
+                            <span class="text-[#3fb950] font-semibold">HEAD → main</span>
+                            <span class="badge badge-green text-[9px]">current</span>
+                            <span class="text-[#484f58] ml-auto">2022 — present</span>
+                        </div>
+                        <p class="text-white font-medium mb-1">feat: DevOps Engineer @ TechCorp Bangladesh</p>
+                        <ul class="text-[#8b949e] space-y-0.5 pl-4">
+                            <li>• Architected AWS multi-region infra for 1M+ users (99.99% uptime)</li>
+                            <li>• Built CI/CD with GitHub Actions — reduced deploy time by 70%</li>
+                            <li>• Containerized 30+ microservices on EKS with auto-scaling</li>
+                            <li>• IaC with Terraform managing 200+ cloud resources</li>
+                        </ul>
+                        <div class="flex gap-1.5 mt-2">
+                            <span class="badge badge-blue text-[9px]">AWS</span>
+                            <span class="badge badge-purple text-[9px]">K8s</span>
+                            <span class="badge badge-yellow text-[9px]">Terraform</span>
+                            <span class="badge badge-green text-[9px]">GH Actions</span>
+                        </div>
+                    </div>
+
+                    <!-- Commit 2 -->
+                    <div class="pb-4 mb-4 border-b border-[#161b22]">
+                        <div class="flex items-center gap-2 mb-1">
+                            <span class="text-[#58a6ff]">a3f8c2d</span>
+                            <span class="text-[#484f58] ml-auto">2020 — 2022</span>
+                        </div>
+                        <p class="text-white font-medium mb-1">feat: Junior DevOps Engineer @ Cloud Solutions Ltd.</p>
+                        <ul class="text-[#8b949e] space-y-0.5 pl-4">
+                            <li>• Docker containerization + Jenkins pipeline automation</li>
+                            <li>• Ansible playbooks for server provisioning (50+ servers)</li>
+                            <li>• Prometheus/Grafana monitoring with PagerDuty alerting</li>
+                            <li>• AWS cost optimization — saved 30% ($2K/month)</li>
+                        </ul>
+                        <div class="flex gap-1.5 mt-2">
+                            <span class="badge badge-blue text-[9px]">Docker</span>
+                            <span class="badge badge-green text-[9px]">Jenkins</span>
+                            <span class="badge badge-yellow text-[9px]">Ansible</span>
+                            <span class="badge badge-red text-[9px]">Grafana</span>
+                        </div>
+                    </div>
+
+                    <!-- Commit 3 -->
+                    <div>
+                        <div class="flex items-center gap-2 mb-1">
+                            <span class="text-[#58a6ff]">b7e1a4f</span>
+                            <span class="text-[#484f58] ml-auto">2019 — 2020</span>
+                        </div>
+                        <p class="text-white font-medium mb-1">feat: System Administrator @ DataSoft Systems</p>
+                        <ul class="text-[#8b949e] space-y-0.5 pl-4">
+                            <li>• Linux server management (Ubuntu/CentOS) — 20+ servers</li>
+                            <li>• Backup & disaster recovery automation with Bash scripts</li>
+                            <li>• Reduced manual tasks by 60% through scripting</li>
+                        </ul>
+                        <div class="flex gap-1.5 mt-2">
+                            <span class="badge badge-blue text-[9px]">Linux</span>
+                            <span class="badge badge-yellow text-[9px]">Bash</span>
+                            <span class="badge badge-green text-[9px]">Nginx</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== CERTIFICATIONS ==================== -->
+    <section id="certifications" class="py-20 px-4">
+        <div class="max-w-4xl mx-auto">
+            <div class="reveal mb-10">
+                <p class="text-[11px] text-[#484f58] uppercase tracking-[0.2em] mb-2">// certifications</p>
+                <h2 class="text-xl font-semibold text-white font-sans">$ ls -la certs/</h2>
+            </div>
+
+            <div class="reveal term">
+                <div class="term-bar">
+                    <div class="term-dot" style="background:#f85149"></div>
+                    <div class="term-dot" style="background:#d29922"></div>
+                    <div class="term-dot" style="background:#3fb950"></div>
+                    <span class="text-[11px] text-[#484f58] ml-2">verified credentials</span>
+                </div>
+                <div class="term-body text-[12px]">
+                    <div class="space-y-3">
+                        <div class="flex items-start gap-3 p-2 rounded hover:bg-[#161b22] transition-colors">
+                            <span class="text-[#d29922] text-base mt-0.5">🏆</span>
+                            <div>
+                                <p class="text-white font-medium">AWS Solutions Architect — Associate</p>
+                                <p class="text-[#484f58]">Amazon Web Services • Valid</p>
+                            </div>
+                            <span class="badge badge-green text-[9px] ml-auto flex-shrink-0">verified ✓</span>
+                        </div>
+                        <div class="flex items-start gap-3 p-2 rounded hover:bg-[#161b22] transition-colors">
+                            <span class="text-[#58a6ff] text-base mt-0.5">🏅</span>
+                            <div>
+                                <p class="text-white font-medium">Certified Kubernetes Administrator (CKA)</p>
+                                <p class="text-[#484f58]">CNCF • Valid</p>
+                            </div>
+                            <span class="badge badge-green text-[9px] ml-auto flex-shrink-0">verified ✓</span>
+                        </div>
+                        <div class="flex items-start gap-3 p-2 rounded hover:bg-[#161b22] transition-colors">
+                            <span class="text-[#bc8cff] text-base mt-0.5">🏆</span>
+                            <div>
+                                <p class="text-white font-medium">HashiCorp Terraform — Associate</p>
+                                <p class="text-[#484f58]">HashiCorp • 2023</p>
+                            </div>
+                            <span class="badge badge-green text-[9px] ml-auto flex-shrink-0">verified ✓</span>
+                        </div>
+                        <div class="flex items-start gap-3 p-2 rounded hover:bg-[#161b22] transition-colors">
+                            <span class="text-[#3fb950] text-base mt-0.5">🏅</span>
+                            <div>
+                                <p class="text-white font-medium">Docker Certified Associate</p>
+                                <p class="text-[#484f58]">Mirantis • 2022</p>
+                            </div>
+                            <span class="badge badge-green text-[9px] ml-auto flex-shrink-0">verified ✓</span>
+                        </div>
+                        <div class="flex items-start gap-3 p-2 rounded hover:bg-[#161b22] transition-colors">
+                            <span class="text-[#79c0ff] text-base mt-0.5">🏆</span>
+                            <div>
+                                <p class="text-white font-medium">Azure Fundamentals (AZ-900)</p>
+                                <p class="text-[#484f58]">Microsoft • 2022</p>
+                            </div>
+                            <span class="badge badge-green text-[9px] ml-auto flex-shrink-0">verified ✓</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== CONTACT ==================== -->
+    <section id="contact" class="py-20 px-4">
+        <div class="max-w-4xl mx-auto">
+            <div class="reveal mb-10">
+                <p class="text-[11px] text-[#484f58] uppercase tracking-[0.2em] mb-2">// contact</p>
+                <h2 class="text-xl font-semibold text-white font-sans">$ ssh contact@rezaul.dev</h2>
+            </div>
+
+            <div class="grid md:grid-cols-5 gap-6">
+                <!-- Info -->
+                <div class="md:col-span-2 space-y-4">
+                    <div class="reveal card p-4 flex items-center gap-3 hover:border-[#58a6ff33] transition-colors">
+                        <i data-lucide="mail" class="w-4 h-4 text-[#58a6ff] flex-shrink-0"></i>
+                        <div>
+                            <div class="text-[10px] text-[#484f58] uppercase tracking-wider">Email</div>
+                            <div class="text-[12px] text-white">imrezaulkrm@gmail.com</div>
+                        </div>
+                    </div>
+                    <div class="reveal card p-4 flex items-center gap-3 hover:border-[#3fb95033] transition-colors">
+                        <i data-lucide="phone" class="w-4 h-4 text-[#3fb950] flex-shrink-0"></i>
+                        <div>
+                            <div class="text-[10px] text-[#484f58] uppercase tracking-wider">Phone</div>
+                            <div class="text-[12px] text-white">+880 1XXX-XXXXXX</div>
+                        </div>
+                    </div>
+                    <div class="reveal card p-4 flex items-center gap-3 hover:border-[#bc8cff33] transition-colors">
+                        <i data-lucide="map-pin" class="w-4 h-4 text-[#bc8cff] flex-shrink-0"></i>
+                        <div>
+                            <div class="text-[10px] text-[#484f58] uppercase tracking-wider">Location</div>
+                            <div class="text-[12px] text-white">Dhaka, Bangladesh</div>
+                        </div>
+                    </div>
+                    <div class="reveal flex gap-2 pt-2">
+                        <a href="https://github.com/imrezaulkrm"
+                            class="card w-9 h-9 flex items-center justify-center text-[#8b949e] hover:text-white hover:border-[#484f58]"><i
+                                data-lucide="github" class="w-4 h-4"></i></a>
+                        <a href="#"
+                            class="card w-9 h-9 flex items-center justify-center text-[#8b949e] hover:text-white hover:border-[#484f58]"><i
+                                data-lucide="linkedin" class="w-4 h-4"></i></a>
+                        <a href="#"
+                            class="card w-9 h-9 flex items-center justify-center text-[#8b949e] hover:text-white hover:border-[#484f58]"><i
+                                data-lucide="twitter" class="w-4 h-4"></i></a>
+                    </div>
+                </div>
+
+                <!-- Form -->
+                <div class="reveal md:col-span-3">
+                    <form id="contactForm" class="term">
+                        <div class="term-bar">
+                            <div class="term-dot" style="background:#f85149"></div>
+                            <div class="term-dot" style="background:#d29922"></div>
+                            <div class="term-dot" style="background:#3fb950"></div>
+                            <span class="text-[11px] text-[#484f58] ml-2">new-message.sh</span>
+                        </div>
+                        <div class="term-body space-y-4">
+                            <div>
+                                <label class="text-[10px] text-[#484f58] uppercase tracking-wider block mb-1">$
+                                    name:</label>
+                                <input type="text" required placeholder="Your Name"
+                                    class="w-full bg-[#0a0e17] border border-[#21262d] rounded px-3 py-2 text-[12px] text-white placeholder-[#30363d] focus:outline-none focus:border-[#1f6feb] transition-colors font-mono" />
+                            </div>
+                            <div>
+                                <label class="text-[10px] text-[#484f58] uppercase tracking-wider block mb-1">$
+                                    email:</label>
+                                <input type="email" required placeholder="you@company.com"
+                                    class="w-full bg-[#0a0e17] border border-[#21262d] rounded px-3 py-2 text-[12px] text-white placeholder-[#30363d] focus:outline-none focus:border-[#1f6feb] transition-colors font-mono" />
+                            </div>
+                            <div>
+                                <label class="text-[10px] text-[#484f58] uppercase tracking-wider block mb-1">$
+                                    subject:</label>
+                                <input type="text" placeholder="DevOps Opportunity"
+                                    class="w-full bg-[#0a0e17] border border-[#21262d] rounded px-3 py-2 text-[12px] text-white placeholder-[#30363d] focus:outline-none focus:border-[#1f6feb] transition-colors font-mono" />
+                            </div>
+                            <div>
+                                <label class="text-[10px] text-[#484f58] uppercase tracking-wider block mb-1">$ message
+                                    <span class="text-[#3fb950]">(required)</span>:</label>
+                                <textarea required rows="4" placeholder="Tell me about your project..."
+                                    class="w-full bg-[#0a0e17] border border-[#21262d] rounded px-3 py-2 text-[12px] text-white placeholder-[#30363d] focus:outline-none focus:border-[#1f6feb] transition-colors font-mono resize-none"></textarea>
+                            </div>
+                            <button type="submit"
+                                class="flex items-center gap-2 bg-[#238636] hover:bg-[#2ea043] text-white text-[12px] font-semibold px-5 py-2 rounded transition-colors">
+                                <i data-lucide="send" class="w-3.5 h-3.5"></i>
+                                $ send-message
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== FOOTER ==================== -->
+    <footer class="border-t border-[#21262d] py-10 px-4">
+        <div class="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div class="flex items-center gap-2">
+                <svg class="w-4 h-4 text-[#3fb950]" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                    stroke-width="2">
+                    <path d="M12 2L2 7l10 5 10-5-10-5z" />
+                    <path d="M2 17l10 5 10-5" />
+                    <path d="M2 12l10 5 10-5" />
+                </svg>
+                <span class="text-[11px] text-[#484f58]">© 2025 Rezaul Karim</span>
+            </div>
+            <p class="text-[11px] text-[#30363d] font-mono">echo "If you do it twice, automate it."</p>
+            <div class="flex gap-3">
+                <a href="https://github.com/imrezaulkrm"
+                    class="text-[#484f58] hover:text-[#8b949e] transition-colors"><i data-lucide="github"
+                        class="w-4 h-4"></i></a>
+                <a href="#" class="text-[#484f58] hover:text-[#8b949e] transition-colors"><i data-lucide="linkedin"
+                        class="w-4 h-4"></i></a>
+                <a href="#" class="text-[#484f58] hover:text-[#8b949e] transition-colors"><i data-lucide="twitter"
+                        class="w-4 h-4"></i></a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- TOAST -->
+    <div id="toast"
+        class="toast fixed bottom-6 right-6 z-50 bg-[#238636] text-white px-5 py-3 rounded-md flex items-center gap-2 shadow-lg">
+        <i data-lucide="check-circle-2" class="w-4 h-4"></i>
+        <span class="text-[12px] font-mono">Message sent successfully</span>
+    </div>
+
+    <script>
+        lucide.createIcons();
+
+        // Mobile Nav
+        document.getElementById('menuBtn').addEventListener('click', () => document.getElementById('mobNav').classList.add('open'));
+        document.getElementById('mobClose').addEventListener('click', () => document.getElementById('mobNav').classList.remove('open'));
+        document.querySelectorAll('.mob-link').forEach(l => l.addEventListener('click', () => document.getElementById('mobNav').classList.remove('open')));
+
+        // Reveal
+        const obs = new IntersectionObserver((entries) => {
+            entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('vis'); });
+        }, { threshold: 0.08 });
+        document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+
+        // Skill bars
+        const sObs = new IntersectionObserver((entries) => {
+            entries.forEach(e => { if (e.isIntersecting) e.target.style.width = e.target.dataset.width; });
+        }, { threshold: 0.3 });
+        document.querySelectorAll('.sk-fill').forEach(b => sObs.observe(b));
+
+        // Typing animation trigger
+        setTimeout(() => {
+            document.querySelectorAll('.type-line').forEach(el => {
+                el.classList.add('on');
+            });
+        }, 300);
+
+        // Contact form
+        document.getElementById('contactForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const t = document.getElementById('toast');
+            t.classList.add('show');
+            e.target.reset();
+            setTimeout(() => t.classList.remove('show'), 3000);
+        });
+
+        // Active nav
+        const secs = document.querySelectorAll('section[id]');
+        window.addEventListener('scroll', () => {
+            let c = '';
+            secs.forEach(s => { if (scrollY >= s.offsetTop - 150) c = s.id; });
+            document.querySelectorAll('.nav-a').forEach(a => {
+                a.classList.toggle('active', a.getAttribute('href') === '#' + c);
+            });
+        });
+
+        // Smooth scroll
+        document.querySelectorAll('a[href^="#"]').forEach(a => {
+            a.addEventListener('click', function (e) {
+                e.preventDefault();
+                const t = document.querySelector(this.getAttribute('href'));
+                if (t) window.scrollTo({ top: t.offsetTop - 70, behavior: 'smooth' });
+            });
+        });
+    </script>
+</body>
+
+</html>
