@@ -1,0 +1,2345 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rezaul & Sinthi — Our Universe</title>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=Cinzel:wght@400;600;900&family=EB+Garamond:ital,wght@0,400;1,400&display=swap"
+        rel="stylesheet">
+
+    <!-- Leaflet Map -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+    <style>
+        :root {
+            --black: #000000;
+            --deep: #050305;
+            --void: #0a050a;
+            --rose-dark: #1a0010;
+            --rose-mid: #3d001f;
+            --rose-red: #8b0030;
+            --rose-blood: #6b0020;
+            --rose-gold: #c9a96e;
+            --gold: #d4af6a;
+            --gold-light: #e8cc8a;
+            --silver: #c8c0c8;
+            --white: #f5f0f2;
+            --cream: #f0e8e8;
+            --petal: #2a0015;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background: var(--black);
+            color: var(--white);
+            font-family: 'EB Garamond', serif;
+            overflow-x: hidden;
+            cursor: none;
+        }
+
+        /* Custom Cursor */
+        #cursor {
+            position: fixed;
+            width: 20px;
+            height: 20px;
+            border: 1px solid var(--rose-gold);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 99999;
+            transition: transform 0.1s ease;
+            mix-blend-mode: difference;
+        }
+
+        #cursor-dot {
+            position: fixed;
+            width: 4px;
+            height: 4px;
+            background: var(--gold-light);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 99999;
+        }
+
+        /* ==================== ENTRY PORTAL ==================== */
+        #portal {
+            position: fixed;
+            inset: 0;
+            z-index: 9999;
+            background: var(--black);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 1.8s ease, visibility 1.8s ease;
+        }
+
+        #portal.gone {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+
+        #portal-canvas {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        .portal-content {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .portal-rose {
+            font-size: 4rem;
+            animation: floatRose 4s ease-in-out infinite;
+            filter: drop-shadow(0 0 30px #8b003055);
+        }
+
+        @keyframes floatRose {
+
+            0%,
+            100% {
+                transform: translateY(0) rotate(-5deg);
+            }
+
+            50% {
+                transform: translateY(-20px) rotate(5deg);
+            }
+        }
+
+        .portal-subtitle {
+            font-family: 'Cormorant Garamond', serif;
+            font-style: italic;
+            font-size: 1rem;
+            color: var(--rose-gold);
+            letter-spacing: 0.4em;
+            text-transform: uppercase;
+            opacity: 0;
+            animation: fadeUp 1s ease 0.5s forwards;
+        }
+
+        .portal-title {
+            font-family: 'Cinzel', serif;
+            font-size: clamp(2.5rem, 6vw, 5rem);
+            font-weight: 900;
+            color: var(--white);
+            letter-spacing: 0.08em;
+            line-height: 1.1;
+            opacity: 0;
+            animation: fadeUp 1s ease 1s forwards;
+        }
+
+        .portal-names {
+            font-family: 'Cormorant Garamond', serif;
+            font-style: italic;
+            font-size: clamp(1.2rem, 3vw, 2rem);
+            color: var(--gold);
+            opacity: 0;
+            animation: fadeUp 1s ease 1.5s forwards;
+        }
+
+        .portal-divider {
+            width: 120px;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--rose-gold), transparent);
+            opacity: 0;
+            animation: fadeUp 1s ease 1.8s forwards;
+        }
+
+        .enter-btn {
+            position: relative;
+            padding: 1.2rem 3.5rem;
+            border: 1px solid var(--rose-gold);
+            background: transparent;
+            color: var(--gold-light);
+            font-family: 'Cinzel', serif;
+            font-size: 0.85rem;
+            letter-spacing: 0.4em;
+            text-transform: uppercase;
+            cursor: pointer;
+            overflow: hidden;
+            opacity: 0;
+            animation: fadeUp 1s ease 2.2s forwards;
+            transition: color 0.4s ease;
+        }
+
+        .enter-btn::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, var(--rose-blood), var(--rose-mid));
+            transform: translateX(-100%);
+            transition: transform 0.5s ease;
+        }
+
+        .enter-btn:hover::before {
+            transform: translateX(0);
+        }
+
+        .enter-btn:hover {
+            color: var(--white);
+        }
+
+        .enter-btn span {
+            position: relative;
+            z-index: 1;
+        }
+
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ==================== MAIN SITE ==================== */
+        #main-site {
+            opacity: 0;
+            transition: opacity 1.5s ease 0.5s;
+        }
+
+        #main-site.visible {
+            opacity: 1;
+        }
+
+        /* ==================== NAV ==================== */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            padding: 1.5rem 3rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: linear-gradient(to bottom, rgba(0, 0, 0, 0.9), transparent);
+        }
+
+        .nav-logo {
+            font-family: 'Cinzel', serif;
+            font-size: 0.9rem;
+            letter-spacing: 0.3em;
+            color: var(--gold);
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2.5rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 0.85rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--silver);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: var(--gold);
+        }
+
+        /* ==================== HERO SECTION ==================== */
+        #hero {
+            min-height: 100vh;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        #hero-canvas {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .hero-label {
+            font-family: 'Cormorant Garamond', serif;
+            font-style: italic;
+            font-size: 1rem;
+            color: var(--rose-gold);
+            letter-spacing: 0.5em;
+            text-transform: uppercase;
+            margin-bottom: 2rem;
+            opacity: 0;
+            animation: heroFade 1.2s ease 0.3s forwards;
+        }
+
+        .hero-main {
+            font-family: 'Cinzel', serif;
+            font-size: clamp(3rem, 8vw, 8rem);
+            font-weight: 900;
+            line-height: 0.9;
+            margin-bottom: 2rem;
+            opacity: 0;
+            animation: heroFade 1.2s ease 0.7s forwards;
+        }
+
+        .hero-main .line1 {
+            display: block;
+            color: var(--white);
+        }
+
+        .hero-main .line2 {
+            display: block;
+            color: transparent;
+            -webkit-text-stroke: 1px var(--rose-gold);
+            font-style: italic;
+        }
+
+        .hero-names {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(1.5rem, 4vw, 3rem);
+            font-style: italic;
+            color: var(--gold);
+            margin-bottom: 3rem;
+            opacity: 0;
+            animation: heroFade 1.2s ease 1.2s forwards;
+        }
+
+        .hero-names .amp {
+            color: var(--rose-red);
+            font-size: 0.8em;
+        }
+
+        .hero-tagline {
+            font-family: 'EB Garamond', serif;
+            font-size: 1.1rem;
+            color: var(--silver);
+            font-style: italic;
+            max-width: 500px;
+            margin: 0 auto 3rem;
+            line-height: 1.8;
+            opacity: 0;
+            animation: heroFade 1.2s ease 1.6s forwards;
+        }
+
+        .scroll-hint {
+            opacity: 0;
+            animation: heroFade 1.2s ease 2.2s forwards;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--rose-gold);
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 0.75rem;
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+        }
+
+        .scroll-line {
+            width: 1px;
+            height: 60px;
+            background: linear-gradient(to bottom, var(--rose-gold), transparent);
+            animation: scrollPulse 2s ease-in-out infinite;
+        }
+
+        @keyframes scrollPulse {
+
+            0%,
+            100% {
+                transform: scaleY(1);
+                opacity: 1;
+            }
+
+            50% {
+                transform: scaleY(0.5);
+                opacity: 0.4;
+            }
+        }
+
+        @keyframes heroFade {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Floating rose petals */
+        .petal {
+            position: absolute;
+            pointer-events: none;
+            animation: petalFall linear infinite;
+            opacity: 0;
+            font-size: 1.5rem;
+            filter: hue-rotate(180deg) saturate(0.3) brightness(0.4);
+        }
+
+        @keyframes petalFall {
+            0% {
+                transform: translateY(-100px) rotate(0deg) translateX(0);
+                opacity: 0;
+            }
+
+            10% {
+                opacity: 0.7;
+            }
+
+            90% {
+                opacity: 0.4;
+            }
+
+            100% {
+                transform: translateY(110vh) rotate(720deg) translateX(100px);
+                opacity: 0;
+            }
+        }
+
+        /* ==================== SECTION COMMON ==================== */
+        section {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .section-label {
+            font-family: 'Cormorant Garamond', serif;
+            font-style: italic;
+            font-size: 0.8rem;
+            letter-spacing: 0.5em;
+            text-transform: uppercase;
+            color: var(--rose-gold);
+            margin-bottom: 1.5rem;
+        }
+
+        .section-title {
+            font-family: 'Cinzel', serif;
+            font-size: clamp(2rem, 5vw, 4.5rem);
+            font-weight: 900;
+            line-height: 1.1;
+            margin-bottom: 2rem;
+            color: var(--white);
+        }
+
+        .gold-line {
+            width: 100px;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--rose-gold), transparent);
+            margin: 2rem auto;
+        }
+
+        /* ==================== MAP SECTION ==================== */
+        #map-section {
+            min-height: 100vh;
+            background: var(--void);
+            padding: 8rem 2rem;
+        }
+
+        .map-intro {
+            text-align: center;
+            margin-bottom: 5rem;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .map-intro p {
+            font-size: 1.15rem;
+            line-height: 1.9;
+            color: var(--silver);
+            font-style: italic;
+        }
+
+        .map-wrapper {
+            max-width: 1000px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .map-frame {
+            border: 1px solid var(--rose-mid);
+            position: relative;
+            box-shadow: 0 0 80px rgba(139, 0, 48, 0.2), inset 0 0 60px rgba(0, 0, 0, 0.8);
+        }
+
+        .map-frame::before,
+        .map-frame::after {
+            content: '✦';
+            position: absolute;
+            color: var(--rose-gold);
+            font-size: 1.2rem;
+            z-index: 10;
+        }
+
+        .map-frame::before {
+            top: -0.7rem;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .map-frame::after {
+            bottom: -0.7rem;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        #romantic-map {
+            height: 500px;
+            width: 100%;
+            filter: saturate(0.6) brightness(0.85);
+        }
+
+        .map-corners {
+            position: absolute;
+            inset: -2px;
+            pointer-events: none;
+            z-index: 5;
+        }
+
+        .corner {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            border-color: var(--rose-gold);
+            border-style: solid;
+        }
+
+        .corner-tl {
+            top: 0;
+            left: 0;
+            border-width: 2px 0 0 2px;
+        }
+
+        .corner-tr {
+            top: 0;
+            right: 0;
+            border-width: 2px 2px 0 0;
+        }
+
+        .corner-bl {
+            bottom: 0;
+            left: 0;
+            border-width: 0 0 2px 2px;
+        }
+
+        .corner-br {
+            bottom: 0;
+            right: 0;
+            border-width: 0 2px 2px 0;
+        }
+
+        /* Distance Display */
+        .distance-card {
+            background: linear-gradient(135deg, var(--rose-dark), var(--void));
+            border: 1px solid var(--rose-mid);
+            padding: 3rem;
+            text-align: center;
+            margin: 4rem auto;
+            max-width: 700px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .distance-card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(ellipse at center, rgba(139, 0, 48, 0.1), transparent 70%);
+        }
+
+        .distance-number {
+            font-family: 'Cinzel', serif;
+            font-size: clamp(4rem, 10vw, 8rem);
+            font-weight: 900;
+            color: transparent;
+            -webkit-text-stroke: 1px var(--rose-gold);
+            line-height: 1;
+            margin-bottom: 0.5rem;
+            position: relative;
+        }
+
+        .distance-unit {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.5rem;
+            color: var(--gold);
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+            margin-bottom: 1.5rem;
+        }
+
+        .distance-msg {
+            font-family: 'EB Garamond', serif;
+            font-style: italic;
+            font-size: 1.2rem;
+            color: var(--silver);
+            line-height: 1.8;
+            max-width: 450px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        /* Location Cards */
+        .location-cards {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            gap: 2rem;
+            align-items: center;
+            max-width: 900px;
+            margin: 4rem auto;
+        }
+
+        .loc-card {
+            background: linear-gradient(135deg, var(--rose-dark), var(--void));
+            border: 1px solid var(--rose-mid);
+            padding: 2.5rem;
+            text-align: center;
+            position: relative;
+            transition: border-color 0.4s;
+        }
+
+        .loc-card:hover {
+            border-color: var(--rose-gold);
+        }
+
+        .loc-card .loc-rose {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            display: block;
+            filter: saturate(0.3) brightness(0.6);
+        }
+
+        .loc-card .loc-name {
+            font-family: 'Cinzel', serif;
+            font-size: 1.1rem;
+            color: var(--gold);
+            margin-bottom: 0.5rem;
+            letter-spacing: 0.1em;
+        }
+
+        .loc-card .loc-place {
+            font-family: 'Cormorant Garamond', serif;
+            font-style: italic;
+            font-size: 0.9rem;
+            color: var(--silver);
+            letter-spacing: 0.15em;
+        }
+
+        .loc-connector {
+            text-align: center;
+            color: var(--rose-gold);
+            font-size: 1.5rem;
+        }
+
+        .loc-connector .heart-line {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .loc-connector .dot {
+            width: 6px;
+            height: 6px;
+            background: var(--rose-gold);
+            border-radius: 50%;
+            animation: dotPulse 1.5s ease-in-out infinite;
+        }
+
+        .loc-connector .dot:nth-child(2) {
+            animation-delay: 0.3s;
+        }
+
+        .loc-connector .dot:nth-child(3) {
+            animation-delay: 0.6s;
+        }
+
+        @keyframes dotPulse {
+
+            0%,
+            100% {
+                opacity: 0.3;
+                transform: scale(1);
+            }
+
+            50% {
+                opacity: 1;
+                transform: scale(1.4);
+            }
+        }
+
+        /* ==================== JOURNEY SECTION ==================== */
+        #journey {
+            min-height: 100vh;
+            background: var(--black);
+            padding: 8rem 2rem;
+            position: relative;
+        }
+
+        .journey-bg {
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(ellipse at 20% 50%, rgba(139, 0, 48, 0.08), transparent 60%),
+                radial-gradient(ellipse at 80% 50%, rgba(201, 169, 110, 0.05), transparent 60%);
+        }
+
+        .journey-inner {
+            max-width: 900px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 2;
+        }
+
+        .journey-head {
+            text-align: center;
+            margin-bottom: 6rem;
+        }
+
+        .path-visual {
+            position: relative;
+            padding: 4rem 0;
+        }
+
+        .path-line {
+            position: absolute;
+            left: 50%;
+            top: 0;
+            bottom: 0;
+            width: 1px;
+            background: linear-gradient(to bottom, var(--rose-blood), var(--rose-gold), var(--rose-blood));
+            transform: translateX(-50%);
+        }
+
+        .path-item {
+            display: grid;
+            grid-template-columns: 1fr 80px 1fr;
+            gap: 2rem;
+            align-items: center;
+            margin-bottom: 4rem;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s ease;
+        }
+
+        .path-item.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .path-item:nth-child(even) .path-text {
+            grid-column: 3;
+            grid-row: 1;
+        }
+
+        .path-item:nth-child(even) .path-empty {
+            grid-column: 1;
+            grid-row: 1;
+        }
+
+        .path-node {
+            grid-column: 2;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        .path-dot {
+            width: 14px;
+            height: 14px;
+            border: 2px solid var(--rose-gold);
+            border-radius: 50%;
+            background: var(--black);
+            position: relative;
+        }
+
+        .path-dot::after {
+            content: '';
+            position: absolute;
+            inset: 3px;
+            background: var(--rose-gold);
+            border-radius: 50%;
+        }
+
+        .path-text {
+            background: linear-gradient(135deg, rgba(26, 0, 16, 0.8), rgba(10, 5, 10, 0.8));
+            border: 1px solid rgba(139, 0, 48, 0.3);
+            padding: 2rem;
+            backdrop-filter: blur(10px);
+        }
+
+        .path-text h3 {
+            font-family: 'Cinzel', serif;
+            font-size: 1rem;
+            color: var(--gold);
+            letter-spacing: 0.1em;
+            margin-bottom: 0.8rem;
+        }
+
+        .path-text p {
+            font-size: 0.95rem;
+            line-height: 1.8;
+            color: var(--silver);
+            font-style: italic;
+        }
+
+        .path-num {
+            font-family: 'Cinzel', serif;
+            font-size: 0.7rem;
+            color: var(--rose-gold);
+            letter-spacing: 0.2em;
+        }
+
+        /* ==================== BLACK ROSE GARDEN ==================== */
+        #rose-garden {
+            min-height: 100vh;
+            background: var(--black);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+            padding: 8rem 2rem;
+        }
+
+        .rose-bg-grid {
+            position: absolute;
+            inset: 0;
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            grid-template-rows: repeat(4, 1fr);
+            opacity: 0.06;
+            pointer-events: none;
+        }
+
+        .rose-bg-item {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 5rem;
+            filter: grayscale(1);
+            animation: roseGridFloat ease-in-out infinite;
+        }
+
+        @keyframes roseGridFloat {
+
+            0%,
+            100% {
+                transform: rotate(-10deg) scale(1);
+            }
+
+            50% {
+                transform: rotate(10deg) scale(1.1);
+            }
+        }
+
+        .garden-center {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            max-width: 700px;
+        }
+
+        .big-rose-display {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 4rem;
+            flex-wrap: wrap;
+        }
+
+        .rose-orb {
+            width: 100px;
+            height: 100px;
+            border: 1px solid rgba(139, 0, 48, 0.4);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            position: relative;
+            animation: roseOrbPulse 3s ease-in-out infinite;
+            filter: saturate(0.2) brightness(0.5);
+            box-shadow: 0 0 30px rgba(139, 0, 48, 0.2), inset 0 0 20px rgba(139, 0, 48, 0.1);
+        }
+
+        .rose-orb:nth-child(2) {
+            animation-delay: 1s;
+            transform: scale(1.3);
+            border-color: rgba(201, 169, 110, 0.4);
+            box-shadow: 0 0 50px rgba(201, 169, 110, 0.15), inset 0 0 30px rgba(0, 0, 0, 0.5);
+            filter: saturate(0.3) brightness(0.6);
+        }
+
+        .rose-orb:nth-child(3) {
+            animation-delay: 2s;
+        }
+
+        @keyframes roseOrbPulse {
+
+            0%,
+            100% {
+                box-shadow: 0 0 30px rgba(139, 0, 48, 0.2);
+            }
+
+            50% {
+                box-shadow: 0 0 60px rgba(139, 0, 48, 0.4);
+            }
+        }
+
+        .garden-quote {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(1.8rem, 4vw, 3rem);
+            font-style: italic;
+            line-height: 1.5;
+            color: var(--white);
+            margin-bottom: 2rem;
+        }
+
+        .garden-quote .highlight {
+            color: var(--rose-gold);
+        }
+
+        .garden-subtext {
+            font-size: 1rem;
+            color: var(--silver);
+            line-height: 1.9;
+            max-width: 500px;
+            margin: 0 auto 3rem;
+            font-style: italic;
+        }
+
+        /* ==================== LOVE LETTERS ==================== */
+        #letters {
+            min-height: 100vh;
+            background: var(--void);
+            padding: 8rem 2rem;
+            position: relative;
+        }
+
+        .letters-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2rem;
+            max-width: 1100px;
+            margin: 4rem auto 0;
+        }
+
+        .letter-card {
+            background: linear-gradient(135deg, rgba(26, 0, 16, 0.9), rgba(10, 5, 10, 0.9));
+            border: 1px solid rgba(139, 0, 48, 0.3);
+            padding: 3rem 2.5rem;
+            position: relative;
+            overflow: hidden;
+            transition: border-color 0.4s, transform 0.4s;
+            cursor: default;
+        }
+
+        .letter-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--rose-gold), transparent);
+            transform: translateX(-100%);
+            transition: transform 0.6s ease;
+        }
+
+        .letter-card:hover::before {
+            transform: translateX(0);
+        }
+
+        .letter-card:hover {
+            border-color: rgba(201, 169, 110, 0.4);
+            transform: translateY(-5px);
+        }
+
+        .letter-number {
+            font-family: 'Cinzel', serif;
+            font-size: 0.7rem;
+            letter-spacing: 0.4em;
+            color: var(--rose-gold);
+            margin-bottom: 1.5rem;
+            display: block;
+        }
+
+        .letter-icon {
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            display: block;
+            filter: saturate(0.3) brightness(0.6);
+        }
+
+        .letter-title {
+            font-family: 'Cinzel', serif;
+            font-size: 1.1rem;
+            color: var(--gold);
+            margin-bottom: 1.5rem;
+            letter-spacing: 0.05em;
+        }
+
+        .letter-body {
+            font-family: 'EB Garamond', serif;
+            font-size: 1rem;
+            line-height: 2;
+            color: var(--silver);
+            font-style: italic;
+        }
+
+        .letter-signature {
+            margin-top: 2rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid rgba(139, 0, 48, 0.2);
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1rem;
+            color: var(--rose-gold);
+            font-style: italic;
+        }
+
+        /* ==================== PROMISES ==================== */
+        #promises {
+            min-height: 100vh;
+            background: var(--black);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 8rem 2rem;
+            position: relative;
+        }
+
+        .promise-bg {
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(ellipse at center, rgba(139, 0, 48, 0.12), transparent 70%);
+        }
+
+        .promise-inner {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            max-width: 700px;
+        }
+
+        .promise-list {
+            list-style: none;
+            margin: 4rem 0;
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        .promise-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 1.5rem;
+            text-align: left;
+            opacity: 0;
+            transform: translateX(-30px);
+            transition: all 0.7s ease;
+            padding: 1.5rem 2rem;
+            border-left: 1px solid rgba(139, 0, 48, 0.4);
+        }
+
+        .promise-item.visible {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .promise-num {
+            font-family: 'Cinzel', serif;
+            font-size: 2.5rem;
+            font-weight: 900;
+            color: transparent;
+            -webkit-text-stroke: 1px rgba(201, 169, 110, 0.4);
+            line-height: 1;
+            flex-shrink: 0;
+            min-width: 60px;
+        }
+
+        .promise-text h4 {
+            font-family: 'Cinzel', serif;
+            font-size: 0.9rem;
+            color: var(--gold);
+            letter-spacing: 0.1em;
+            margin-bottom: 0.5rem;
+        }
+
+        .promise-text p {
+            font-style: italic;
+            color: var(--silver);
+            line-height: 1.8;
+            font-size: 1rem;
+        }
+
+        /* ==================== CONSTELLATION ==================== */
+        #constellation {
+            min-height: 100vh;
+            background: var(--black);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 8rem 2rem;
+        }
+
+        #const-canvas {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        .const-content {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+        }
+
+        .const-content .section-title {
+            font-size: clamp(2rem, 5vw, 5rem);
+            margin-bottom: 1rem;
+        }
+
+        .names-display {
+            font-family: 'Cormorant Garamond', serif;
+            font-style: italic;
+            font-size: clamp(2rem, 5vw, 4rem);
+            color: var(--gold);
+            margin-bottom: 2rem;
+        }
+
+        .forever-text {
+            font-family: 'EB Garamond', serif;
+            font-size: 1.2rem;
+            color: var(--silver);
+            font-style: italic;
+            max-width: 500px;
+            margin: 0 auto;
+            line-height: 1.9;
+        }
+
+        /* ==================== FINAL LOOP ==================== */
+        #finale {
+            min-height: 100vh;
+            background: var(--black);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 8rem 2rem;
+            position: relative;
+        }
+
+        .finale-bg {
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(ellipse at center, rgba(139, 0, 48, 0.15), transparent 70%);
+            animation: bgPulse 5s ease-in-out infinite;
+        }
+
+        @keyframes bgPulse {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.5;
+            }
+        }
+
+        .finale-content {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            max-width: 700px;
+        }
+
+        .finale-rose {
+            font-size: 5rem;
+            margin-bottom: 3rem;
+            display: block;
+            animation: finalRose 6s ease-in-out infinite;
+            filter: saturate(0.3) brightness(0.5);
+        }
+
+        @keyframes finalRose {
+
+            0%,
+            100% {
+                transform: scale(1) rotate(-10deg);
+                filter: saturate(0.3) brightness(0.5);
+            }
+
+            50% {
+                transform: scale(1.1) rotate(10deg);
+                filter: saturate(0.5) brightness(0.7);
+            }
+        }
+
+        .finale-title {
+            font-family: 'Cinzel', serif;
+            font-size: clamp(2.5rem, 6vw, 5rem);
+            font-weight: 900;
+            color: var(--white);
+            margin-bottom: 1.5rem;
+        }
+
+        .finale-subtitle {
+            font-family: 'Cormorant Garamond', serif;
+            font-style: italic;
+            font-size: 1.5rem;
+            color: var(--gold);
+            margin-bottom: 2rem;
+        }
+
+        .finale-msg {
+            font-style: italic;
+            color: var(--silver);
+            line-height: 2;
+            font-size: 1.1rem;
+            margin-bottom: 4rem;
+        }
+
+        .return-btn {
+            display: inline-block;
+            padding: 1.2rem 3.5rem;
+            border: 1px solid var(--rose-gold);
+            color: var(--gold-light);
+            font-family: 'Cinzel', serif;
+            font-size: 0.85rem;
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+            text-decoration: none;
+            position: relative;
+            overflow: hidden;
+            transition: color 0.4s;
+        }
+
+        .return-btn::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, var(--rose-blood), var(--rose-mid));
+            transform: translateX(-100%);
+            transition: transform 0.5s ease;
+        }
+
+        .return-btn:hover::before {
+            transform: translateX(0);
+        }
+
+        .return-btn:hover {
+            color: var(--white);
+        }
+
+        .return-btn span {
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Rose decorations along section borders */
+        .section-ornament {
+            text-align: center;
+            padding: 2rem 0;
+            color: var(--rose-gold);
+            font-size: 0.9rem;
+            letter-spacing: 1em;
+            opacity: 0.5;
+        }
+
+        /* Leaflet custom styles */
+        .leaflet-container {
+            background: #0a050a !important;
+        }
+
+        .custom-marker {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* ==================== SCROLLBAR ==================== */
+        ::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--black);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--rose-blood);
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--rose-gold);
+        }
+
+        /* ==================== FLOATING ROSES (decorative) ==================== */
+        .deco-rose {
+            position: fixed;
+            pointer-events: none;
+            opacity: 0.04;
+            font-size: 15rem;
+            z-index: 0;
+            filter: grayscale(1);
+        }
+
+        .deco-rose-1 {
+            top: -5rem;
+            right: -5rem;
+            animation: decoFloat 20s ease-in-out infinite;
+        }
+
+        .deco-rose-2 {
+            bottom: -5rem;
+            left: -5rem;
+            animation: decoFloat 25s ease-in-out infinite reverse;
+        }
+
+        @keyframes decoFloat {
+
+            0%,
+            100% {
+                transform: rotate(0deg);
+            }
+
+            50% {
+                transform: rotate(30deg);
+            }
+        }
+
+        /* Reveal animations */
+        .reveal {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: opacity 0.9s ease, transform 0.9s ease;
+        }
+
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Mobile responsiveness */
+        @media (max-width: 768px) {
+            nav {
+                padding: 1rem 1.5rem;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .location-cards {
+                grid-template-columns: 1fr;
+            }
+
+            .loc-connector {
+                display: none;
+            }
+
+            .path-item {
+                grid-template-columns: 1fr;
+            }
+
+            .path-line {
+                display: none;
+            }
+
+            .path-node {
+                display: none;
+            }
+
+            .path-item:nth-child(even) .path-text {
+                grid-column: 1;
+            }
+
+            .path-item:nth-child(even) .path-empty {
+                display: none;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- MUSIC (autoplay on interaction) -->
+    <audio id="bg-music" loop preload="auto">
+        <!-- Replace the src below with your music file URL -->
+        <source src="audio/music.mp3" type="audio/mp3">
+    </audio>
+
+    <!-- CURSOR -->
+    <div id="cursor"></div>
+    <div id="cursor-dot"></div>
+
+    <!-- DECORATIVE ROSES -->
+    <div class="deco-rose deco-rose-1">🌹</div>
+    <div class="deco-rose deco-rose-2">🌹</div>
+
+    <!-- ==================== ENTRY PORTAL ==================== -->
+    <div id="portal">
+        <canvas id="portal-canvas"></canvas>
+        <div class="portal-content">
+            <div class="portal-rose">🖤</div>
+            <div class="portal-subtitle">A Private Universe Awaits</div>
+            <h1 class="portal-title">Our Story</h1>
+            <div class="portal-names">Rezaul & Sinthi</div>
+            <div class="portal-divider"></div>
+            <p
+                style="font-family:'Cormorant Garamond',serif; font-style:italic; color:var(--silver); font-size:0.9rem; letter-spacing:0.1em; max-width:300px; text-align:center; opacity:0; animation: fadeUp 1s ease 2s forwards;">
+                "Some souls were made to find each other<br>across any distance…"
+            </p>
+            <button class="enter-btn" onclick="enterSite()">
+                <span>✦ Enter Our Universe ✦</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- ==================== MAIN SITE ==================== -->
+    <div id="main-site">
+
+        <!-- NAV -->
+        <nav>
+            <a href="#hero" class="nav-logo">R ✦ S</a>
+            <ul class="nav-links">
+                <li><a href="#map-section">Our Map</a></li>
+                <li><a href="#journey">Journey</a></li>
+                <li><a href="#rose-garden">Garden</a></li>
+                <li><a href="#letters">Letters</a></li>
+                <li><a href="#promises">Promises</a></li>
+            </ul>
+        </nav>
+
+        <!-- HERO -->
+        <section id="hero">
+            <canvas id="hero-canvas"></canvas>
+
+            <!-- Floating petals -->
+            <div id="petals-container"></div>
+
+            <div class="hero-content">
+                <div class="hero-label">✦ A Love Story Written in Stars ✦</div>
+                <h1 class="hero-main">
+                    <span class="line1">You are my</span>
+                    <span class="line2">Universe</span>
+                </h1>
+                <div class="hero-names">
+                    Rezaul Karim <span class="amp">✦</span> Sandia Ahmed Sinthi
+                </div>
+                <p class="hero-tagline">
+                    Somewhere in this city, two souls found each other. Two addresses on a map,
+                    one story written by the universe itself.
+                </p>
+                <div class="scroll-hint">
+                    <div class="scroll-line"></div>
+                    <span>Discover Our Story</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== MAP SECTION ==================== -->
+        <section id="map-section">
+            <div class="section-ornament">— 🥀 —</div>
+
+            <div class="map-intro reveal">
+                <div class="section-label">✦ Where We Stand ✦</div>
+                <h2 class="section-title">Two Hearts,<br>One Map</h2>
+                <div class="gold-line"></div>
+                <p>
+                    Every love story has a geography — two points on this earth
+                    where two people stood, unaware that across the city,
+                    their person was waiting for them.
+                </p>
+            </div>
+
+            <!-- Location cards above map -->
+            <div class="location-cards reveal">
+                <div class="loc-card">
+                    <span class="loc-rose">🥀</span>
+                    <div class="loc-name">Rezaul Karim</div>
+                    <div class="loc-place">Savar, Dhaka</div>
+                    <div
+                        style="margin-top:1rem; font-family:'Cormorant Garamond',serif; font-style:italic; color:var(--silver); font-size:0.85rem; line-height:1.6;">
+                        "From here, I looked at the same sky as you."
+                    </div>
+                </div>
+
+                <div class="loc-connector">
+                    <div class="heart-line">
+                        <div class="dot"></div>
+                        <div class="dot"></div>
+                        <div class="dot"></div>
+                        <div style="color:var(--rose-gold); font-size:1.5rem; margin:0.5rem 0;">♥</div>
+                        <div class="dot"></div>
+                        <div class="dot"></div>
+                        <div class="dot"></div>
+                    </div>
+                </div>
+
+                <div class="loc-card">
+                    <span class="loc-rose">🥀</span>
+                    <div class="loc-name">Sandia Ahmed Sinthi</div>
+                    <div class="loc-place">Tongi, Gazipur</div>
+                    <div
+                        style="margin-top:1rem; font-family:'Cormorant Garamond',serif; font-style:italic; color:var(--silver); font-size:0.85rem; line-height:1.6;">
+                        "From here, I looked at the same moon as you."
+                    </div>
+                </div>
+            </div>
+
+            <!-- Map -->
+            <div class="map-wrapper reveal">
+                <div class="map-frame">
+                    <div class="map-corners">
+                        <div class="corner corner-tl"></div>
+                        <div class="corner corner-tr"></div>
+                        <div class="corner corner-bl"></div>
+                        <div class="corner corner-br"></div>
+                    </div>
+                    <div id="romantic-map"></div>
+                </div>
+            </div>
+
+            <!-- Distance Card -->
+            <div class="distance-card reveal">
+                <div class="distance-number" id="animated-dist">0</div>
+                <div class="distance-unit">Kilometers of Love</div>
+                <div class="gold-line"></div>
+                <p class="distance-msg">
+                    "35 kilometers. 35,000 meters. A distance that the heart collapses
+                    in a single heartbeat — because love has no concept of far."
+                </p>
+            </div>
+
+            <!-- Route Description -->
+            <div style="max-width:700px; margin:0 auto; text-align:center;" class="reveal">
+                <div class="section-label">✦ The Path Between Us ✦</div>
+                <p style="font-style:italic; color:var(--silver); line-height:2; font-size:1.05rem;">
+                    From Savar to Tongi — through roads, bridges, and river banks —
+                    there is a thread connecting us, invisible but unbreakable.
+                    Every car, every bus, every rickshaw on those roads is
+                    just noise around our story.
+                </p>
+            </div>
+
+            <div class="section-ornament">— 🥀 —</div>
+        </section>
+
+        <!-- ==================== JOURNEY ==================== -->
+        <section id="journey">
+            <div class="journey-bg"></div>
+            <div class="journey-inner">
+                <div class="journey-head reveal">
+                    <div class="section-label">✦ Every Step We Took ✦</div>
+                    <h2 class="section-title">The Journey<br>to Each Other</h2>
+                    <div class="gold-line"></div>
+                    <p style="font-style:italic; color:var(--silver); line-height:2; max-width:500px; margin:0 auto;">
+                        Love is not a destination. It is every moment,
+                        every conversation, every glance — the entire journey
+                        that made us who we are together.
+                    </p>
+                </div>
+
+                <div class="path-visual">
+                    <div class="path-line"></div>
+
+                    <div class="path-item">
+                        <div class="path-text">
+                            <h3>✦ The Beginning</h3>
+                            <p>Every great love story starts with a moment so ordinary it doesn't feel significant —
+                                until everything that follows makes it the most important moment of your life. That was
+                                ours.</p>
+                        </div>
+                        <div class="path-node">
+                            <div class="path-dot"></div>
+                            <div class="path-num">I</div>
+                        </div>
+                        <div class="path-empty"></div>
+                    </div>
+
+                    <div class="path-item">
+                        <div class="path-empty"></div>
+                        <div class="path-node">
+                            <div class="path-dot"></div>
+                            <div class="path-num">II</div>
+                        </div>
+                        <div class="path-text">
+                            <h3>✦ The Connection</h3>
+                            <p>Two souls from different corners of this city, drawn together by something greater than
+                                coincidence. The universe kept pushing us toward each other until we finally listened.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="path-item">
+                        <div class="path-text">
+                            <h3>✦ The Distance Felt</h3>
+                            <p>35 kilometers can feel like an ocean on the nights when you can't be there. The silence
+                                between messages, the time between meetings — every absence made the presence sweeter.
+                            </p>
+                        </div>
+                        <div class="path-node">
+                            <div class="path-dot"></div>
+                            <div class="path-num">III</div>
+                        </div>
+                        <div class="path-empty"></div>
+                    </div>
+
+                    <div class="path-item">
+                        <div class="path-empty"></div>
+                        <div class="path-node">
+                            <div class="path-dot"></div>
+                            <div class="path-num">IV</div>
+                        </div>
+                        <div class="path-text">
+                            <h3>✦ The Understanding</h3>
+                            <p>We learned each other like a language — slowly, beautifully, imperfectly. Your silences
+                                taught me more than anyone else's words ever could.</p>
+                        </div>
+                    </div>
+
+                    <div class="path-item">
+                        <div class="path-text">
+                            <h3>✦ The Choosing</h3>
+                            <p>Every single day, I choose you. Not because I have to, but because choosing you is the
+                                best decision I make. You are not a habit — you are a choice I make with my whole heart.
+                            </p>
+                        </div>
+                        <div class="path-node">
+                            <div class="path-dot"></div>
+                            <div class="path-num">V</div>
+                        </div>
+                        <div class="path-empty"></div>
+                    </div>
+
+                    <div class="path-item">
+                        <div class="path-empty"></div>
+                        <div class="path-node">
+                            <div class="path-dot"></div>
+                            <div class="path-num">VI</div>
+                        </div>
+                        <div class="path-text">
+                            <h3>✦ Right Now</h3>
+                            <p>Here we are. This very moment, reading this together — this is the story we are still
+                                writing. And the most beautiful chapters are yet to come.</p>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== BLACK ROSE GARDEN ==================== -->
+        <section id="rose-garden">
+            <div class="rose-bg-grid" id="rose-grid"></div>
+
+            <div class="garden-center">
+                <div class="big-rose-display">
+                    <div class="rose-orb">🥀</div>
+                    <div class="rose-orb">🥀</div>
+                    <div class="rose-orb">🥀</div>
+                </div>
+
+                <div class="section-label reveal">✦ The Garden of Eternal Roses ✦</div>
+                <div class="garden-quote reveal">
+                    "You are my favorite <span class="highlight">black rose</span> —
+                    rare, mysterious, and more beautiful
+                    than anything ordinary."
+                </div>
+                <div class="gold-line"></div>
+                <p class="garden-subtext reveal">
+                    The black rose does not exist in nature — it is created, rare, unlike anything else.
+                    That is exactly what we are. Not ordinary love. Not common love.
+                    Something the world had to search for.
+                </p>
+
+                <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:2rem; margin-top:4rem; max-width:700px; margin-left:auto; margin-right:auto;"
+                    class="reveal">
+                    <div style="text-align:center; padding:2rem 1rem; border:1px solid rgba(139,0,48,0.3);">
+                        <div style="font-size:2rem; margin-bottom:1rem; filter:saturate(0.2) brightness(0.5);">🥀</div>
+                        <div
+                            style="font-family:'Cinzel',serif; font-size:0.75rem; color:var(--gold); letter-spacing:0.1em; margin-bottom:0.5rem;">
+                            RARE</div>
+                        <div style="font-style:italic; color:var(--silver); font-size:0.85rem; line-height:1.6;">Like
+                            you — one of one, irreplaceable</div>
+                    </div>
+                    <div style="text-align:center; padding:2rem 1rem; border:1px solid rgba(201,169,110,0.3);">
+                        <div style="font-size:2rem; margin-bottom:1rem; filter:saturate(0.2) brightness(0.5);">🥀</div>
+                        <div
+                            style="font-family:'Cinzel',serif; font-size:0.75rem; color:var(--gold); letter-spacing:0.1em; margin-bottom:0.5rem;">
+                            ETERNAL</div>
+                        <div style="font-style:italic; color:var(--silver); font-size:0.85rem; line-height:1.6;">What we
+                            have only grows deeper with time</div>
+                    </div>
+                    <div style="text-align:center; padding:2rem 1rem; border:1px solid rgba(139,0,48,0.3);">
+                        <div style="font-size:2rem; margin-bottom:1rem; filter:saturate(0.2) brightness(0.5);">🥀</div>
+                        <div
+                            style="font-family:'Cinzel',serif; font-size:0.75rem; color:var(--gold); letter-spacing:0.1em; margin-bottom:0.5rem;">
+                            CHOSEN</div>
+                        <div style="font-style:italic; color:var(--silver); font-size:0.85rem; line-height:1.6;">Every
+                            day, deliberately, beautifully</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== LOVE LETTERS ==================== -->
+        <section id="letters">
+            <div style="text-align:center; max-width:700px; margin:0 auto;" class="reveal">
+                <div class="section-label">✦ Written From the Heart ✦</div>
+                <h2 class="section-title">Letters I<br>Never Sent</h2>
+                <div class="gold-line"></div>
+                <p style="font-style:italic; color:var(--silver); line-height:2;">
+                    Some feelings are too vast for conversation. These are the words
+                    that live in the quiet spaces between everything I say to you.
+                </p>
+            </div>
+
+            <div class="letters-grid">
+
+                <div class="letter-card reveal">
+                    <span class="letter-number">Letter I</span>
+                    <span class="letter-icon">🌙</span>
+                    <h3 class="letter-title">On the Nights I Miss You</h3>
+                    <p class="letter-body">
+                        There are nights when the city is loud but the silence around me is deafening
+                        because you are not in it. I look at the distance between us on a map —
+                        35 kilometers — and I think: the moon is 384,000 kilometers away,
+                        and it still pulls the entire ocean toward itself.
+                        You pull me like that.
+                    </p>
+                    <div class="letter-signature">— Always yours, R.</div>
+                </div>
+
+                <div class="letter-card reveal">
+                    <span class="letter-number">Letter II</span>
+                    <span class="letter-icon">⭐</span>
+                    <h3 class="letter-title">On What You Don't Know</h3>
+                    <p class="letter-body">
+                        You don't know how often I think of you mid-day,
+                        doing something completely ordinary — and suddenly you arrive in my mind,
+                        uninvited and utterly welcome. You are the thought that interrupts everything
+                        and I have never once wanted it to stop.
+                    </p>
+                    <div class="letter-signature">— R.</div>
+                </div>
+
+                <div class="letter-card reveal">
+                    <span class="letter-number">Letter III</span>
+                    <span class="letter-icon">🥀</span>
+                    <h3 class="letter-title">On Your Darkness</h3>
+                    <p class="letter-body">
+                        You love black roses — and I understand why.
+                        You are not afraid of dark things. You find beauty where others see nothing.
+                        That is rare. That is you. You taught me that the most extraordinary things
+                        exist outside the ordinary.
+                    </p>
+                    <div class="letter-signature">— R.</div>
+                </div>
+
+                <div class="letter-card reveal">
+                    <span class="letter-number">Letter IV</span>
+                    <span class="letter-icon">💎</span>
+                    <h3 class="letter-title">On Why It's You</h3>
+                    <p class="letter-body">
+                        If I could choose anyone in this whole world — in any city, any time —
+                        I would walk back through every road, every kilometer of Dhaka,
+                        every confused turn, just to find you again.
+                        You were worth every moment of not knowing you.
+                    </p>
+                    <div class="letter-signature">— Always, R.</div>
+                </div>
+
+                <div class="letter-card reveal">
+                    <span class="letter-number">Letter V</span>
+                    <span class="letter-icon">🌹</span>
+                    <h3 class="letter-title">On the Distance</h3>
+                    <p class="letter-body">
+                        Savar to Tongi. I have measured it on maps, I have traced the roads with my eyes.
+                        But Sinthi — the real distance between us has always been zero.
+                        Because wherever you are is exactly where my heart already lives.
+                    </p>
+                    <div class="letter-signature">— Yours completely, R.</div>
+                </div>
+
+                <div class="letter-card reveal">
+                    <span class="letter-number">Letter VI</span>
+                    <span class="letter-icon">🕯️</span>
+                    <h3 class="letter-title">On Forever</h3>
+                    <p class="letter-body">
+                        They say forever is a long time. But with you,
+                        it doesn't feel long enough. I want a thousand forevers.
+                        I want to run out of time with you and still be reaching for more.
+                        You are the only thing that makes time feel both infinite and fleeting.
+                    </p>
+                    <div class="letter-signature">— Forever yours, Rezaul.</div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- ==================== PROMISES ==================== -->
+        <section id="promises">
+            <div class="promise-bg"></div>
+            <div class="promise-inner">
+                <div class="reveal">
+                    <div class="section-label">✦ Sacred Words ✦</div>
+                    <h2 class="section-title">My Promises<br>to You</h2>
+                    <div class="gold-line"></div>
+                </div>
+
+                <ul class="promise-list">
+                    <li class="promise-item">
+                        <div class="promise-num">01</div>
+                        <div class="promise-text">
+                            <h4>I Will Always Choose You</h4>
+                            <p>Not because loving you is easy — but because you are worth every difficulty. I choose you
+                                on the beautiful days and especially on the hard ones.</p>
+                        </div>
+                    </li>
+                    <li class="promise-item">
+                        <div class="promise-num">02</div>
+                        <div class="promise-text">
+                            <h4>I Will Never Make You Feel Small</h4>
+                            <p>Your dreams deserve to be enormous. Your feelings deserve to be heard. In my world, you
+                                are never too much and always enough.</p>
+                        </div>
+                    </li>
+                    <li class="promise-item">
+                        <div class="promise-num">03</div>
+                        <div class="promise-text">
+                            <h4>I Will Cross Every Distance</h4>
+                            <p>35 kilometers today, whatever tomorrow brings — I will cross every road, every bridge,
+                                every distance that stands between me and you.</p>
+                        </div>
+                    </li>
+                    <li class="promise-item">
+                        <div class="promise-num">04</div>
+                        <div class="promise-text">
+                            <h4>I Will Love Your Darkness Too</h4>
+                            <p>Your shadows, your storms, your quiet days — I love all of you. Not just the parts that
+                                are easy to love, but every single complicated, beautiful piece.</p>
+                        </div>
+                    </li>
+                    <li class="promise-item">
+                        <div class="promise-num">05</div>
+                        <div class="promise-text">
+                            <h4>I Will Remember This Moment</h4>
+                            <p>This story. This map. This distance. This love. I will carry it with me always as proof
+                                that somewhere in this universe, we found each other.</p>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- ==================== CONSTELLATION ==================== -->
+        <section id="constellation">
+            <canvas id="const-canvas"></canvas>
+            <div class="const-content reveal">
+                <div class="section-label">✦ Written in the Sky ✦</div>
+                <h2 class="section-title">Two Stars,<br>One Sky</h2>
+                <div class="gold-line"></div>
+                <div class="names-display">Rezaul ✦ Sinthi</div>
+                <p class="forever-text">
+                    Somewhere in the night sky above Dhaka, two stars align perfectly —
+                    one over Savar, one over Tongi — and in that alignment,
+                    the universe spells out our story for anyone
+                    who knows how to look.
+                </p>
+            </div>
+        </section>
+
+        <!-- ==================== FINALE / LOOP ==================== -->
+        <section id="finale">
+            <div class="finale-bg"></div>
+            <div class="finale-content">
+                <span class="finale-rose">🥀</span>
+                <h2 class="finale-title">You Found It.</h2>
+                <div class="finale-subtitle">The End of the Beginning.</div>
+                <div class="gold-line"></div>
+                <p class="finale-msg reveal">
+                    You have walked through every room of this universe I built for you.
+                    You have seen the map, felt the distance collapse, read the letters
+                    that lived too deep for words. This is what you are to me, Sinthi —
+                    an entire universe contained in one person, in one name,
+                    in one smile that changes everything.
+                    <br><br>
+                    Now go back to the beginning.
+                    <br>
+                    Because some things are worth experiencing again and again.
+                </p>
+                <a href="#hero" class="return-btn" onclick="loopBack()">
+                    <span>✦ Return to Our Universe ✦</span>
+                </a>
+
+                <div
+                    style="margin-top:5rem; font-family:'Cormorant Garamond',serif; font-style:italic; color:rgba(201,169,110,0.5); font-size:0.9rem; letter-spacing:0.2em;">
+                    — Made with love, by Rezaul —
+                </div>
+            </div>
+        </section>
+
+    </div> <!-- end main-site -->
+
+    <script>
+        // ==================== CURSOR ====================
+        const cursor = document.getElementById('cursor');
+        const cursorDot = document.getElementById('cursor-dot');
+        document.addEventListener('mousemove', (e) => {
+            cursor.style.left = e.clientX - 10 + 'px';
+            cursor.style.top = e.clientY - 10 + 'px';
+            cursorDot.style.left = e.clientX - 2 + 'px';
+            cursorDot.style.top = e.clientY - 2 + 'px';
+        });
+        document.addEventListener('mousedown', () => cursor.style.transform = 'scale(0.7)');
+        document.addEventListener('mouseup', () => cursor.style.transform = 'scale(1)');
+
+        // ==================== PORTAL CANVAS ====================
+        (function () {
+            const canvas = document.getElementById('portal-canvas');
+            const ctx = canvas.getContext('2d');
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+
+            const stars = Array.from({ length: 200 }, () => ({
+                x: Math.random() * canvas.width,
+                y: Math.random() * canvas.height,
+                r: Math.random() * 1.5 + 0.3,
+                speed: Math.random() * 0.3 + 0.1,
+                opacity: Math.random()
+            }));
+
+            function animatePortal() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                ctx.fillStyle = '#000000';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+                // Radial glow
+                const grad = ctx.createRadialGradient(canvas.width / 2, canvas.height / 2, 0, canvas.width / 2, canvas.height / 2, 300);
+                grad.addColorStop(0, 'rgba(139,0,48,0.15)');
+                grad.addColorStop(1, 'transparent');
+                ctx.fillStyle = grad;
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+                stars.forEach(s => {
+                    s.opacity += (Math.random() - 0.5) * 0.05;
+                    s.opacity = Math.max(0.1, Math.min(1, s.opacity));
+                    ctx.beginPath();
+                    ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+                    ctx.fillStyle = `rgba(201,169,110,${s.opacity})`;
+                    ctx.fill();
+                });
+
+                requestAnimationFrame(animatePortal);
+            }
+            animatePortal();
+
+            window.addEventListener('resize', () => {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+            });
+        })();
+
+        // ==================== ENTER SITE ====================
+        function enterSite() {
+            // Try to play music
+            const music = document.getElementById('bg-music');
+            music.volume = 0.4;
+            music.play().catch(() => { });
+
+            document.getElementById('portal').classList.add('gone');
+            const main = document.getElementById('main-site');
+            main.classList.add('visible');
+
+            setTimeout(() => {
+                initHeroCanvas();
+                initMap();
+                initConstCanvas();
+                createPetals();
+                populateRoseGrid();
+                startScrollAnimations();
+                animateDistance();
+            }, 500);
+        }
+
+        // ==================== HERO CANVAS ====================
+        function initHeroCanvas() {
+            const canvas = document.getElementById('hero-canvas');
+            const ctx = canvas.getContext('2d');
+
+            function resize() {
+                canvas.width = canvas.offsetWidth;
+                canvas.height = canvas.offsetHeight;
+            }
+            resize();
+            window.addEventListener('resize', resize);
+
+            const stars = Array.from({ length: 300 }, () => ({
+                x: Math.random(),
+                y: Math.random(),
+                r: Math.random() * 1.2 + 0.2,
+                speed: Math.random() * 0.2 + 0.05,
+                o: Math.random()
+            }));
+
+            function draw() {
+                const w = canvas.width, h = canvas.height;
+                ctx.clearRect(0, 0, w, h);
+
+                // Gradient background
+                const bg = ctx.createRadialGradient(w / 2, h / 2, 0, w / 2, h / 2, w * 0.8);
+                bg.addColorStop(0, '#1a0010');
+                bg.addColorStop(0.5, '#0a050a');
+                bg.addColorStop(1, '#000000');
+                ctx.fillStyle = bg;
+                ctx.fillRect(0, 0, w, h);
+
+                // Stars
+                stars.forEach(s => {
+                    s.o += (Math.random() - 0.5) * 0.03;
+                    s.o = Math.max(0.1, Math.min(0.9, s.o));
+                    ctx.beginPath();
+                    ctx.arc(s.x * w, s.y * h, s.r, 0, Math.PI * 2);
+                    const color = Math.random() > 0.7 ? `rgba(201,169,110,${s.o})` : `rgba(255,240,240,${s.o})`;
+                    ctx.fillStyle = color;
+                    ctx.fill();
+                });
+
+                // Central glow
+                const glow = ctx.createRadialGradient(w / 2, h / 2, 0, w / 2, h / 2, 300);
+                glow.addColorStop(0, 'rgba(139,0,48,0.08)');
+                glow.addColorStop(1, 'transparent');
+                ctx.fillStyle = glow;
+                ctx.fillRect(0, 0, w, h);
+
+                requestAnimationFrame(draw);
+            }
+            draw();
+        }
+
+        // ==================== ROSE PETALS ====================
+        function createPetals() {
+            const container = document.getElementById('petals-container');
+            const roseEmojis = ['🥀', '🌹'];
+            for (let i = 0; i < 12; i++) {
+                const petal = document.createElement('div');
+                petal.classList.add('petal');
+                petal.textContent = roseEmojis[Math.floor(Math.random() * roseEmojis.length)];
+                petal.style.left = Math.random() * 100 + '%';
+                petal.style.fontSize = (Math.random() * 1.5 + 0.8) + 'rem';
+                const dur = Math.random() * 15 + 10;
+                const delay = Math.random() * -20;
+                petal.style.animation = `petalFall ${dur}s ${delay}s linear infinite`;
+                container.appendChild(petal);
+            }
+        }
+
+        // ==================== ROSE GRID ====================
+        function populateRoseGrid() {
+            const grid = document.getElementById('rose-grid');
+            for (let i = 0; i < 24; i++) {
+                const item = document.createElement('div');
+                item.classList.add('rose-bg-item');
+                item.textContent = '🥀';
+                const dur = Math.random() * 10 + 8;
+                const delay = Math.random() * -15;
+                item.style.animation = `roseGridFloat ${dur}s ${delay}s ease-in-out infinite`;
+                grid.appendChild(item);
+            }
+        }
+
+        // ==================== MAP ====================
+        function initMap() {
+            const rLat = 23.832169759871338, rLng = 90.26251200122493;
+            const sLat = 24.006344058380716, sLng = 90.55354799142552;
+
+            const map = L.map('romantic-map', {
+                zoomControl: false,
+                attributionControl: false,
+                scrollWheelZoom: false
+            });
+
+            // Dark romantic tiles
+            L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+                maxZoom: 19
+            }).addTo(map);
+
+            // Fit bounds
+            const bounds = L.latLngBounds([rLat, rLng], [sLat, sLng]);
+            map.fitBounds(bounds, { padding: [60, 60] });
+
+            // Custom icons
+            const createIcon = (label, color) => L.divIcon({
+                className: '',
+                html: `<div style="
+      background: linear-gradient(135deg, #1a0010, #0a050a);
+      border: 1px solid ${color};
+      padding: 8px 14px;
+      font-family: 'Cinzel', serif;
+      font-size: 11px;
+      color: ${color};
+      letter-spacing: 0.1em;
+      white-space: nowrap;
+      box-shadow: 0 0 20px rgba(139,0,48,0.3);
+      position: relative;
+    ">
+      🥀 ${label}
+      <div style="
+        position: absolute;
+        bottom: -8px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 0; height: 0;
+        border-left: 6px solid transparent;
+        border-right: 6px solid transparent;
+        border-top: 8px solid ${color};
+      "></div>
+    </div>`,
+                iconAnchor: [60, 40]
+            });
+
+            L.marker([rLat, rLng], { icon: createIcon('Rezaul', '#c9a96e') }).addTo(map);
+            L.marker([sLat, sLng], { icon: createIcon('Sinthi', '#8b0030') }).addTo(map);
+
+            // Animated polyline between them
+            const polyline = L.polyline([[rLat, rLng], [sLat, sLng]], {
+                color: '#8b0030',
+                weight: 2,
+                opacity: 0.8,
+                dashArray: '8, 8',
+                dashOffset: '0'
+            }).addTo(map);
+
+            // Add midpoint heart
+            const midLat = (rLat + sLat) / 2;
+            const midLng = (rLng + sLng) / 2;
+            const heartIcon = L.divIcon({
+                className: '',
+                html: `<div style="font-size:20px; text-shadow:0 0 10px rgba(139,0,48,0.8);">♥</div>`,
+                iconAnchor: [10, 10]
+            });
+            L.marker([midLat, midLng], { icon: heartIcon }).addTo(map);
+
+            // Animate dashes
+            let offset = 0;
+            function animateDash() {
+                offset -= 1;
+                if (offset < -16) offset = 0;
+                polyline.setStyle({ dashOffset: offset.toString() });
+                requestAnimationFrame(animateDash);
+            }
+            animateDash();
+
+            // Add circles
+            L.circle([rLat, rLng], { radius: 800, color: '#c9a96e', fillColor: '#c9a96e', fillOpacity: 0.05, weight: 1 }).addTo(map);
+            L.circle([sLat, sLng], { radius: 800, color: '#8b0030', fillColor: '#8b0030', fillOpacity: 0.05, weight: 1 }).addTo(map);
+        }
+
+        // ==================== DISTANCE COUNTER ====================
+        function animateDistance() {
+            const el = document.getElementById('animated-dist');
+            const target = 35.4;
+            let current = 0;
+            const duration = 2500;
+            const steps = 60;
+            const increment = target / steps;
+            let step = 0;
+
+            const observer = new IntersectionObserver((entries) => {
+                if (entries[0].isIntersecting) {
+                    const interval = setInterval(() => {
+                        current += increment;
+                        step++;
+                        if (step >= steps) {
+                            el.textContent = '35.4';
+                            clearInterval(interval);
+                        } else {
+                            el.textContent = current.toFixed(1);
+                        }
+                    }, duration / steps);
+                    observer.disconnect();
+                }
+            });
+            observer.observe(el);
+        }
+
+        // ==================== CONSTELLATION CANVAS ====================
+        function initConstCanvas() {
+            const canvas = document.getElementById('const-canvas');
+            const ctx = canvas.getContext('2d');
+
+            function resize() {
+                canvas.width = canvas.offsetWidth;
+                canvas.height = canvas.offsetHeight;
+            }
+            resize();
+            window.addEventListener('resize', resize);
+
+            const stars = Array.from({ length: 250 }, () => ({
+                x: Math.random(),
+                y: Math.random(),
+                r: Math.random() * 1.5 + 0.3,
+                o: Math.random(),
+                twinkleSpeed: Math.random() * 0.02 + 0.005
+            }));
+
+            // Constellation points (abstract pattern)
+            const constPoints = [
+                { x: 0.2, y: 0.3 }, { x: 0.25, y: 0.4 }, { x: 0.32, y: 0.35 },
+                { x: 0.38, y: 0.5 }, { x: 0.45, y: 0.42 }, { x: 0.5, y: 0.5 },
+                { x: 0.55, y: 0.42 }, { x: 0.62, y: 0.5 }, { x: 0.68, y: 0.35 },
+                { x: 0.75, y: 0.4 }, { x: 0.8, y: 0.3 }
+            ];
+
+            let phase = 0;
+
+            function draw() {
+                const w = canvas.width, h = canvas.height;
+                ctx.clearRect(0, 0, w, h);
+
+                ctx.fillStyle = '#000000';
+                ctx.fillRect(0, 0, w, h);
+
+                // Stars
+                stars.forEach(s => {
+                    s.o += s.twinkleSpeed * (Math.random() > 0.5 ? 1 : -1);
+                    s.o = Math.max(0.05, Math.min(1, s.o));
+                    ctx.beginPath();
+                    ctx.arc(s.x * w, s.y * h, s.r, 0, Math.PI * 2);
+                    ctx.fillStyle = `rgba(255,245,220,${s.o * 0.6})`;
+                    ctx.fill();
+                });
+
+                // Constellation lines
+                phase += 0.01;
+                ctx.strokeStyle = `rgba(201,169,110,${0.15 + Math.sin(phase) * 0.05})`;
+                ctx.lineWidth = 0.5;
+                ctx.setLineDash([3, 6]);
+                ctx.beginPath();
+                constPoints.forEach((p, i) => {
+                    if (i === 0) ctx.moveTo(p.x * w, p.y * h);
+                    else ctx.lineTo(p.x * w, p.y * h);
+                });
+                ctx.stroke();
+                ctx.setLineDash([]);
+
+                // Constellation star markers
+                constPoints.forEach((p, i) => {
+                    const pulse = 0.7 + Math.sin(phase + i * 0.5) * 0.3;
+                    ctx.beginPath();
+                    ctx.arc(p.x * w, p.y * h, 2 * pulse, 0, Math.PI * 2);
+                    ctx.fillStyle = `rgba(201,169,110,${pulse})`;
+                    ctx.fill();
+
+                    // Glow
+                    const grd = ctx.createRadialGradient(p.x * w, p.y * h, 0, p.x * w, p.y * h, 15);
+                    grd.addColorStop(0, `rgba(201,169,110,${0.2 * pulse})`);
+                    grd.addColorStop(1, 'transparent');
+                    ctx.fillStyle = grd;
+                    ctx.beginPath();
+                    ctx.arc(p.x * w, p.y * h, 15, 0, Math.PI * 2);
+                    ctx.fill();
+                });
+
+                // Two main stars (their locations)
+                [[0.3, 0.6], [0.7, 0.4]].forEach(([px, py], idx) => {
+                    const pulse = 1 + Math.sin(phase * 2 + idx * Math.PI) * 0.3;
+                    const color = idx === 0 ? '201,169,110' : '139,0,48';
+
+                    const g = ctx.createRadialGradient(px * w, py * h, 0, px * w, py * h, 30 * pulse);
+                    g.addColorStop(0, `rgba(${color},0.6)`);
+                    g.addColorStop(1, 'transparent');
+                    ctx.fillStyle = g;
+                    ctx.beginPath();
+                    ctx.arc(px * w, py * h, 30 * pulse, 0, Math.PI * 2);
+                    ctx.fill();
+
+                    ctx.beginPath();
+                    ctx.arc(px * w, py * h, 4 * pulse, 0, Math.PI * 2);
+                    ctx.fillStyle = `rgba(${color},1)`;
+                    ctx.fill();
+                });
+
+                requestAnimationFrame(draw);
+            }
+            draw();
+        }
+
+        // ==================== SCROLL ANIMATIONS ====================
+        function startScrollAnimations() {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(e => {
+                    if (e.isIntersecting) e.target.classList.add('visible');
+                });
+            }, { threshold: 0.15 });
+
+            document.querySelectorAll('.reveal, .path-item, .promise-item').forEach(el => {
+                observer.observe(el);
+            });
+        }
+
+        // ==================== LOOP BACK ====================
+        function loopBack() {
+            setTimeout(() => {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }, 300);
+        }
+
+        // ==================== KEYBOARD SHORTCUT (Escape prevents exit) ====================
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                e.preventDefault();
+                // Lovingly prevent escape ;)
+                const main = document.getElementById('main-site');
+                main.style.animation = 'none';
+            }
+        });
+    </script>
+</body>
+
+</html>

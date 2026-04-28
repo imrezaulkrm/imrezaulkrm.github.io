@@ -1,0 +1,2233 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rezaul & Sinthi — Our Universe</title>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=Cinzel:wght@400;600;900&family=EB+Garamond:ital,wght@0,400;1,400&display=swap"
+        rel="stylesheet">
+
+    <!-- Leaflet Map -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+    <style>
+        :root {
+            --black: #000000;
+            --deep: #050305;
+            --void: #0a050a;
+            --primary-rose: #d4627f;
+            --secondary-rose: #e87aa9;
+            --accent-rose: #f099c0;
+            --light-rose: #f5b3d0;
+            --pale-rose: #fcd1d9;
+            --teal-dark: #0d3d47;
+            --teal-light: #1a6b77;
+            --gray-dark: #1a3233;
+            --silver: #d1c9d1;
+            --white: #faf8fa;
+            --cream: #f3ede8;
+            --gold: #d4af6a;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background: var(--black);
+            color: var(--white);
+            font-family: 'EB Garamond', serif;
+            overflow-x: hidden;
+            cursor: none;
+        }
+
+        @media (hover: none) and (pointer: coarse) {
+
+            #cursor,
+            #cursor-dot {
+                display: none !important;
+            }
+
+            body {
+                cursor: auto;
+            }
+        }
+
+        /* ==================== CURSOR ==================== */
+        #cursor {
+            position: fixed;
+            width: 24px;
+            height: 24px;
+            border: 2px solid var(--primary-rose);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 99999;
+            transition: transform 0.15s ease;
+            box-shadow: 0 0 10px rgba(212, 98, 127, 0.5);
+        }
+
+        #cursor-dot {
+            position: fixed;
+            width: 5px;
+            height: 5px;
+            background: var(--primary-rose);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 99999;
+            box-shadow: 0 0 5px var(--primary-rose);
+        }
+
+        /* ==================== MUSIC PLAYER ==================== */
+        .music-toggle {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--primary-rose), var(--secondary-rose));
+            border: none;
+            border-radius: 50%;
+            color: var(--white);
+            font-size: 1.5rem;
+            cursor: pointer;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 25px rgba(212, 98, 127, 0.4);
+        }
+
+        .music-toggle:hover {
+            transform: scale(1.15);
+            box-shadow: 0 12px 35px rgba(212, 98, 127, 0.6);
+        }
+
+        .music-toggle.playing {
+            animation: pulse-music 1.5s ease-in-out infinite;
+        }
+
+        @keyframes pulse-music {
+
+            0%,
+            100% {
+                box-shadow: 0 8px 25px rgba(212, 98, 127, 0.4);
+            }
+
+            50% {
+                box-shadow: 0 8px 35px rgba(212, 98, 127, 0.8);
+            }
+        }
+
+        /* ==================== ENTRY PORTAL ==================== */
+        #portal {
+            position: fixed;
+            inset: 0;
+            z-index: 9999;
+            background: var(--black);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 1.8s ease, visibility 1.8s ease;
+        }
+
+        #portal.gone {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+
+        #portal-canvas {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        .portal-content {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2.5rem;
+            padding: 2rem;
+        }
+
+        .portal-rose {
+            font-size: clamp(3.5rem, 12vw, 6rem);
+            animation: floatRose 4s ease-in-out infinite;
+            filter: drop-shadow(0 0 40px rgba(212, 98, 127, 0.6));
+        }
+
+        @keyframes floatRose {
+
+            0%,
+            100% {
+                transform: translateY(0) rotate(-8deg);
+            }
+
+            50% {
+                transform: translateY(-25px) rotate(8deg);
+            }
+        }
+
+        .portal-subtitle {
+            font-family: 'Cormorant Garamond', serif;
+            font-style: italic;
+            font-size: clamp(0.85rem, 2.5vw, 1.1rem);
+            color: var(--secondary-rose);
+            letter-spacing: 0.5em;
+            text-transform: uppercase;
+            opacity: 0;
+            animation: fadeUp 1s ease 0.5s forwards;
+        }
+
+        .portal-title {
+            font-family: 'Cinzel', serif;
+            font-size: clamp(2.8rem, 8vw, 5.5rem);
+            font-weight: 900;
+            color: var(--white);
+            letter-spacing: 0.1em;
+            line-height: 1.1;
+            opacity: 0;
+            animation: fadeUp 1s ease 1s forwards;
+            text-shadow: 0 0 30px rgba(212, 98, 127, 0.3);
+        }
+
+        .portal-names {
+            font-family: 'Cormorant Garamond', serif;
+            font-style: italic;
+            font-size: clamp(1.3rem, 4vw, 2.3rem);
+            color: var(--light-rose);
+            opacity: 0;
+            animation: fadeUp 1s ease 1.5s forwards;
+            letter-spacing: 0.08em;
+        }
+
+        .portal-divider {
+            width: 120px;
+            height: 1.5px;
+            background: linear-gradient(90deg, transparent, var(--secondary-rose), transparent);
+            opacity: 0;
+            animation: fadeUp 1s ease 1.8s forwards;
+        }
+
+        .enter-btn {
+            position: relative;
+            padding: clamp(1.1rem, 2.5vw, 1.4rem) clamp(2.8rem, 6vw, 4rem);
+            border: 2px solid var(--secondary-rose);
+            background: transparent;
+            color: var(--light-rose);
+            font-family: 'Cinzel', serif;
+            font-size: clamp(0.75rem, 2.2vw, 0.95rem);
+            letter-spacing: 0.5em;
+            text-transform: uppercase;
+            cursor: pointer;
+            overflow: hidden;
+            opacity: 0;
+            animation: fadeUp 1s ease 2.2s forwards;
+            transition: all 0.4s ease;
+        }
+
+        .enter-btn::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, var(--primary-rose), var(--secondary-rose));
+            transform: translateX(-100%);
+            transition: transform 0.5s ease;
+        }
+
+        .enter-btn:hover::before {
+            transform: translateX(0);
+        }
+
+        .enter-btn:hover {
+            color: var(--white);
+            box-shadow: 0 10px 30px rgba(212, 98, 127, 0.4);
+            transform: translateY(-3px);
+        }
+
+        .enter-btn span {
+            position: relative;
+            z-index: 1;
+        }
+
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ==================== MAIN SITE ==================== */
+        #main-site {
+            opacity: 0;
+            transition: opacity 1.5s ease 0.5s;
+        }
+
+        #main-site.visible {
+            opacity: 1;
+        }
+
+        /* ==================== NAV ==================== */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            padding: clamp(1.2rem, 2.5vw, 1.8rem) clamp(2rem, 3.5vw, 3.5rem);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: linear-gradient(to bottom, rgba(0, 0, 0, 0.98), transparent);
+            backdrop-filter: blur(8px);
+            border-bottom: 1px solid rgba(212, 98, 127, 0.1);
+        }
+
+        .nav-logo {
+            font-family: 'Cinzel', serif;
+            font-size: clamp(0.8rem, 2.2vw, 1rem);
+            letter-spacing: 0.4em;
+            color: var(--secondary-rose);
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .nav-logo:hover {
+            text-shadow: 0 0 15px rgba(232, 122, 169, 0.5);
+        }
+
+        .nav-links {
+            display: none;
+            gap: 3rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 0.9rem;
+            letter-spacing: 0.25em;
+            text-transform: uppercase;
+            color: var(--silver);
+            text-decoration: none;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 0;
+            height: 1px;
+            background: var(--secondary-rose);
+            transition: width 0.3s;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .nav-links a:hover {
+            color: var(--secondary-rose);
+        }
+
+        @media (min-width: 900px) {
+            .nav-links {
+                display: flex;
+            }
+        }
+
+        /* ==================== HERO SECTION ==================== */
+        #hero {
+            min-height: 100vh;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            padding-top: 3rem;
+            background: linear-gradient(to bottom, rgba(0, 0, 0, 0.8), rgba(13, 61, 71, 0.2));
+        }
+
+        #hero-canvas {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            padding: clamp(1.5rem, 3.5vw, 2.5rem);
+        }
+
+        .hero-label {
+            font-family: 'Cormorant Garamond', serif;
+            font-style: italic;
+            font-size: clamp(0.8rem, 2.2vw, 1.1rem);
+            color: var(--secondary-rose);
+            letter-spacing: 0.6em;
+            text-transform: uppercase;
+            margin-bottom: clamp(1.8rem, 3.5vw, 2.5rem);
+            opacity: 0;
+            animation: heroFade 1.2s ease 0.3s forwards;
+        }
+
+        .hero-main {
+            font-family: 'Cinzel', serif;
+            font-size: clamp(2.8rem, 10vw, 9rem);
+            font-weight: 900;
+            line-height: 0.9;
+            margin-bottom: clamp(1.8rem, 3.5vw, 2.5rem);
+            opacity: 0;
+            animation: heroFade 1.2s ease 0.7s forwards;
+            text-shadow: 0 0 40px rgba(212, 98, 127, 0.2);
+        }
+
+        .hero-main .line1 {
+            display: block;
+            color: var(--white);
+        }
+
+        .hero-main .line2 {
+            display: block;
+            color: transparent;
+            -webkit-text-stroke: 1.5px var(--secondary-rose);
+            font-style: italic;
+        }
+
+        .hero-names {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(1.3rem, 4.5vw, 3.5rem);
+            font-style: italic;
+            color: var(--light-rose);
+            margin-bottom: clamp(2.5rem, 4.5vw, 3.5rem);
+            opacity: 0;
+            animation: heroFade 1.2s ease 1.2s forwards;
+            letter-spacing: 0.05em;
+        }
+
+        .hero-names .amp {
+            color: var(--secondary-rose);
+            font-size: 0.85em;
+            margin: 0 0.3em;
+        }
+
+        .hero-tagline {
+            font-family: 'EB Garamond', serif;
+            font-size: clamp(1rem, 2.8vw, 1.2rem);
+            color: var(--silver);
+            font-style: italic;
+            max-width: 600px;
+            margin: 0 auto clamp(2.5rem, 4.5vw, 3.5rem);
+            line-height: 1.9;
+            opacity: 0;
+            animation: heroFade 1.2s ease 1.6s forwards;
+        }
+
+        .scroll-hint {
+            display: none;
+        }
+
+        @keyframes heroFade {
+            from {
+                opacity: 0;
+                transform: translateY(35px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Floating rose petals */
+        .petal {
+            position: fixed;
+            pointer-events: none;
+            animation: petalFall linear infinite;
+            opacity: 0;
+            font-size: clamp(1.2rem, 3.5vw, 1.8rem);
+            filter: drop-shadow(0 0 8px rgba(212, 98, 127, 0.3));
+            z-index: 1;
+        }
+
+        @keyframes petalFall {
+            0% {
+                transform: translateY(-100px) rotate(0deg) translateX(0);
+                opacity: 0;
+            }
+
+            10% {
+                opacity: 0.8;
+            }
+
+            90% {
+                opacity: 0.4;
+            }
+
+            100% {
+                transform: translateY(110vh) rotate(720deg) translateX(150px);
+                opacity: 0;
+            }
+        }
+
+        /* ==================== SECTION COMMON ==================== */
+        section {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .section-label {
+            font-family: 'Cormorant Garamond', serif;
+            font-style: italic;
+            font-size: clamp(0.75rem, 2.2vw, 0.9rem);
+            letter-spacing: 0.6em;
+            text-transform: uppercase;
+            color: var(--secondary-rose);
+            margin-bottom: clamp(1.2rem, 2.5vw, 1.8rem);
+        }
+
+        .section-title {
+            font-family: 'Cinzel', serif;
+            font-size: clamp(2.3rem, 6.5vw, 5rem);
+            font-weight: 900;
+            line-height: 1.1;
+            margin-bottom: clamp(1.8rem, 3.5vw, 2.5rem);
+            color: var(--white);
+            text-shadow: 0 0 30px rgba(212, 98, 127, 0.15);
+        }
+
+        .gold-line {
+            width: 100%;
+            max-width: 120px;
+            height: 1.5px;
+            background: linear-gradient(90deg, transparent, var(--secondary-rose), transparent);
+            margin: clamp(1.8rem, 3.5vw, 2.5rem) auto;
+        }
+
+        /* ==================== MAP SECTION ==================== */
+        #map-section {
+            min-height: 100vh;
+            background: linear-gradient(135deg, var(--void), var(--teal-dark));
+            padding: clamp(5rem, 9vw, 9rem) clamp(2rem, 3.5vw, 2.5rem);
+        }
+
+        .map-intro {
+            text-align: center;
+            margin-bottom: clamp(3.5rem, 7vw, 6rem);
+            max-width: 750px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .map-intro p {
+            font-size: clamp(1.05rem, 2.8vw, 1.3rem);
+            line-height: 1.95;
+            color: var(--silver);
+            font-style: italic;
+        }
+
+        .map-wrapper {
+            max-width: 1100px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .map-frame {
+            border: 3px solid var(--primary-rose);
+            position: relative;
+            box-shadow: 0 0 100px rgba(212, 98, 127, 0.35), inset 0 0 80px rgba(0, 0, 0, 0.9);
+            background: var(--black);
+            transition: all 0.5s ease;
+        }
+
+        .map-frame:hover {
+            box-shadow: 0 0 150px rgba(212, 98, 127, 0.5), inset 0 0 80px rgba(0, 0, 0, 0.9);
+            border-color: var(--secondary-rose);
+            transform: translateY(-8px);
+        }
+
+        .map-frame::before,
+        .map-frame::after {
+            content: '✦';
+            position: absolute;
+            color: var(--primary-rose);
+            font-size: clamp(1.2rem, 2.5vw, 1.5rem);
+            z-index: 10;
+            filter: drop-shadow(0 0 8px rgba(212, 98, 127, 0.5));
+        }
+
+        .map-frame::before {
+            top: -1rem;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .map-frame::after {
+            bottom: -1rem;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        #romantic-map {
+            height: clamp(320px, 55vw, 550px);
+            width: 100%;
+            filter: saturate(0.8) brightness(0.95) hue-rotate(5deg) contrast(1.1);
+            cursor: grab;
+        }
+
+        #romantic-map:active {
+            cursor: grabbing;
+        }
+
+        .map-corners {
+            position: absolute;
+            inset: -3px;
+            pointer-events: none;
+            z-index: 5;
+        }
+
+        .corner {
+            position: absolute;
+            width: 25px;
+            height: 25px;
+            border-color: var(--primary-rose);
+            border-style: solid;
+        }
+
+        .corner-tl {
+            top: 0;
+            left: 0;
+            border-width: 3px 0 0 3px;
+        }
+
+        .corner-tr {
+            top: 0;
+            right: 0;
+            border-width: 3px 3px 0 0;
+        }
+
+        .corner-bl {
+            bottom: 0;
+            left: 0;
+            border-width: 0 0 3px 3px;
+        }
+
+        .corner-br {
+            bottom: 0;
+            right: 0;
+            border-width: 0 3px 3px 0;
+        }
+
+        /* Distance Display */
+        .distance-card {
+            background: linear-gradient(135deg, rgba(212, 98, 127, 0.12), rgba(13, 61, 71, 0.18));
+            border: 2px solid var(--secondary-rose);
+            padding: clamp(2.5rem, 4.5vw, 3.5rem);
+            text-align: center;
+            margin: clamp(3.5rem, 6vw, 5rem) auto;
+            max-width: 750px;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.5s ease;
+            backdrop-filter: blur(5px);
+        }
+
+        .distance-card:hover {
+            border-color: var(--accent-rose);
+            transform: translateY(-12px);
+            box-shadow: 0 25px 70px rgba(212, 98, 127, 0.25);
+        }
+
+        .distance-card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(ellipse at center, rgba(212, 98, 127, 0.1), transparent 70%);
+        }
+
+        .distance-number {
+            font-family: 'Cinzel', serif;
+            font-size: clamp(3.5rem, 11vw, 9rem);
+            font-weight: 900;
+            color: transparent;
+            -webkit-text-stroke: 2px var(--secondary-rose);
+            line-height: 1;
+            margin-bottom: 0.5rem;
+            position: relative;
+        }
+
+        .distance-unit {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(1.3rem, 3.2vw, 1.7rem);
+            color: var(--primary-rose);
+            letter-spacing: 0.35em;
+            text-transform: uppercase;
+            margin-bottom: clamp(1.2rem, 2.5vw, 1.8rem);
+        }
+
+        .distance-msg {
+            font-family: 'EB Garamond', serif;
+            font-style: italic;
+            font-size: clamp(1.05rem, 2.8vw, 1.3rem);
+            color: var(--silver);
+            line-height: 1.95;
+            max-width: 500px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        /* Location Cards */
+        .location-cards {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: clamp(1.8rem, 3.5vw, 2.5rem);
+            align-items: center;
+            max-width: 950px;
+            margin: clamp(3.5rem, 6vw, 5rem) auto;
+        }
+
+        @media (min-width: 768px) {
+            .location-cards {
+                grid-template-columns: 1fr auto 1fr;
+            }
+        }
+
+        .loc-card {
+            background: linear-gradient(135deg, rgba(212, 98, 127, 0.1), rgba(13, 61, 71, 0.15));
+            border: 1.5px solid var(--primary-rose);
+            padding: clamp(1.8rem, 3.5vw, 3rem);
+            text-align: center;
+            position: relative;
+            transition: all 0.5s ease;
+            backdrop-filter: blur(8px);
+        }
+
+        .loc-card:hover {
+            border-color: var(--secondary-rose);
+            transform: translateY(-8px);
+            background: linear-gradient(135deg, rgba(212, 98, 127, 0.18), rgba(13, 61, 71, 0.25));
+            box-shadow: 0 20px 50px rgba(212, 98, 127, 0.2);
+        }
+
+        .loc-card .loc-rose {
+            font-size: clamp(2.2rem, 4.5vw, 2.8rem);
+            margin-bottom: 1.2rem;
+            display: block;
+            filter: drop-shadow(0 0 10px rgba(212, 98, 127, 0.3));
+        }
+
+        .loc-card .loc-name {
+            font-family: 'Cinzel', serif;
+            font-size: clamp(0.95rem, 2.2vw, 1.2rem);
+            color: var(--secondary-rose);
+            margin-bottom: 0.8rem;
+            letter-spacing: 0.12em;
+        }
+
+        .loc-card .loc-place {
+            font-family: 'Cormorant Garamond', serif;
+            font-style: italic;
+            font-size: clamp(0.85rem, 2vw, 1rem);
+            color: var(--silver);
+            letter-spacing: 0.15em;
+        }
+
+        .loc-connector {
+            display: none;
+            text-align: center;
+            color: var(--secondary-rose);
+            font-size: 1.5rem;
+        }
+
+        @media (min-width: 768px) {
+            .loc-connector {
+                display: block;
+            }
+        }
+
+        .loc-connector .heart-line {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .loc-connector .dot {
+            width: 7px;
+            height: 7px;
+            background: var(--secondary-rose);
+            border-radius: 50%;
+            animation: dotPulse 1.5s ease-in-out infinite;
+            box-shadow: 0 0 8px var(--secondary-rose);
+        }
+
+        .loc-connector .dot:nth-child(2) {
+            animation-delay: 0.3s;
+        }
+
+        .loc-connector .dot:nth-child(3) {
+            animation-delay: 0.6s;
+        }
+
+        @keyframes dotPulse {
+
+            0%,
+            100% {
+                opacity: 0.3;
+                transform: scale(1);
+            }
+
+            50% {
+                opacity: 1;
+                transform: scale(1.5);
+            }
+        }
+
+        /* ==================== JOURNEY SECTION ==================== */
+        #journey {
+            min-height: 100vh;
+            background: linear-gradient(180deg, #000000, var(--teal-dark));
+            padding: clamp(5rem, 9vw, 9rem) clamp(2rem, 3.5vw, 2.5rem);
+            position: relative;
+        }
+
+        .journey-bg {
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(ellipse at 20% 50%, rgba(212, 98, 127, 0.1), transparent 60%),
+                radial-gradient(ellipse at 80% 50%, rgba(232, 122, 169, 0.06), transparent 60%);
+        }
+
+        .journey-inner {
+            max-width: 950px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 2;
+        }
+
+        .journey-head {
+            text-align: center;
+            margin-bottom: clamp(4.5rem, 7vw, 7rem);
+        }
+
+        .path-visual {
+            position: relative;
+            padding: clamp(2.5rem, 4.5vw, 5rem) 0;
+        }
+
+        .path-line {
+            position: absolute;
+            left: 50%;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: linear-gradient(to bottom, var(--secondary-rose), var(--primary-rose), var(--secondary-rose));
+            transform: translateX(-50%);
+            box-shadow: 0 0 25px rgba(212, 98, 127, 0.5);
+        }
+
+        @media (max-width: 768px) {
+            .path-line {
+                display: none;
+            }
+        }
+
+        .path-item {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: clamp(1.8rem, 3.5vw, 2.5rem);
+            align-items: center;
+            margin-bottom: clamp(3.5rem, 4.5vw, 5rem);
+            opacity: 0;
+            transform: translateY(35px);
+            transition: all 0.9s ease;
+        }
+
+        @media (min-width: 769px) {
+            .path-item {
+                grid-template-columns: 1fr 90px 1fr;
+            }
+        }
+
+        .path-item.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .path-item:nth-child(even) .path-text {
+            grid-column: 1;
+        }
+
+        @media (min-width: 769px) {
+            .path-item:nth-child(even) .path-text {
+                grid-column: 3;
+            }
+        }
+
+        .path-node {
+            display: none;
+            grid-column: 2;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.6rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        @media (min-width: 769px) {
+            .path-node {
+                display: flex;
+            }
+        }
+
+        .path-dot {
+            width: 16px;
+            height: 16px;
+            border: 2.5px solid var(--secondary-rose);
+            border-radius: 50%;
+            background: var(--black);
+            position: relative;
+            box-shadow: 0 0 20px rgba(212, 98, 127, 0.4);
+        }
+
+        .path-dot::after {
+            content: '';
+            position: absolute;
+            inset: 3px;
+            background: var(--secondary-rose);
+            border-radius: 50%;
+        }
+
+        .path-text {
+            background: linear-gradient(135deg, rgba(13, 61, 71, 0.5), rgba(26, 107, 119, 0.3));
+            border: 1.5px solid rgba(212, 98, 127, 0.5);
+            padding: clamp(1.8rem, 3.5vw, 2.5rem);
+            backdrop-filter: blur(12px);
+            transition: all 0.4s ease;
+        }
+
+        .path-item.visible .path-text {
+            background: linear-gradient(135deg, rgba(13, 61, 71, 0.7), rgba(26, 107, 119, 0.4));
+            border-color: rgba(232, 122, 169, 0.7);
+        }
+
+        .path-text h3 {
+            font-family: 'Cinzel', serif;
+            font-size: clamp(0.95rem, 2.2vw, 1.1rem);
+            color: var(--secondary-rose);
+            letter-spacing: 0.12em;
+            margin-bottom: clamp(0.8rem, 1.5vw, 1.2rem);
+        }
+
+        .path-text p {
+            font-size: clamp(0.95rem, 2.2vw, 1.05rem);
+            line-height: 1.9;
+            color: var(--silver);
+            font-style: italic;
+        }
+
+        .path-num {
+            font-family: 'Cinzel', serif;
+            font-size: clamp(0.65rem, 1.8vw, 0.8rem);
+            color: var(--secondary-rose);
+            letter-spacing: 0.25em;
+        }
+
+        /* ==================== ROSE GARDEN ==================== */
+        #rose-garden {
+            min-height: 100vh;
+            background: linear-gradient(180deg, #000000, var(--teal-dark));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+            padding: clamp(5rem, 9vw, 9rem) clamp(2rem, 3.5vw, 2.5rem);
+        }
+
+        .rose-bg-grid {
+            position: absolute;
+            inset: 0;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            opacity: 0.08;
+            pointer-events: none;
+        }
+
+        .rose-bg-item {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: clamp(3rem, 6vw, 6rem);
+            filter: grayscale(1);
+            animation: roseGridFloat ease-in-out infinite;
+        }
+
+        @keyframes roseGridFloat {
+
+            0%,
+            100% {
+                transform: rotate(-12deg) scale(1);
+            }
+
+            50% {
+                transform: rotate(12deg) scale(1.15);
+            }
+        }
+
+        .garden-center {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            max-width: 750px;
+        }
+
+        .big-rose-display {
+            display: flex;
+            justify-content: center;
+            gap: clamp(2rem, 3.5vw, 3rem);
+            margin-bottom: clamp(3.5rem, 5vw, 5rem);
+            flex-wrap: wrap;
+        }
+
+        .rose-orb {
+            width: clamp(100px, 18vw, 140px);
+            height: clamp(100px, 18vw, 140px);
+            border: 2px solid rgba(212, 98, 127, 0.5);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: clamp(3rem, 6vw, 4rem);
+            position: relative;
+            animation: roseOrbPulse 3s ease-in-out infinite;
+            filter: drop-shadow(0 0 15px rgba(212, 98, 127, 0.25));
+            box-shadow: 0 0 40px rgba(212, 98, 127, 0.25), inset 0 0 30px rgba(212, 98, 127, 0.1);
+        }
+
+        .rose-orb:nth-child(2) {
+            animation-delay: 1s;
+            transform: scale(1.35);
+            border-color: rgba(232, 122, 169, 0.6);
+            box-shadow: 0 0 60px rgba(232, 122, 169, 0.2), inset 0 0 40px rgba(0, 0, 0, 0.6);
+            filter: drop-shadow(0 0 20px rgba(232, 122, 169, 0.35));
+        }
+
+        .rose-orb:nth-child(3) {
+            animation-delay: 2s;
+        }
+
+        @keyframes roseOrbPulse {
+
+            0%,
+            100% {
+                box-shadow: 0 0 40px rgba(212, 98, 127, 0.25);
+            }
+
+            50% {
+                box-shadow: 0 0 80px rgba(212, 98, 127, 0.45);
+            }
+        }
+
+        .garden-quote {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(1.7rem, 4.5vw, 3.5rem);
+            font-style: italic;
+            line-height: 1.6;
+            color: var(--white);
+            margin-bottom: clamp(1.8rem, 2.5vw, 2.5rem);
+        }
+
+        .garden-quote .highlight {
+            color: var(--secondary-rose);
+        }
+
+        .garden-subtext {
+            font-size: clamp(0.95rem, 2.2vw, 1.1rem);
+            color: var(--silver);
+            line-height: 1.95;
+            max-width: 550px;
+            margin: 0 auto clamp(2.5rem, 3.5vw, 3.5rem);
+            font-style: italic;
+        }
+
+        /* ==================== LOVE LETTERS ==================== */
+        #letters {
+            min-height: 100vh;
+            background: linear-gradient(180deg, #000000, var(--teal-dark));
+            padding: clamp(5rem, 9vw, 9rem) clamp(2rem, 3.5vw, 2.5rem);
+            position: relative;
+        }
+
+        .letters-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: clamp(2rem, 3.5vw, 2.5rem);
+            max-width: 1200px;
+            margin: clamp(3.5rem, 5vw, 5rem) auto 0;
+        }
+
+        .letter-card {
+            background: linear-gradient(135deg, rgba(13, 61, 71, 0.4), rgba(26, 107, 119, 0.2));
+            border: 1.5px solid rgba(212, 98, 127, 0.5);
+            padding: clamp(2.2rem, 3.5vw, 3rem);
+            position: relative;
+            overflow: hidden;
+            transition: all 0.5s ease;
+            cursor: default;
+            backdrop-filter: blur(8px);
+        }
+
+        .letter-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--secondary-rose), transparent);
+            transform: translateX(-100%);
+            transition: transform 0.6s ease;
+        }
+
+        .letter-card:hover::before {
+            transform: translateX(0);
+        }
+
+        .letter-card:hover {
+            border-color: var(--secondary-rose);
+            transform: translateY(-12px);
+            background: linear-gradient(135deg, rgba(13, 61, 71, 0.6), rgba(26, 107, 119, 0.35));
+            box-shadow: 0 20px 50px rgba(212, 98, 127, 0.2);
+        }
+
+        .letter-number {
+            font-family: 'Cinzel', serif;
+            font-size: clamp(0.65rem, 1.8vw, 0.8rem);
+            letter-spacing: 0.5em;
+            color: var(--secondary-rose);
+            margin-bottom: clamp(1.2rem, 2.2vw, 1.8rem);
+            display: block;
+        }
+
+        .letter-icon {
+            font-size: clamp(2rem, 3.5vw, 2.5rem);
+            margin-bottom: clamp(1.2rem, 2.2vw, 1.8rem);
+            display: block;
+            filter: drop-shadow(0 0 10px rgba(212, 98, 127, 0.25));
+        }
+
+        .letter-title {
+            font-family: 'Cinzel', serif;
+            font-size: clamp(1rem, 2.2vw, 1.2rem);
+            color: var(--secondary-rose);
+            margin-bottom: clamp(1.2rem, 2.2vw, 1.8rem);
+            letter-spacing: 0.08em;
+        }
+
+        .letter-body {
+            font-family: 'EB Garamond', serif;
+            font-size: clamp(0.95rem, 2.2vw, 1.1rem);
+            line-height: 1.95;
+            color: var(--silver);
+            font-style: italic;
+        }
+
+        .letter-signature {
+            margin-top: clamp(1.8rem, 2.5vw, 2.5rem);
+            padding-top: clamp(1.2rem, 2vw, 1.8rem);
+            border-top: 1px solid rgba(212, 98, 127, 0.3);
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(0.95rem, 2.2vw, 1.1rem);
+            color: var(--secondary-rose);
+            font-style: italic;
+        }
+
+        /* ==================== PROMISES ==================== */
+        #promises {
+            min-height: 100vh;
+            background: linear-gradient(180deg, #000000, var(--teal-dark));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: clamp(5rem, 9vw, 9rem) clamp(2rem, 3.5vw, 2.5rem);
+            position: relative;
+        }
+
+        .promise-bg {
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(ellipse at center, rgba(212, 98, 127, 0.12), transparent 70%);
+        }
+
+        .promise-inner {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            max-width: 750px;
+        }
+
+        .promise-list {
+            list-style: none;
+            margin: clamp(3.5rem, 5vw, 5rem) 0;
+            display: flex;
+            flex-direction: column;
+            gap: clamp(1.8rem, 2.5vw, 2.5rem);
+        }
+
+        .promise-item {
+            display: flex;
+            align-items: flex-start;
+            gap: clamp(1.2rem, 2.5vw, 1.8rem);
+            text-align: left;
+            opacity: 0;
+            transform: translateX(-35px);
+            transition: all 0.8s ease;
+            padding: clamp(1.2rem, 2.5vw, 1.8rem) clamp(1.8rem, 2.5vw, 2.5rem);
+            border-left: 3px solid var(--primary-rose);
+        }
+
+        .promise-item.visible {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .promise-item:hover {
+            border-left-color: var(--secondary-rose);
+            background: linear-gradient(90deg, rgba(212, 98, 127, 0.1), transparent);
+            padding-left: clamp(2rem, 3vw, 2.8rem);
+        }
+
+        .promise-num {
+            font-family: 'Cinzel', serif;
+            font-size: clamp(2.2rem, 5.5vw, 3rem);
+            font-weight: 900;
+            color: transparent;
+            -webkit-text-stroke: 1.5px var(--secondary-rose);
+            line-height: 1;
+            flex-shrink: 0;
+            min-width: clamp(60px, 10vw, 80px);
+        }
+
+        .promise-text h4 {
+            font-family: 'Cinzel', serif;
+            font-size: clamp(0.85rem, 2.2vw, 1rem);
+            color: var(--secondary-rose);
+            letter-spacing: 0.12em;
+            margin-bottom: 0.6rem;
+        }
+
+        .promise-text p {
+            font-style: italic;
+            color: var(--silver);
+            line-height: 1.9;
+            font-size: clamp(0.95rem, 2.2vw, 1.05rem);
+        }
+
+        /* ==================== CONSTELLATION ==================== */
+        #constellation {
+            min-height: 100vh;
+            background: linear-gradient(180deg, #000000, var(--teal-dark));
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: clamp(5rem, 9vw, 9rem) clamp(2rem, 3.5vw, 2.5rem);
+        }
+
+        #const-canvas {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        .const-content {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+        }
+
+        .const-content .section-title {
+            font-size: clamp(2.5rem, 6.5vw, 5.5rem);
+            margin-bottom: clamp(1.2rem, 2.5vw, 1.8rem);
+        }
+
+        .names-display {
+            font-family: 'Cormorant Garamond', serif;
+            font-style: italic;
+            font-size: clamp(2rem, 5.5vw, 4.5rem);
+            color: var(--light-rose);
+            margin-bottom: clamp(1.8rem, 2.5vw, 2.5rem);
+            letter-spacing: 0.06em;
+        }
+
+        .forever-text {
+            font-family: 'EB Garamond', serif;
+            font-size: clamp(1.05rem, 2.8vw, 1.3rem);
+            color: var(--silver);
+            font-style: italic;
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.95;
+        }
+
+        /* ==================== FINALE ==================== */
+        #finale {
+            min-height: 100vh;
+            background: linear-gradient(180deg, #000000, var(--teal-dark));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: clamp(5rem, 9vw, 9rem) clamp(2rem, 3.5vw, 2.5rem);
+            position: relative;
+        }
+
+        .finale-bg {
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(ellipse at center, rgba(212, 98, 127, 0.15), transparent 70%);
+            animation: bgPulse 5.5s ease-in-out infinite;
+        }
+
+        @keyframes bgPulse {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.55;
+            }
+        }
+
+        .finale-content {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            max-width: 750px;
+        }
+
+        .finale-rose {
+            font-size: clamp(4rem, 13vw, 6rem);
+            margin-bottom: clamp(2.5rem, 3.5vw, 3.5rem);
+            display: block;
+            animation: finalRose 6.5s ease-in-out infinite;
+            filter: drop-shadow(0 0 20px rgba(212, 98, 127, 0.35));
+        }
+
+        @keyframes finalRose {
+
+            0%,
+            100% {
+                transform: scale(1) rotate(-12deg);
+                filter: drop-shadow(0 0 15px rgba(212, 98, 127, 0.25));
+            }
+
+            50% {
+                transform: scale(1.15) rotate(12deg);
+                filter: drop-shadow(0 0 30px rgba(232, 122, 169, 0.4));
+            }
+        }
+
+        .finale-title {
+            font-family: 'Cinzel', serif;
+            font-size: clamp(2.3rem, 6.5vw, 5.5rem);
+            font-weight: 900;
+            color: var(--white);
+            margin-bottom: clamp(1.2rem, 2.5vw, 1.8rem);
+            text-shadow: 0 0 30px rgba(212, 98, 127, 0.15);
+        }
+
+        .finale-subtitle {
+            font-family: 'Cormorant Garamond', serif;
+            font-style: italic;
+            font-size: clamp(1.3rem, 3.5vw, 1.7rem);
+            color: var(--secondary-rose);
+            margin-bottom: clamp(1.8rem, 2.5vw, 2.5rem);
+        }
+
+        .finale-msg {
+            font-style: italic;
+            color: var(--silver);
+            line-height: 1.95;
+            font-size: clamp(1rem, 2.8vw, 1.2rem);
+            margin-bottom: clamp(3.5rem, 5vw, 4.5rem);
+        }
+
+        .return-btn {
+            display: inline-block;
+            padding: clamp(1.1rem, 2.5vw, 1.4rem) clamp(2.8rem, 5vw, 4rem);
+            border: 2px solid var(--primary-rose);
+            color: var(--light-rose);
+            font-family: 'Cinzel', serif;
+            font-size: clamp(0.75rem, 2.2vw, 0.95rem);
+            letter-spacing: 0.4em;
+            text-transform: uppercase;
+            text-decoration: none;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s;
+        }
+
+        .return-btn::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, var(--primary-rose), var(--secondary-rose));
+            transform: translateX(-100%);
+            transition: transform 0.5s ease;
+        }
+
+        .return-btn:hover::before {
+            transform: translateX(0);
+        }
+
+        .return-btn:hover {
+            color: var(--white);
+            box-shadow: 0 10px 30px rgba(212, 98, 127, 0.4);
+            transform: translateY(-3px);
+        }
+
+        .return-btn span {
+            position: relative;
+            z-index: 1;
+        }
+
+        .section-ornament {
+            text-align: center;
+            padding: clamp(1.2rem, 2.5vw, 2.5rem) 0;
+            color: var(--secondary-rose);
+            font-size: 0.95rem;
+            letter-spacing: 1.2em;
+            opacity: 0.6;
+        }
+
+        /* Leaflet custom styles */
+        .leaflet-container {
+            background: #0d3d47 !important;
+        }
+
+        .leaflet-control-zoom {
+            background-color: rgba(13, 61, 71, 0.95) !important;
+            border: 2px solid var(--primary-rose) !important;
+            box-shadow: 0 0 25px rgba(212, 98, 127, 0.4) !important;
+            border-radius: 8px !important;
+        }
+
+        .leaflet-control-zoom-in,
+        .leaflet-control-zoom-out {
+            background-color: rgba(13, 61, 71, 0.9) !important;
+            color: var(--secondary-rose) !important;
+            border-bottom: 2px solid var(--primary-rose) !important;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            font-size: clamp(1.1rem, 2.5vw, 1.4rem);
+        }
+
+        .leaflet-control-zoom-in:hover,
+        .leaflet-control-zoom-out:hover {
+            background-color: var(--primary-rose) !important;
+            color: var(--white) !important;
+            transform: scale(1.1);
+        }
+
+        /* ==================== SCROLLBAR ==================== */
+        ::-webkit-scrollbar {
+            width: 5px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--black);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary-rose);
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--secondary-rose);
+        }
+
+        /* ==================== FLOATING ROSES ==================== */
+        .deco-rose {
+            position: fixed;
+            pointer-events: none;
+            opacity: 0.05;
+            font-size: clamp(10rem, 25vw, 18rem);
+            z-index: 0;
+            filter: grayscale(1);
+        }
+
+        .deco-rose-1 {
+            top: -7rem;
+            right: -7rem;
+            animation: decoFloat 25s ease-in-out infinite;
+        }
+
+        .deco-rose-2 {
+            bottom: -7rem;
+            left: -7rem;
+            animation: decoFloat 30s ease-in-out infinite reverse;
+        }
+
+        @keyframes decoFloat {
+
+            0%,
+            100% {
+                transform: rotate(0deg);
+            }
+
+            50% {
+                transform: rotate(35deg);
+            }
+        }
+
+        /* Reveal animations */
+        .reveal {
+            opacity: 0;
+            transform: translateY(45px);
+            transition: opacity 1s ease, transform 1s ease;
+        }
+
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- MUSIC TOGGLE BUTTON -->
+    <button class="music-toggle" id="musicToggle" title="Play Music">
+        🎵
+    </button>
+
+    <!-- BACKGROUND MUSIC -->
+    <audio id="bg-music" loop preload="auto">
+        <source src="audio/music.mp3" type="audio/mp3">
+    </audio>
+
+    <!-- CURSOR -->
+    <div id="cursor"></div>
+    <div id="cursor-dot"></div>
+
+    <!-- DECORATIVE ROSES -->
+    <div class="deco-rose deco-rose-1">🌹</div>
+    <div class="deco-rose deco-rose-2">🌹</div>
+
+    <!-- ENTRY PORTAL -->
+    <div id="portal">
+        <canvas id="portal-canvas"></canvas>
+        <div class="portal-content">
+            <div class="portal-rose">🌹</div>
+            <div class="portal-subtitle">Welcome to</div>
+            <div class="portal-title">Our Universe</div>
+            <div class="portal-names">Rezaul <span class="amp">&</span> Sinthi</div>
+            <div class="portal-divider"></div>
+            <button class="enter-btn" id="enterBtn"><span>✨ Enter ✨</span></button>
+        </div>
+    </div>
+
+    <!-- MAIN SITE -->
+    <div id="main-site">
+
+        <!-- NAV -->
+        <nav>
+            <a href="#" class="nav-logo">✦ Our Universe ✦</a>
+            <ul class="nav-links">
+                <li><a href="#hero">Home</a></li>
+                <li><a href="#map-section">Map</a></li>
+                <li><a href="#journey">Journey</a></li>
+                <li><a href="#letters">Letters</a></li>
+            </ul>
+        </nav>
+
+        <!-- HERO -->
+        <section id="hero">
+            <canvas id="hero-canvas"></canvas>
+            <div class="hero-content">
+                <div class="hero-label">A Love Story</div>
+                <div class="hero-main">
+                    <span class="line1">Our</span>
+                    <span class="line2">Universe</span>
+                </div>
+                <div class="hero-names">Rezaul <span class="amp">&</span> Sinthi</div>
+                <div class="hero-tagline">Two hearts, one destiny. A journey written in the stars, destined to meet,
+                    meant to love forever.</div>
+            </div>
+        </section>
+
+        <!-- MAP SECTION -->
+        <section id="map-section">
+            <div class="map-intro">
+                <p>Distance can never separate what the heart holds dear. Our connection transcends miles and moments.
+                </p>
+            </div>
+            <div class="map-wrapper">
+                <div class="map-frame">
+                    <div id="romantic-map" style="position: relative;">
+                        <div class="map-corners">
+                            <div class="corner corner-tl"></div>
+                            <div class="corner corner-tr"></div>
+                            <div class="corner corner-bl"></div>
+                            <div class="corner corner-br"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="distance-card">
+                <div class="distance-number" id="distance">0</div>
+                <div class="distance-unit">km apart</div>
+                <div class="distance-msg">Yet connected by the strongest force in this universe: <strong>our
+                        love</strong></div>
+            </div>
+
+            <div class="location-cards">
+                <div class="loc-card">
+                    <span class="loc-rose">🌹</span>
+                    <div class="loc-name">Rezaul</div>
+                    <div class="loc-place">Dhaka, Bangladesh</div>
+                </div>
+                <div class="loc-connector">
+                    <div class="heart-line">
+                        <div class="dot"></div>
+                        <div class="dot"></div>
+                        <div class="dot"></div>
+                        ♥
+                    </div>
+                </div>
+                <div class="loc-card">
+                    <span class="loc-rose">🌹</span>
+                    <div class="loc-name">Sinthi</div>
+                    <div class="loc-place">Sylhet, Bangladesh</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- JOURNEY -->
+        <section id="journey">
+            <div class="journey-bg"></div>
+            <div class="journey-inner">
+                <div class="journey-head">
+                    <div class="section-label">Our Story</div>
+                    <div class="section-title">The Journey</div>
+                </div>
+
+                <div class="path-visual">
+                    <div class="path-line"></div>
+
+                    <div class="path-item">
+                        <div class="path-empty"></div>
+                        <div class="path-node">
+                            <div class="path-dot"></div>
+                            <div class="path-num">01</div>
+                        </div>
+                        <div class="path-text">
+                            <h3>The Beginning</h3>
+                            <p>Two souls found each other at the most unexpected moment, when the universe knew we
+                                needed to meet.</p>
+                        </div>
+                    </div>
+
+                    <div class="path-item">
+                        <div class="path-text">
+                            <h3>First Spark</h3>
+                            <p>A conversation that turned into hours. Words that felt like home. A connection deeper
+                                than time itself.</p>
+                        </div>
+                        <div class="path-node">
+                            <div class="path-dot"></div>
+                            <div class="path-num">02</div>
+                        </div>
+                    </div>
+
+                    <div class="path-item">
+                        <div class="path-empty"></div>
+                        <div class="path-node">
+                            <div class="path-dot"></div>
+                            <div class="path-num">03</div>
+                        </div>
+                        <div class="path-text">
+                            <h3>Growing Closer</h3>
+                            <p>Distance became irrelevant when your heart is entwined with another. Every moment, a
+                                memory worth treasuring.</p>
+                        </div>
+                    </div>
+
+                    <div class="path-item">
+                        <div class="path-text">
+                            <h3>Forever Begins</h3>
+                            <p>With you, I found not just love, but a home. A partner for life's greatest adventure.</p>
+                        </div>
+                        <div class="path-node">
+                            <div class="path-dot"></div>
+                            <div class="path-num">04</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ROSE GARDEN -->
+        <section id="rose-garden">
+            <div class="rose-bg-grid">
+                <div class="rose-bg-item">🌹</div>
+                <div class="rose-bg-item">🌹</div>
+                <div class="rose-bg-item">🌹</div>
+                <div class="rose-bg-item">🌹</div>
+            </div>
+
+            <div class="garden-center">
+                <div class="big-rose-display">
+                    <div class="rose-orb">🌹</div>
+                    <div class="rose-orb">🌹</div>
+                    <div class="rose-orb">🌹</div>
+                </div>
+                <div class="garden-quote">
+                    In the garden of love, we are the <span class="highlight">most beautiful blooms</span>.
+                </div>
+                <div class="garden-subtext">
+                    Love is not measured by time but by the depth of connection. With you, every moment is an eternity
+                    of bliss.
+                </div>
+            </div>
+        </section>
+
+        <!-- LOVE LETTERS -->
+        <section id="letters">
+            <div style="text-align: center; margin-bottom: clamp(3.5rem, 5vw, 5rem);">
+                <div class="section-label">Words from the Heart</div>
+                <div class="section-title">Love Letters</div>
+            </div>
+
+            <div class="letters-grid">
+                <div class="letter-card">
+                    <span class="letter-number">Letter 01</span>
+                    <span class="letter-icon">💌</span>
+                    <h3 class="letter-title">To My Beloved</h3>
+                    <div class="letter-body">
+                        "You are the reason my heart beats faster, the reason my soul smiles. In you, I found not just
+                        love, but my soulmate."
+                    </div>
+                    <div class="letter-signature">— Always Yours</div>
+                </div>
+
+                <div class="letter-card">
+                    <span class="letter-number">Letter 02</span>
+                    <span class="letter-icon">💌</span>
+                    <h3 class="letter-title">Your Love</h3>
+                    <div class="letter-body">
+                        "Every day with you feels like a dream I don't want to wake from. Your love is my forever."
+                    </div>
+                    <div class="letter-signature">— Forever Yours</div>
+                </div>
+
+                <div class="letter-card">
+                    <span class="letter-number">Letter 03</span>
+                    <span class="letter-icon">💌</span>
+                    <h3 class="letter-title">My Promise</h3>
+                    <div class="letter-body">
+                        "I promise to love you on your darkest days, to celebrate your brightest moments, and to stand
+                        by you always."
+                    </div>
+                    <div class="letter-signature">— With All My Heart</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- PROMISES -->
+        <section id="promises">
+            <div class="promise-bg"></div>
+            <div class="promise-inner">
+                <div style="margin-bottom: clamp(3.5rem, 5vw, 5rem);">
+                    <div class="section-label">Commitment</div>
+                    <div class="section-title">Our Promises</div>
+                </div>
+
+                <ul class="promise-list">
+                    <li class="promise-item">
+                        <span class="promise-num">1</span>
+                        <div class="promise-text">
+                            <h4>To love unconditionally</h4>
+                            <p>Every day, in every way, without doubt or hesitation.</p>
+                        </div>
+                    </li>
+                    <li class="promise-item">
+                        <span class="promise-num">2</span>
+                        <div class="promise-text">
+                            <h4>To support your dreams</h4>
+                            <p>To be your biggest cheerleader and strongest pillar.</p>
+                        </div>
+                    </li>
+                    <li class="promise-item">
+                        <span class="promise-num">3</span>
+                        <div class="promise-text">
+                            <h4>To stay true always</h4>
+                            <p>Loyalty is the foundation of everything we build together.</p>
+                        </div>
+                    </li>
+                    <li class="promise-item">
+                        <span class="promise-num">4</span>
+                        <div class="promise-text">
+                            <h4>To grow together</h4>
+                            <p>Through joy and sorrow, we become stronger every day.</p>
+                        </div>
+                    </li>
+                    <li class="promise-item">
+                        <span class="promise-num">5</span>
+                        <div class="promise-text">
+                            <h4>To cherish forever</h4>
+                            <p>You are my eternity, my forever, my always.</p>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- CONSTELLATION -->
+        <section id="constellation">
+            <canvas id="const-canvas"></canvas>
+            <div class="const-content">
+                <div class="section-label">Written in the Stars</div>
+                <div class="section-title">Our Constellation</div>
+                <div class="names-display">Rezaul ♥ Sinthi</div>
+                <div class="forever-text">
+                    In the infinite cosmos of love, we are two stars destined to shine together, forever intertwined in
+                    the dance of eternity.
+                </div>
+            </div>
+        </section>
+
+        <!-- FINALE -->
+        <section id="finale">
+            <div class="finale-bg"></div>
+            <div class="finale-content">
+                <span class="finale-rose">🌹</span>
+                <div class="finale-title">Forever Starts Now</div>
+                <div class="finale-subtitle">Our Universe is Infinite</div>
+                <div class="finale-msg">
+                    This is not just a story; this is our promise. A journey that began in the stars and will continue
+                    beyond time itself.
+                </div>
+                <a href="#hero" class="return-btn"><span>Begin Again ↻</span></a>
+            </div>
+        </section>
+
+    </div>
+
+    <script>
+        // ==================== AUTO MUSIC PLAYER ====================
+        const bgMusic = document.getElementById('bg-music');
+        const musicToggle = document.getElementById('musicToggle');
+        let isPlaying = false;
+
+        // Auto-play on first interaction
+        document.addEventListener('click', () => {
+            if (!isPlaying) {
+                bgMusic.play().catch(() => {
+                    console.log('Auto-play prevented by browser');
+                });
+                isPlaying = true;
+                musicToggle.classList.add('playing');
+            }
+        }, { once: true });
+
+        // Music toggle button
+        musicToggle.addEventListener('click', () => {
+            if (isPlaying) {
+                bgMusic.pause();
+                musicToggle.classList.remove('playing');
+                isPlaying = false;
+            } else {
+                bgMusic.play();
+                musicToggle.classList.add('playing');
+                isPlaying = true;
+            }
+        });
+
+        // ==================== CURSOR ====================
+        const cursor = document.getElementById('cursor');
+        const cursorDot = document.getElementById('cursor-dot');
+        document.addEventListener('mousemove', (e) => {
+            cursor.style.left = e.clientX - 12 + 'px';
+            cursor.style.top = e.clientY - 12 + 'px';
+            cursorDot.style.left = e.clientX - 2.5 + 'px';
+            cursorDot.style.top = e.clientY - 2.5 + 'px';
+        });
+        document.addEventListener('mousedown', () => cursor.style.transform = 'scale(0.6)');
+        document.addEventListener('mouseup', () => cursor.style.transform = 'scale(1)');
+
+        // ==================== PORTAL CANVAS ====================
+        (function () {
+            const canvas = document.getElementById('portal-canvas');
+            const ctx = canvas.getContext('2d');
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+
+            let particles = [];
+            class Particle {
+                constructor() {
+                    this.x = Math.random() * canvas.width;
+                    this.y = Math.random() * canvas.height;
+                    this.size = Math.random() * 2.5 + 1;
+                    this.speedX = (Math.random() - 0.5) * 2.5;
+                    this.speedY = (Math.random() - 0.5) * 2.5;
+                    this.opacity = Math.random() * 0.6 + 0.2;
+                }
+                update() {
+                    this.x += this.speedX;
+                    this.y += this.speedY;
+                    if (this.x > canvas.width) this.x = 0;
+                    if (this.x < 0) this.x = canvas.width;
+                    if (this.y > canvas.height) this.y = 0;
+                    if (this.y < 0) this.y = canvas.height;
+                }
+                draw() {
+                    ctx.fillStyle = `rgba(212, 98, 127, ${this.opacity})`;
+                    ctx.beginPath();
+                    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+            }
+
+            for (let i = 0; i < 120; i++) {
+                particles.push(new Particle());
+            }
+
+            function animate() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                particles.forEach(p => {
+                    p.update();
+                    p.draw();
+                });
+                requestAnimationFrame(animate);
+            }
+            animate();
+            window.addEventListener('resize', () => {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+            });
+        })();
+
+        // ==================== ENTER SITE ====================
+        document.getElementById('enterBtn').addEventListener('click', function () {
+            const portal = document.getElementById('portal');
+            const mainSite = document.getElementById('main-site');
+            portal.classList.add('gone');
+            setTimeout(() => {
+                mainSite.classList.add('visible');
+                initHeroCanvas();
+                initMap();
+                animateDistance();
+                initConstCanvas();
+                startScrollAnimations();
+            }, 500);
+        });
+
+        // ==================== HERO CANVAS ====================
+        function initHeroCanvas() {
+            const canvas = document.getElementById('hero-canvas');
+            const ctx = canvas.getContext('2d');
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+
+            let particles = [];
+            class StarParticle {
+                constructor() {
+                    this.x = Math.random() * canvas.width;
+                    this.y = Math.random() * canvas.height;
+                    this.size = Math.random() * 1.8;
+                    this.opacity = Math.random() * 0.6 + 0.3;
+                    this.twinkleSpeed = Math.random() * 0.035 + 0.01;
+                    this.twinkleAmount = 0;
+                }
+                update() {
+                    this.twinkleAmount += this.twinkleSpeed;
+                    this.opacity = 0.3 + Math.sin(this.twinkleAmount) * 0.35;
+                }
+                draw() {
+                    ctx.fillStyle = `rgba(209, 201, 209, ${this.opacity})`;
+                    ctx.beginPath();
+                    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+            }
+
+            for (let i = 0; i < 180; i++) {
+                particles.push(new StarParticle());
+            }
+
+            function animate() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                particles.forEach(p => {
+                    p.update();
+                    p.draw();
+                });
+                requestAnimationFrame(animate);
+            }
+            animate();
+
+            window.addEventListener('resize', () => {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+            });
+        }
+
+        // ==================== ROSE PETALS ====================
+        function createPetals() {
+            const hero = document.getElementById('hero');
+            setInterval(() => {
+                const petal = document.createElement('div');
+                petal.className = 'petal';
+                petal.textContent = '🌹';
+                petal.style.left = Math.random() * window.innerWidth + 'px';
+                petal.style.animationDuration = Math.random() * 6 + 9 + 's';
+                hero.appendChild(petal);
+                setTimeout(() => petal.remove(), 15000);
+            }, 600);
+        }
+        createPetals();
+
+        // ==================== MAP ====================
+        function initMap() {
+            const rLat = 23.832169759871338, rLng = 90.26251200122493;
+            const sLat = 24.006344058380716, sLng = 90.55354799142552;
+
+            const map = L.map('romantic-map', {
+                zoomControl: true,
+                attributionControl: false,
+                scrollWheelZoom: true,
+                dragging: true,
+                minZoom: 8,
+                maxZoom: 16
+            });
+
+            L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+                maxZoom: 19
+            }).addTo(map);
+
+            const bounds = L.latLngBounds([rLat, rLng], [sLat, sLng]);
+            map.fitBounds(bounds, { padding: [120, 120], maxZoom: 12 });
+
+            const createIcon = (label, color) => L.divIcon({
+                className: '',
+                html: `<div style="
+                    background: linear-gradient(135deg, rgba(13,61,71,0.97), rgba(0,0,0,0.95));
+                    border: 2.5px solid ${color};
+                    padding: 12px 18px;
+                    font-family: 'Cinzel', serif;
+                    font-size: 13px;
+                    color: ${color};
+                    letter-spacing: 0.18em;
+                    white-space: nowrap;
+                    box-shadow: 0 0 40px ${color}50;
+                    border-radius: 5px;
+                    position: relative;
+                ">
+                    🥀 ${label}
+                    <div style="
+                        position: absolute;
+                        bottom: -12px;
+                        left: 50%;
+                        transform: translateX(-50%);
+                        width: 0; height: 0;
+                        border-left: 10px solid transparent;
+                        border-right: 10px solid transparent;
+                        border-top: 12px solid ${color};
+                    "></div>
+                </div>`,
+                iconAnchor: [75, 50]
+            });
+
+            L.marker([rLat, rLng], { icon: createIcon('Rezaul', '#d4627f') }).addTo(map);
+            L.marker([sLat, sLng], { icon: createIcon('Sinthi', '#f099c0') }).addTo(map);
+
+            const polyline = L.polyline([[rLat, rLng], [sLat, sLng]], {
+                color: '#d4627f',
+                weight: 4,
+                opacity: 0.95,
+                dashArray: '8, 8',
+                dashOffset: '0'
+            }).addTo(map);
+
+            const midLat = (rLat + sLat) / 2;
+            const midLng = (rLng + sLng) / 2;
+            const heartIcon = L.divIcon({
+                className: '',
+                html: `<div style="font-size:28px; text-shadow:0 0 20px rgba(212,98,127,0.9); animation:pulse 1.5s ease-in-out infinite;">♥</div>`,
+                iconAnchor: [14, 14]
+            });
+            L.marker([midLat, midLng], { icon: heartIcon }).addTo(map);
+
+            let offset = 0;
+            function animateDash() {
+                offset -= 1.2;
+                if (offset < -16) offset = 0;
+                polyline.setStyle({ dashOffset: offset.toString() });
+                requestAnimationFrame(animateDash);
+            }
+            animateDash();
+
+            L.circle([rLat, rLng], {
+                radius: 1500,
+                color: '#d4627f',
+                fillColor: '#d4627f',
+                fillOpacity: 0.1,
+                weight: 2
+            }).addTo(map);
+
+            L.circle([sLat, sLng], {
+                radius: 1500,
+                color: '#f099c0',
+                fillColor: '#f099c0',
+                fillOpacity: 0.1,
+                weight: 2
+            }).addTo(map);
+        }
+
+        // ==================== DISTANCE COUNTER ====================
+        function animateDistance() {
+            const rLat = 23.832169759871338, rLng = 90.26251200122493;
+            const sLat = 24.006344058380716, sLng = 90.55354799142552;
+
+            function distance(lat1, lon1, lat2, lon2) {
+                const R = 6371;
+                const dLat = (lat2 - lat1) * Math.PI / 180;
+                const dLon = (lon2 - lon1) * Math.PI / 180;
+                const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+                    Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+                    Math.sin(dLon / 2) * Math.sin(dLon / 2);
+                const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+                return R * c;
+            }
+
+            const dist = Math.round(distance(rLat, rLng, sLat, sLng));
+            const distElement = document.getElementById('distance');
+            let current = 0;
+            const increment = dist / 60;
+
+            function count() {
+                if (current < dist) {
+                    current += increment;
+                    distElement.textContent = Math.round(current);
+                    requestAnimationFrame(count);
+                }
+            }
+            count();
+        }
+
+        // ==================== CONSTELLATION CANVAS ====================
+        function initConstCanvas() {
+            const canvas = document.getElementById('const-canvas');
+            const ctx = canvas.getContext('2d');
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+
+            const stars = [];
+            for (let i = 0; i < 220; i++) {
+                stars.push({
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height,
+                    size: Math.random() * 2.2,
+                    opacity: Math.random() * 0.6 + 0.3
+                });
+            }
+
+            function drawConstellation() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+                stars.forEach(star => {
+                    ctx.fillStyle = `rgba(209, 201, 209, ${star.opacity})`;
+                    ctx.beginPath();
+                    ctx.arc(star.x, star.y, star.size, 0, Math.PI * 2);
+                    ctx.fill();
+                });
+
+                const rPos = { x: canvas.width * 0.3, y: canvas.height * 0.3 };
+                const sPos = { x: canvas.width * 0.7, y: canvas.height * 0.7 };
+
+                ctx.strokeStyle = 'rgba(212, 98, 127, 0.35)';
+                ctx.lineWidth = 2.5;
+                ctx.beginPath();
+                ctx.moveTo(rPos.x, rPos.y);
+                ctx.lineTo(sPos.x, sPos.y);
+                ctx.stroke();
+
+                ctx.fillStyle = 'rgba(212, 98, 127, 0.9)';
+                ctx.beginPath();
+                ctx.arc(rPos.x, rPos.y, 10, 0, Math.PI * 2);
+                ctx.fill();
+
+                ctx.fillStyle = 'rgba(240, 153, 192, 0.9)';
+                ctx.beginPath();
+                ctx.arc(sPos.x, sPos.y, 10, 0, Math.PI * 2);
+                ctx.fill();
+
+                requestAnimationFrame(drawConstellation);
+            }
+            drawConstellation();
+
+            window.addEventListener('resize', () => {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+            });
+        }
+
+        // ==================== SCROLL ANIMATIONS ====================
+        function startScrollAnimations() {
+            const observerOptions = {
+                threshold: 0.2,
+                rootMargin: '0px 0px -80px 0px'
+            };
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    }
+                });
+            }, observerOptions);
+
+            document.querySelectorAll('.path-item, .promise-item, .reveal').forEach(el => {
+                observer.observe(el);
+            });
+        }
+    </script>
+</body>
+
+</html>

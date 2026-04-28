@@ -3,529 +3,47 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-    <title>A Private Universe</title>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Dancing+Script:wght@400;600&family=Playfair+Display:ital,wght@0,400;1,300&family=Poppins:wght@300;400&display=swap"
-        rel="stylesheet">
+    <title>Stay Happy</title>
+
     <style>
-        *,
-        *::before,
-        *::after {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-
-        :root {
-            --pink: #ff5fa2;
-            --lavender: #9b87f5;
-            --glow: #ffd1e8;
-            --night: #2a1b3d;
-            --dream: #fff5fb;
-            --deep-night: #140d20;
-        }
-
-        html,
         body {
-            width: 100%;
-            height: 100%;
+            margin: 0;
+            height: 100vh;
             overflow: hidden;
-            background: var(--deep-night);
-            font-family: 'Poppins', sans-serif;
-            color: #fff;
-            -webkit-tap-highlight-color: transparent;
-            user-select: none;
-        }
-
-        /* ── CANVAS LAYERS ── */
-        #universe {
-            position: fixed;
-            inset: 0;
-            width: 100%;
-            height: 100%;
-            overflow: hidden;
-        }
-
-        /* ── AURORA BG ── */
-        #aurora {
-            position: absolute;
-            inset: 0;
-            background: var(--deep-night);
-            transition: background 2s ease;
-        }
-
-        #aurora::before {
-            content: '';
-            position: absolute;
-            inset: -50%;
-            background: radial-gradient(ellipse 80% 60% at 30% 40%, rgba(155, 135, 245, 0.35) 0%, transparent 60%),
-                radial-gradient(ellipse 60% 80% at 70% 60%, rgba(255, 95, 162, 0.3) 0%, transparent 60%),
-                radial-gradient(ellipse 100% 50% at 50% 80%, rgba(42, 27, 61, 0.9) 0%, transparent 70%);
-            animation: auroraShift 12s ease-in-out infinite alternate;
-        }
-
-        @keyframes auroraShift {
-            0% {
-                transform: translate(0, 0) rotate(0deg);
-                opacity: 0.8;
-            }
-
-            50% {
-                transform: translate(-3%, 2%) rotate(3deg);
-                opacity: 1;
-            }
-
-            100% {
-                transform: translate(3%, -2%) rotate(-2deg);
-                opacity: 0.9;
-            }
-        }
-
-        /* ── STARFIELD ── */
-        #stars {
-            position: absolute;
-            inset: 0;
-            overflow: hidden;
-            opacity: 0;
-            transition: opacity 2s ease;
-        }
-
-        .star {
-            position: absolute;
-            width: 2px;
-            height: 2px;
-            border-radius: 50%;
-            background: #fff;
-            animation: twinkle var(--dur, 3s) ease-in-out infinite;
-            animation-delay: var(--delay, 0s);
-            opacity: 0;
-        }
-
-        @keyframes twinkle {
-
-            0%,
-            100% {
-                opacity: 0;
-                transform: scale(0.5);
-            }
-
-            50% {
-                opacity: 0.8;
-                transform: scale(1.2);
-            }
-        }
-
-        /* ── PARTICLE CANVAS ── */
-        #particle-canvas {
-            position: absolute;
-            inset: 0;
-            pointer-events: none;
-        }
-
-        /* ── SCENES ── */
-        .scene {
-            position: absolute;
-            inset: 0;
             display: flex;
-            flex-direction: column;
-            align-items: center;
             justify-content: center;
-            padding: 2rem;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.1s;
-        }
-
-        .scene.active {
-            opacity: 1;
-            pointer-events: auto;
-        }
-
-        /* ── SCENE 1: ENTRY ── */
-        #scene-entry {
+            align-items: center;
+            font-family: Arial, sans-serif;
+            color: white;
             text-align: center;
+            background: #1f2a36;
         }
 
-        .entry-whisper {
-            font-family: 'Poppins', sans-serif;
-            font-size: clamp(11px, 3vw, 13px);
-            letter-spacing: 0.35em;
-            text-transform: uppercase;
-            color: rgba(255, 213, 232, 0.5);
-            margin-bottom: 2.5rem;
-            animation: fadeUp 2s ease 0.5s both;
+        #msg {
+            font-size: 45px;
+            z-index: 10;
+            padding: 20px;
+            transition: all 0.5s ease;
+            opacity: 1;
         }
 
-        .entry-headline {
-            font-family: 'Cormorant Garamond', serif;
-            font-size: clamp(26px, 7vw, 48px);
-            font-weight: 300;
-            font-style: italic;
-            line-height: 1.4;
-            color: rgba(255, 245, 251, 0.92);
-            margin-bottom: 3.5rem;
-            animation: fadeUp 2s ease 1s both;
-            text-shadow: 0 0 60px rgba(255, 95, 162, 0.4);
+        .bubble {
+            position: absolute;
+            bottom: -100px;
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 50%;
+            animation: floatUp linear infinite;
         }
 
-        .enter-btn {
-            display: inline-block;
-            padding: 1rem 2.8rem;
-            border: 1px solid rgba(255, 95, 162, 0.5);
-            border-radius: 100px;
-            font-family: 'Poppins', sans-serif;
-            font-size: 13px;
-            font-weight: 300;
-            letter-spacing: 0.2em;
-            color: rgba(255, 213, 232, 0.9);
-            background: rgba(255, 95, 162, 0.08);
-            cursor: pointer;
-            animation: fadeUp 2s ease 1.6s both, pulse 3s ease-in-out 3.5s infinite;
-            backdrop-filter: blur(10px);
-            transition: background 0.3s, border-color 0.3s, transform 0.15s;
-        }
-
-        .enter-btn:hover {
-            background: rgba(255, 95, 162, 0.18);
-            border-color: rgba(255, 95, 162, 0.8);
-        }
-
-        .enter-btn:active {
-            transform: scale(0.97);
-        }
-
-        @keyframes pulse {
-
-            0%,
-            100% {
-                box-shadow: 0 0 0 0 rgba(255, 95, 162, 0);
-            }
-
-            50% {
-                box-shadow: 0 0 0 12px rgba(255, 95, 162, 0.12);
-            }
-        }
-
-        @keyframes fadeUp {
+        @keyframes floatUp {
             from {
-                opacity: 0;
-                transform: translateY(24px);
+                transform: translateY(0) scale(1);
+                opacity: 0.6;
             }
 
             to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        /* ── SCENE 2: NAME REVEAL ── */
-        #scene-name {
-            text-align: center;
-            flex-direction: column;
-            gap: 1.5rem;
-        }
-
-        .name-prelude {
-            font-family: 'Poppins', sans-serif;
-            font-size: clamp(10px, 2.5vw, 12px);
-            letter-spacing: 0.4em;
-            text-transform: uppercase;
-            color: rgba(255, 213, 232, 0.45);
-            opacity: 0;
-            transition: opacity 1.5s ease;
-        }
-
-        .big-name {
-            font-family: 'Playfair Display', serif;
-            font-size: clamp(32px, 9vw, 68px);
-            font-weight: 400;
-            font-style: italic;
-            color: transparent;
-            background: linear-gradient(135deg, #ffd1e8 0%, #ff5fa2 40%, #9b87f5 80%);
-            -webkit-background-clip: text;
-            background-clip: text;
-            letter-spacing: 0.02em;
-            line-height: 1.2;
-            opacity: 0;
-            transform: scale(0.92);
-            transition: opacity 1.5s ease, transform 1.5s ease;
-            text-align: center;
-        }
-
-        .name-glow {
-            position: absolute;
-            inset: 0;
-            background: radial-gradient(ellipse 60% 40% at 50% 50%, rgba(255, 95, 162, 0.2), transparent 70%);
-            opacity: 0;
-            transition: opacity 2s ease;
-            pointer-events: none;
-        }
-
-        /* ── SCENE 3: DIMENSION ── */
-        #scene-dimension {
-            text-align: center;
-        }
-
-        .dim-text {
-            font-family: 'Cormorant Garamond', serif;
-            font-style: italic;
-            font-size: clamp(18px, 5vw, 30px);
-            font-weight: 300;
-            color: rgba(255, 245, 251, 0.75);
-            line-height: 1.9;
-            opacity: 0;
-            transform: translateY(20px);
-            transition: opacity 2s ease, transform 2s ease;
-            max-width: 500px;
-            text-align: center;
-        }
-
-        /* ── SCENE 4: LETTER ── */
-        #scene-letter {
-            padding: 1.5rem 1rem;
-            overflow: hidden;
-        }
-
-        .glass-card {
-            background: rgba(255, 245, 251, 0.06);
-            backdrop-filter: blur(30px);
-            -webkit-backdrop-filter: blur(30px);
-            border: 1px solid rgba(255, 213, 232, 0.2);
-            border-radius: 24px;
-            padding: clamp(1.5rem, 5vw, 2.5rem);
-            max-width: 540px;
-            width: 100%;
-            max-height: 72vh;
-            overflow-y: auto;
-            scrollbar-width: thin;
-            scrollbar-color: rgba(255, 95, 162, 0.3) transparent;
-            animation: floatCard 6s ease-in-out infinite;
-            box-shadow: 0 8px 60px rgba(155, 135, 245, 0.15), 0 0 0 1px rgba(255, 213, 232, 0.1) inset;
-            position: relative;
-        }
-
-        .glass-card::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: radial-gradient(ellipse 70% 40% at 50% 0%, rgba(255, 213, 232, 0.08), transparent 60%);
-            border-radius: 24px;
-            pointer-events: none;
-        }
-
-        .glass-card::-webkit-scrollbar {
-            width: 3px;
-        }
-
-        .glass-card::-webkit-scrollbar-thumb {
-            background: rgba(255, 95, 162, 0.3);
-            border-radius: 3px;
-        }
-
-        @keyframes floatCard {
-
-            0%,
-            100% {
-                transform: translateY(0px);
-            }
-
-            50% {
-                transform: translateY(-6px);
-            }
-        }
-
-        .letter-dear {
-            font-family: 'Dancing Script', cursive;
-            font-size: clamp(20px, 5.5vw, 28px);
-            color: rgba(255, 213, 232, 0.9);
-            margin-bottom: 1.2rem;
-            font-weight: 600;
-        }
-
-        .letter-body {
-            font-family: 'Cormorant Garamond', serif;
-            font-size: clamp(15px, 4.2vw, 19px);
-            font-weight: 300;
-            line-height: 1.95;
-            color: rgba(255, 245, 251, 0.82);
-            font-style: italic;
-        }
-
-        .letter-body p {
-            margin-bottom: 1.1em;
-        }
-
-        .letter-sig {
-            font-family: 'Dancing Script', cursive;
-            font-size: clamp(18px, 5vw, 24px);
-            color: rgba(255, 95, 162, 0.85);
-            margin-top: 1.5rem;
-            font-weight: 600;
-        }
-
-        .scroll-hint {
-            font-family: 'Poppins', sans-serif;
-            font-size: 11px;
-            letter-spacing: 0.2em;
-            color: rgba(255, 213, 232, 0.35);
-            text-align: center;
-            margin-top: 1rem;
-            text-transform: uppercase;
-            animation: blink 2s ease-in-out infinite;
-        }
-
-        @keyframes blink {
-
-            0%,
-            100% {
-                opacity: 0.35
-            }
-
-            50% {
-                opacity: 0.7
-            }
-        }
-
-        /* ── SCENE 5: HEART ── */
-        #scene-heart {
-            text-align: center;
-            flex-direction: column;
-            gap: 2rem;
-        }
-
-        #heart-wrapper {
-            position: relative;
-            width: 120px;
-            height: 120px;
-            cursor: pointer;
-            filter: drop-shadow(0 0 30px rgba(255, 95, 162, 0.6));
-            animation: heartbeat 2.2s ease-in-out infinite;
-            transition: transform 0.15s;
-        }
-
-        #heart-wrapper:active {
-            transform: scale(0.92);
-        }
-
-        @keyframes heartbeat {
-
-            0%,
-            100% {
-                transform: scale(1);
-            }
-
-            14% {
-                transform: scale(1.08);
-            }
-
-            28% {
-                transform: scale(1);
-            }
-
-            42% {
-                transform: scale(1.04);
-            }
-
-            70% {
-                transform: scale(1);
-            }
-        }
-
-        #heart-svg {
-            width: 100%;
-            height: 100%;
-        }
-
-        .heart-label {
-            font-family: 'Cormorant Garamond', serif;
-            font-style: italic;
-            font-size: clamp(16px, 4.5vw, 22px);
-            color: rgba(255, 245, 251, 0.7);
-            font-weight: 300;
-        }
-
-        .heart-tapped-text {
-            font-family: 'Dancing Script', cursive;
-            font-size: clamp(20px, 6vw, 30px);
-            color: rgba(255, 213, 232, 0.95);
-            opacity: 0;
-            transform: scale(0.8);
-            transition: opacity 1s ease, transform 1s ease;
-            font-weight: 600;
-        }
-
-        .heart-tapped-text.show {
-            opacity: 1;
-            transform: scale(1);
-        }
-
-        /* ── SCENE 6: AFFIRMATIONS ── */
-        #scene-affirmations {
-            overflow: hidden;
-        }
-
-        .affirmation-field {
-            position: relative;
-            width: 100%;
-            height: 100%;
-        }
-
-        .affirmation {
-            position: absolute;
-            font-family: 'Cormorant Garamond', serif;
-            font-style: italic;
-            font-size: clamp(16px, 5vw, 26px);
-            font-weight: 300;
-            color: rgba(255, 245, 251, 0.85);
-            text-align: center;
-            max-width: 280px;
-            line-height: 1.5;
-            opacity: 0;
-            pointer-events: none;
-            text-shadow: 0 0 40px rgba(255, 95, 162, 0.5);
-        }
-
-        .stay-btn {
-            position: absolute;
-            bottom: 2.5rem;
-            left: 50%;
-            transform: translateX(-50%);
-            padding: 0.85rem 2.5rem;
-            border: 1px solid rgba(255, 213, 232, 0.3);
-            border-radius: 100px;
-            font-family: 'Poppins', sans-serif;
-            font-size: 12px;
-            letter-spacing: 0.25em;
-            color: rgba(255, 213, 232, 0.75);
-            background: rgba(255, 95, 162, 0.07);
-            cursor: pointer;
-            text-transform: uppercase;
-            transition: background 0.3s, border-color 0.3s, transform 0.15s;
-            white-space: nowrap;
-        }
-
-        .stay-btn:hover {
-            background: rgba(255, 95, 162, 0.15);
-            border-color: rgba(255, 213, 232, 0.6);
-        }
-
-        .stay-btn:active {
-            transform: translateX(-50%) scale(0.97);
-        }
-
-        /* ── UTILITIES ── */
-        .fade-in {
-            animation: simpleFade 1.5s ease both;
-        }
-
-        @keyframes simpleFade {
-            from {
+                transform: translateY(-110vh) scale(1.5);
                 opacity: 0;
-            }
-
-            to {
-                opacity: 1;
             }
         }
     </style>
@@ -533,389 +51,174 @@
 
 <body>
 
-    <div id="universe">
+    <!-- 🎵 BACKGROUND MUSIC (AUTO LOOP) -->
+    <audio id="bgMusic" autoplay loop>
+        <source src="audio/happy.mp3" type="audio/mp3">
+    </audio>
 
-        <!-- AURORA BG -->
-        <div id="aurora"></div>
-
-        <!-- STARS -->
-        <div id="stars"></div>
-
-        <!-- PARTICLE CANVAS -->
-        <canvas id="particle-canvas"></canvas>
-
-        <!-- SCENE 1: ENTRY -->
-        <div class="scene active" id="scene-entry">
-            <p class="entry-whisper">For you, and only you</p>
-            <h1 class="entry-headline">A Quiet Place Was Built<br>For Someone Special…</h1>
-            <button class="enter-btn" id="enter-btn">Step Inside &nbsp;💖</button>
-        </div>
-
-        <!-- SCENE 2: NAME REVEAL -->
-        <div class="scene" id="scene-name">
-            <div class="name-glow" id="name-glow"></div>
-            <p class="name-prelude" id="name-prelude">You are the reason this exists</p>
-            <h2 class="big-name" id="big-name">Sandia Ahmed Sinthi</h2>
-        </div>
-
-        <!-- SCENE 3: DIMENSION SHIFT -->
-        <div class="scene" id="scene-dimension">
-            <p class="dim-text" id="dim-text">
-                You are not inside a website anymore…<br>
-                you are inside someone's feelings.
-            </p>
-        </div>
-
-        <!-- SCENE 4: LETTER -->
-        <div class="scene" id="scene-letter" style="justify-content:center; align-items:center; flex-direction:column;">
-            <div class="glass-card" id="letter-card">
-                <p class="letter-dear">Dear Sandia Ahmed Sinthi,</p>
-                <div class="letter-body">
-                    <p>If you are reading this… it means you stepped into a space that was made with care, attention,
-                        and emotion.</p>
-                    <p>This is not a design. It is a feeling — structured into visuals.</p>
-                    <p>Every pixel here carries patience. Every motion carries intention.</p>
-                    <p>You are not just important… you are the reason this space exists in the first place.</p>
-                    <p>Some things in life are built quickly, without thought. This is not one of them. This was built
-                        slowly — the way something is built when the builder keeps stopping just to think of you.</p>
-                    <p>Stay here slowly. Do not rush. Let this moment exist for you.</p>
-                    <p>Because you deserve moments like this — quiet, warm, and made entirely for you.</p>
-                </div>
-                <p class="letter-sig">— with all sincerity 💖</p>
-            </div>
-            <p class="scroll-hint" id="scroll-hint">scroll inside the letter ↑↓</p>
-            <button class="enter-btn" id="letter-continue"
-                style="margin-top:1.2rem; opacity:0; pointer-events:none; transition: opacity 1.5s ease;">Continue
-                →</button>
-        </div>
-
-        <!-- SCENE 5: HEART -->
-        <div class="scene" id="scene-heart">
-            <div id="heart-wrapper">
-                <svg id="heart-svg" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-                    <defs>
-                        <linearGradient id="hg" x1="0%" y1="0%" x2="100%" y2="100%">
-                            <stop offset="0%" stop-color="#ff8dc7" />
-                            <stop offset="50%" stop-color="#ff5fa2" />
-                            <stop offset="100%" stop-color="#9b87f5" />
-                        </linearGradient>
-                    </defs>
-                    <path fill="url(#hg)"
-                        d="M50 85 C50 85 12 58 12 35 C12 23 21 14 33 14 C40 14 46 18 50 24 C54 18 60 14 67 14 C79 14 88 23 88 35 C88 58 50 85 50 85Z" />
-                </svg>
-            </div>
-            <p class="heart-label">tap the heart…</p>
-            <p class="heart-tapped-text" id="heart-tapped">You are deeply appreciated 💖</p>
-        </div>
-
-        <!-- SCENE 6: AFFIRMATIONS -->
-        <div class="scene" id="scene-affirmations">
-            <div class="affirmation-field" id="affirmation-field"></div>
-            <button class="stay-btn" id="stay-btn">Stay a little longer ♾</button>
-        </div>
-
-    </div>
+    <div id="msg">Stay Happy Always</div>
 
     <script>
-        // ─── SETUP ───────────────────────────────────────────────────
-        const canvas = document.getElementById('particle-canvas');
-        const ctx = canvas.getContext('2d');
-        let W, H, particles = [], affirmationTimers = [];
-        let currentScene = 1;
 
-        function resize() {
-            W = canvas.width = window.innerWidth;
-            H = canvas.height = window.innerHeight;
-        }
-        resize();
-        window.addEventListener('resize', resize);
+        // autoplay fix (browser restriction workaround)
+        window.addEventListener("load", () => {
+            const music = document.getElementById("bgMusic");
+            music.volume = 0.4;
 
-        // ─── STARS ───────────────────────────────────────────────────
-        const starsEl = document.getElementById('stars');
-        for (let i = 0; i < 120; i++) {
-            const s = document.createElement('div');
-            s.className = 'star';
-            s.style.left = Math.random() * 100 + '%';
-            s.style.top = Math.random() * 100 + '%';
-            s.style.setProperty('--dur', (2 + Math.random() * 4) + 's');
-            s.style.setProperty('--delay', (Math.random() * 5) + 's');
-            s.style.width = s.style.height = (Math.random() < 0.3 ? 3 : 2) + 'px';
-            starsEl.appendChild(s);
-        }
-
-        // ─── PARTICLES ───────────────────────────────────────────────
-        class Particle {
-            constructor(x, y, type = 'dust') {
-                this.x = x ?? Math.random() * W;
-                this.y = y ?? Math.random() * H;
-                this.type = type;
-                this.reset();
-                if (!x) this.life = Math.random();
+            let playPromise = music.play();
+            if (playPromise !== undefined) {
+                playPromise.catch(() => {
+                    // if autoplay blocked, try again silently
+                    document.body.addEventListener("click", () => {
+                        music.play();
+                    }, { once: true });
+                });
             }
-            reset() {
-                this.size = this.type === 'heart' ? (4 + Math.random() * 8) : (1 + Math.random() * 2.5);
-                this.vx = (Math.random() - 0.5) * (this.type === 'heart' ? 3 : 0.8);
-                this.vy = this.type === 'heart' ? -(2 + Math.random() * 5) : (-0.3 - Math.random() * 0.5);
-                this.life = 1;
-                this.decay = this.type === 'heart' ? (0.015 + Math.random() * 0.02) : (0.005 + Math.random() * 0.008);
-                this.color = this.type === 'heart'
-                    ? ['#ff5fa2', '#ffd1e8', '#9b87f5', '#ff8dc7'][Math.floor(Math.random() * 4)]
-                    : `hsla(${310 + Math.random() * 60}, 80%, 80%, 1)`;
-            }
-            update() {
-                this.x += this.vx;
-                this.vy += 0.03;
-                this.y += this.vy;
-                this.life -= this.decay;
-                this.vx *= 0.99;
-            }
-            draw() {
-                ctx.save();
-                ctx.globalAlpha = Math.max(0, this.life);
-                if (this.type === 'heart') {
-                    drawHeart(ctx, this.x, this.y, this.size, this.color);
-                } else {
-                    ctx.beginPath();
-                    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-                    ctx.fillStyle = this.color;
-                    ctx.shadowBlur = 6;
-                    ctx.shadowColor = this.color;
-                    ctx.fill();
-                }
-                ctx.restore();
-            }
-        }
-
-        function drawHeart(c, x, y, r, color) {
-            c.save();
-            c.translate(x, y);
-            c.scale(r / 8, r / 8);
-            c.beginPath();
-            c.moveTo(0, -2);
-            c.bezierCurveTo(-8, -10, -16, 2, 0, 10);
-            c.bezierCurveTo(16, 2, 8, -10, 0, -2);
-            c.fillStyle = color;
-            c.shadowBlur = 12;
-            c.shadowColor = color;
-            c.fill();
-            c.restore();
-        }
-
-        let ambientParticles = [];
-        function initAmbient() {
-            ambientParticles = [];
-            for (let i = 0; i < 40; i++) {
-                ambientParticles.push(new Particle());
-            }
-        }
-        initAmbient();
-
-        function burstHearts(cx, cy, count = 40) {
-            for (let i = 0; i < count; i++) {
-                const p = new Particle(cx + (Math.random() - 0.5) * 60, cy + (Math.random() - 0.5) * 60, 'heart');
-                particles.push(p);
-            }
-        }
-
-        let anim;
-        function loop() {
-            ctx.clearRect(0, 0, W, H);
-            const allP = [...ambientParticles, ...particles];
-            for (let i = allP.length - 1; i >= 0; i--) {
-                const p = allP[i];
-                p.update();
-                p.draw();
-                if (p.life <= 0) {
-                    if (ambientParticles.includes(p)) {
-                        p.x = Math.random() * W;
-                        p.y = H + 20;
-                        p.reset();
-                        p.life = 0.01;
-                    } else {
-                        particles.splice(particles.indexOf(p), 1);
-                    }
-                }
-            }
-            anim = requestAnimationFrame(loop);
-        }
-        loop();
-
-        // ─── SCENE TRANSITIONS ───────────────────────────────────────
-        const scenes = {
-            1: document.getElementById('scene-entry'),
-            2: document.getElementById('scene-name'),
-            3: document.getElementById('scene-dimension'),
-            4: document.getElementById('scene-letter'),
-            5: document.getElementById('scene-heart'),
-            6: document.getElementById('scene-affirmations'),
-        };
-
-        function goTo(n) {
-            const from = scenes[currentScene];
-            const to = scenes[n];
-            if (!to) return;
-            from.style.transition = 'opacity 1.2s ease';
-            from.style.opacity = '0';
-            from.style.pointerEvents = 'none';
-            setTimeout(() => {
-                from.classList.remove('active');
-                from.style.opacity = '';
-                from.style.transition = '';
-                to.classList.add('active');
-                currentScene = n;
-                onSceneEnter(n);
-            }, 1200);
-        }
-
-        function onSceneEnter(n) {
-            if (n === 2) enterNameScene();
-            if (n === 3) enterDimScene();
-            if (n === 4) enterLetterScene();
-            if (n === 5) enterHeartScene();
-            if (n === 6) enterAffirmScene();
-        }
-
-        // ─── SCENE 1 ─────────────────────────────────────────────────
-        document.getElementById('enter-btn').addEventListener('click', () => {
-            burstHearts(W / 2, H / 2, 25);
-            goTo(2);
         });
 
-        // ─── SCENE 2: NAME ───────────────────────────────────────────
-        function enterNameScene() {
-            const glow = document.getElementById('name-glow');
-            const prelude = document.getElementById('name-prelude');
-            const name = document.getElementById('big-name');
-            starsEl.style.opacity = '0.5';
-
-            setTimeout(() => { prelude.style.opacity = '1'; }, 600);
-            setTimeout(() => {
-                name.style.opacity = '1';
-                name.style.transform = 'scale(1)';
-                glow.style.opacity = '1';
-            }, 1400);
-            setTimeout(() => goTo(3), 4500);
-        }
-
-        // ─── SCENE 3: DIMENSION ──────────────────────────────────────
-        function enterDimScene() {
-            starsEl.style.opacity = '1';
-            const t = document.getElementById('dim-text');
-            setTimeout(() => {
-                t.style.opacity = '1';
-                t.style.transform = 'translateY(0)';
-            }, 500);
-            setTimeout(() => goTo(4), 4000);
-        }
-
-        // ─── SCENE 4: LETTER ─────────────────────────────────────────
-        function enterLetterScene() {
-            const btn = document.getElementById('letter-continue');
-            const card = document.getElementById('letter-card');
-
-            card.addEventListener('scroll', function onScroll() {
-                const nearEnd = card.scrollHeight - card.scrollTop < card.clientHeight + 100;
-                if (nearEnd) {
-                    btn.style.opacity = '1';
-                    btn.style.pointerEvents = 'auto';
-                    card.removeEventListener('scroll', onScroll);
-                }
-            }, { passive: true });
-
-            setTimeout(() => {
-                btn.style.opacity = '1';
-                btn.style.pointerEvents = 'auto';
-            }, 7000);
-
-            btn.addEventListener('click', () => goTo(5));
-        }
-
-        // ─── SCENE 5: HEART ──────────────────────────────────────────
-        function enterHeartScene() {
-            const wrapper = document.getElementById('heart-wrapper');
-            const tapped = document.getElementById('heart-tapped');
-            let tappedOnce = false;
-
-            wrapper.addEventListener('click', function handleHeart() {
-                if (tappedOnce) return;
-                tappedOnce = true;
-                const r = wrapper.getBoundingClientRect();
-                const cx = r.left + r.width / 2;
-                const cy = r.top + r.height / 2;
-                burstHearts(cx, cy, 60);
-                tapped.classList.add('show');
-                wrapper.style.animation = 'none';
-                wrapper.style.transform = 'scale(1.4)';
-                wrapper.style.filter = 'drop-shadow(0 0 60px rgba(255,95,162,0.9))';
-                setTimeout(() => {
-                    wrapper.style.transform = 'scale(1)';
-                    wrapper.style.animation = 'heartbeat 2.2s ease-in-out infinite';
-                }, 800);
-                setTimeout(() => goTo(6), 3000);
-            });
-        }
-
-        // ─── SCENE 6: AFFIRMATIONS ───────────────────────────────────
-        const affirmations = [
-            "You are safe here",
-            "You are valued more\nthan you know",
-            "Someone thinks of you\nin silence",
-            "You matter deeply",
-            "You are extraordinary",
-            "You deserve every good thing",
-            "Your presence is a gift",
-            "You are not forgotten",
-            "You are whole",
-            "You are loved, quietly\nand completely",
+        // ---------------- MESSAGES ----------------
+        const messages = [
+            "Stay Happy Always",
+            "You Are Amazing",
+            "Keep Smiling Today",
+            "Good Vibes Only",
+            "Believe In Yourself",
+            "Everything Will Be Fine",
+            "You Can Do It",
+            "Stay Strong Always",
+            "Think Positive Daily",
+            "Enjoy Your Life",
+            "Be Happy Now",
+            "Never Give Up",
+            "You Matter Most",
+            "Peace And Love",
+            "Bright Future Ahead",
+            "Smile Every Moment",
+            "Life Is Beautiful",
+            "Stay Calm Stay Strong",
+            "You Are Enough",
+            "Happiness Is Free",
+            "Dream Big Always",
+            "Keep Going Forward",
+            "Shine Like Sun",
+            "Love Yourself More",
+            "Breathe And Relax",
+            "Better Days Ahead",
+            "Trust The Process",
+            "Keep Moving Forward",
+            "Your Time Will Come",
+            "Magic Is Real",
+            "Be Your Best Self",
+            "Small Steps Matter",
+            "Stay Positive Always",
+            "Focus On Good Things",
+            "You Are Loved",
+            "Calm Mind Strong Heart",
+            "Let It Flow",
+            "Make Today Count",
+            "Dream Believe Achieve",
+            "Rise And Shine",
+            "Energy Is Everything",
+            "Create Your Happiness",
+            "Keep Your Spark",
+            "Life Goes On Beautifully",
+            "Breathe Deep Smile",
+            "Keep Your Hope",
+            "You Are Strong",
+            "Stay Light Hearted",
+            "Joy Is Within",
+            "Progress Not Perfection",
+            "Be Kind Always",
+            "Keep It Simple",
+            "Shine From Within",
+            "Trust Your Journey",
+            "Peace Starts Here",
+            "Grow Through Pain",
+            "Let Go Worry",
+            "Focus On Now",
+            "Create Your Path",
+            "Stay Humble Always",
+            "Rise Every Time",
+            "Positive Mindset Wins",
+            "You Are Magic",
+            "Stay Grounded Always",
+            "Chase Your Dreams",
+            "Inner Peace Matters",
+            "Choose Happiness Daily",
+            "Be Fearless Today",
+            "Life Is Short Smile",
+            "Keep Moving Forward",
+            "Radiate Good Energy",
+            "Nothing Is Impossible",
+            "Stay True Yourself",
+            "Light Up World",
+            "Make It Happen",
+            "Silence Your Doubts",
+            "Peaceful Mind Strong Soul",
+            "Believe And Achieve",
+            "Stay Soft Stay Strong",
+            "Good Things Coming",
+            "Never Stop Trying",
+            "Own Your Journey",
+            "Everything Will Align",
+            "Stay Hopeful Always",
+            "Be Your Energy",
+            "Let Dreams Grow",
+            "Step By Step",
+            "Calm Heart Brave Mind",
+            "Shine Without Fear",
+            "Keep Growing Daily"
         ];
 
-        function enterAffirmScene() {
-            const field = document.getElementById('affirmation-field');
-            let index = 0;
+        let lastMessage = "";
 
-            function spawnAffirmation() {
-                const el = document.createElement('div');
-                el.className = 'affirmation';
-                const x = 10 + Math.random() * 65;
-                const y = 10 + Math.random() * 70;
-                el.style.left = x + '%';
-                el.style.top = y + '%';
-                el.style.transform = 'translate(-50%, -50%)';
-                el.style.fontSize = (14 + Math.random() * 12) + 'px';
-                const colors = ['rgba(255,245,251,0.85)', 'rgba(255,213,232,0.85)', 'rgba(155,135,245,0.85)', 'rgba(255,95,162,0.75)'];
-                el.style.color = colors[Math.floor(Math.random() * colors.length)];
-                const msg = affirmations[index % affirmations.length];
-                el.style.whiteSpace = 'pre-line';
-                el.textContent = msg;
-                index++;
-                field.appendChild(el);
+        // ---------------- MESSAGE CHANGE ----------------
+        function changeMessage() {
+            const el = document.getElementById("msg");
 
-                requestAnimationFrame(() => {
-                    el.style.transition = 'opacity 2s ease, transform 2s ease';
-                    el.style.opacity = '1';
-                    el.style.transform = 'translate(-50%, -55%)';
-                });
+            el.style.opacity = "0";
+            el.style.transform = "scale(0.7)";
 
-                setTimeout(() => {
-                    el.style.opacity = '0';
-                    setTimeout(() => el.remove(), 2000);
-                }, 3500);
+            setTimeout(() => {
+                let random;
 
-                const t = setTimeout(spawnAffirmation, 1800 + Math.random() * 1200);
-                affirmationTimers.push(t);
-            }
+                do {
+                    random = messages[Math.floor(Math.random() * messages.length)];
+                } while (random === lastMessage);
 
-            spawnAffirmation();
+                lastMessage = random;
+
+                el.innerText = random;
+
+                el.style.opacity = "1";
+                el.style.transform = "scale(1)";
+            }, 250);
         }
 
-        document.getElementById('stay-btn').addEventListener('click', () => {
-            affirmationTimers.forEach(clearTimeout);
-            affirmationTimers.length = 0;
-            document.getElementById('affirmation-field').innerHTML = '';
-            particles.length = 0;
-            goTo(4);
-        });
+        setInterval(changeMessage, 3500);
+
+        // ---------------- BUBBLES ----------------
+        function createBubbles() {
+            for (let i = 0; i < 25; i++) {
+                let bubble = document.createElement("div");
+                bubble.classList.add("bubble");
+
+                let size = Math.random() * 60 + 10;
+
+                bubble.style.width = size + "px";
+                bubble.style.height = size + "px";
+                bubble.style.left = Math.random() * 100 + "vw";
+                bubble.style.animationDuration = (Math.random() * 10 + 5) + "s";
+                bubble.style.animationDelay = Math.random() * 5 + "s";
+
+                document.body.appendChild(bubble);
+            }
+        }
+
+        createBubbles();
+
     </script>
+
 </body>
 
 </html>
