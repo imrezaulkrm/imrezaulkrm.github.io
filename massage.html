@@ -1,0 +1,1287 @@
+<!DOCTYPE html>
+<html lang="bn">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Secret Message</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Hind+Siliguri:wght@300;400;500;600&family=Noto+Serif+Bengali:wght@300;400;500;600&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --bg: #070505;
+            --text: #f8f4f2;
+            --dim: #a6948a;
+            --acc: #e8a0b4;
+            /* Romantic Rose */
+            --acc-rgb: 232, 160, 180;
+            --acc2: #c78aaa;
+            --mut: #63544d;
+            --bd: rgba(255, 255, 255, 0.08);
+            --card-bg: rgba(15, 12, 12, 0.85);
+            --vg: #4a6a4a;
+            /* Elegant Forest */
+            --vg-rgb: 74, 106, 74;
+        }
+
+        .vt .sh .sa {
+            border-color: rgba(var(--acc-rgb), 0.4);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            user-select: none;
+            -webkit-user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: 'Hind Siliguri', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            overflow: hidden;
+            width: 100vw;
+            height: 100vh;
+            line-height: 1.6;
+        }
+
+        @media print {
+            body {
+                display: none !important
+            }
+        }
+
+        @media(prefers-reduced-motion:reduce) {
+
+            *,
+            *::before,
+            *::after {
+                animation-duration: .01ms !important;
+                transition-duration: .01ms !important
+            }
+        }
+
+        .pg {
+            position: fixed;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: all 1.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+            transform: scale(0.9) translateY(20px);
+            z-index: 1;
+        }
+
+        .pg.on {
+            opacity: 1;
+            pointer-events: all;
+            transform: scale(1) translateY(0);
+        }
+
+        .bgcv {
+            position: absolute;
+            inset: 0;
+            z-index: 0;
+        }
+
+        .gl {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.1;
+            pointer-events: none;
+            z-index: 0;
+            transition: all 2s ease;
+        }
+
+        .crd {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+            padding: 3rem 2.2rem;
+            background: var(--card-bg);
+            border: 1px solid var(--bd);
+            border-radius: 1.5rem;
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            max-width: 400px;
+            width: 90%;
+            animation: cardFloat 8s ease-in-out infinite, cardReveal 1.2s cubic-bezier(0.2, 1, 0.3, 1) forwards;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5),
+                inset 0 1px 1px rgba(255, 255, 255, 0.05);
+        }
+
+        @keyframes cardReveal {
+            from {
+                opacity: 0;
+                transform: translateY(30px) scale(0.9);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .s-ttl,
+        .v-ttl {
+            background: linear-gradient(90deg, var(--acc), #fff, var(--acc));
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: shimmer 4s linear infinite;
+        }
+
+        @keyframes shimmer {
+            to {
+                background-position: 200% center;
+            }
+        }
+
+        .s-div i {
+            font-size: 0.6rem;
+            color: #e8a0b4;
+            animation: heartPulse 2.5s ease-in-out infinite;
+            filter: drop-shadow(0 0 8px rgba(var(--acc-rgb), 0.4));
+        }
+
+        @keyframes cardFloat {
+
+            0%,
+            100% {
+                transform: translateY(0) rotate(0deg);
+            }
+
+            33% {
+                transform: translateY(-6px) rotate(0.5deg);
+            }
+
+            66% {
+                transform: translateY(4px) rotate(-0.5deg);
+            }
+        }
+
+        .ipt {
+            width: 100%;
+            padding: 0.9rem 1.2rem;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 0.8rem;
+            color: var(--text);
+            font-family: 'Hind Siliguri', sans-serif;
+            font-size: 0.95rem;
+            outline: none;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            margin-bottom: 1rem;
+        }
+
+        .ipt:focus {
+            border-color: var(--acc);
+            background: rgba(0, 0, 0, 0.5);
+            box-shadow: 0 0 0 4px rgba(var(--acc-rgb), 0.15);
+        }
+
+        .ipt::placeholder {
+            color: var(--mut);
+            opacity: 0.6;
+        }
+
+        .bt {
+            width: 100%;
+            padding: 0.9rem;
+            background: linear-gradient(135deg, var(--acc), var(--acc2));
+            color: #000;
+            border: none;
+            border-radius: 0.8rem;
+            font-family: 'Hind Siliguri', sans-serif;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            letter-spacing: 0.02em;
+            box-shadow: 0 4px 15px rgba(var(--acc-rgb), 0.2);
+        }
+
+        .bt:hover {
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 8px 25px rgba(var(--acc-rgb), 0.3);
+            filter: brightness(1.1);
+        }
+
+        .bt:active {
+            transform: translateY(0) scale(0.98);
+        }
+
+        .er {
+            color: #ff6b6b;
+            font-size: 0.8rem;
+            margin-top: 1rem;
+            min-height: 1.2em;
+            font-weight: 500;
+        }
+
+        .dv {
+            width: 60px;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--acc), transparent);
+            margin: 0 auto 1.8rem;
+            border-radius: 2px;
+        }
+
+        @keyframes blink {
+
+            0%,
+            100% {
+                opacity: 0.3;
+                transform: translateX(0);
+            }
+
+            50% {
+                opacity: 1;
+                transform: translateX(5px);
+            }
+        }
+
+        .rlb {
+            position: fixed;
+            top: 1.5rem;
+            right: 1.5rem;
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--dim);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .rlb.v {
+            opacity: 0.6;
+            pointer-events: all;
+        }
+
+        .rlb:hover {
+            opacity: 1 !important;
+            background: rgba(255, 255, 255, 0.1);
+            transform: rotate(180deg);
+            color: var(--acc);
+            border-color: var(--acc);
+        }
+
+        .wo {
+            height: clamp(140px, 20vh, 200px);
+            overflow: hidden;
+            position: relative;
+            margin: 0 auto;
+            max-width: 800px;
+            width: 95%;
+            mask-image: linear-gradient(to bottom, transparent, black 8%, black 92%, transparent);
+            -webkit-mask-image: linear-gradient(to bottom, transparent, black 8%, black 92%, transparent);
+        }
+
+        .wo::after {
+            display: none;
+        }
+
+        .wi {
+            transition: transform 0.8s cubic-bezier(0.2, 1, 0.3, 1);
+            line-height: 2.8;
+            padding: 10px 0;
+        }
+
+        .ws {
+            display: inline;
+            opacity: 0;
+            animation: wordFadeIn 1s cubic-bezier(0.2, 1, 0.3, 1) forwards;
+            margin-right: 0.3em;
+        }
+
+        @keyframes wordFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px) scale(0.95);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .cur {
+            display: inline-block;
+            width: 1.5px;
+            height: 1.1em;
+            background: var(--acc);
+            margin-left: 3px;
+            vertical-align: text-bottom;
+            animation: bk 1s step-end infinite
+        }
+
+        @keyframes bk {
+            50% {
+                opacity: 0
+            }
+        }
+
+        .pt {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: rgba(255, 255, 255, .03);
+            z-index: 10
+        }
+
+        .pf {
+            height: 100%;
+            width: 0%;
+            transition: width .35s ease
+        }
+
+        .sh {
+            position: fixed;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            color: var(--mut);
+            font-size: .68rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: .25rem;
+            z-index: 2;
+            transition: opacity .5s;
+            letter-spacing: .05em
+        }
+
+        .sh.g {
+            opacity: 0;
+            pointer-events: none
+        }
+
+        .sa {
+            width: 11px;
+            height: 11px;
+            border-right: 1.5px solid currentColor;
+            border-bottom: 1.5px solid currentColor;
+            transform: rotate(45deg);
+            animation: sb 2s ease-in-out infinite
+        }
+
+        @keyframes sb {
+
+            0%,
+            100% {
+                transform: rotate(45deg) translateY(-2px)
+            }
+
+            50% {
+                transform: rotate(45deg) translateY(2px)
+            }
+        }
+
+        .em {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(1.1rem, 3vw, 1.5rem);
+            font-style: italic;
+            font-weight: 400;
+            opacity: 0;
+            transform: scale(.88);
+            transition: opacity 1.6s ease, transform 1.6s ease;
+            margin-top: 1.5rem
+        }
+
+        .em.i {
+            opacity: 1;
+            transform: scale(1)
+        }
+
+        @keyframes shk {
+
+            0%,
+            100% {
+                transform: translateX(0)
+            }
+
+            20% {
+                transform: translateX(-7px)
+            }
+
+            40% {
+                transform: translateX(7px)
+            }
+
+            60% {
+                transform: translateX(-4px)
+            }
+
+            80% {
+                transform: translateX(4px)
+            }
+        }
+
+        /* ====== সিন্থি রোমান্টিক স্টাইল ====== */
+        #sPg {
+            background:
+                radial-gradient(circle at 20% 30%, rgba(232, 160, 180, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, rgba(199, 138, 170, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 50% 50%, rgba(18, 12, 12, 1) 0%, #070505 100%);
+        }
+
+        #sPg .pf {
+            background: linear-gradient(90deg, var(--acc), var(--acc2));
+        }
+
+        #sPg .pf {
+            background: linear-gradient(90deg, #e8a0b4, #c78aaa, #b498c9)
+        }
+
+        .s-ttl {
+            font-family: 'Cormorant Garamond', serif;
+            font-weight: 600;
+            font-size: clamp(1.5rem, 4.5vw, 2.3rem);
+            color: #e8a0b4;
+            letter-spacing: .1em;
+            margin-bottom: .6rem;
+            font-style: italic;
+            text-shadow: 0 0 50px rgba(232, 160, 180, .2)
+        }
+
+        .s-div {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: .8rem;
+            margin-bottom: 1.5rem
+        }
+
+        .s-div span {
+            display: block;
+            height: 1px;
+            width: 45px;
+            background: linear-gradient(90deg, transparent, rgba(232, 160, 180, .35))
+        }
+
+        .s-div i {
+            font-size: .6rem;
+            color: #e8a0b4;
+            animation: heartPulse 2.5s ease-in-out infinite
+        }
+
+        @keyframes heartPulse {
+
+            0%,
+            100% {
+                transform: scale(1);
+                opacity: .6
+            }
+
+            50% {
+                transform: scale(1.25);
+                opacity: 1;
+                text-shadow: 0 0 12px rgba(232, 160, 180, .4)
+            }
+        }
+
+        .s-txt {
+            font-family: 'Noto Serif Bengali', serif;
+            font-weight: 300;
+            font-size: clamp(1.12rem, 3vw, 1.4rem);
+            line-height: 2.7;
+            letter-spacing: .02em;
+            color: rgba(245, 235, 230, .92)
+        }
+
+        .s-em {
+            color: #e8a0b4
+        }
+
+        #sPg .em {
+            font-family: 'Cormorant Garamond', serif;
+            color: #e8a0b4;
+            text-shadow: 0 0 30px rgba(232, 160, 180, .15)
+        }
+
+        #sPg .cur {
+            background: #e8a0b4
+        }
+
+        #sPg .sh {
+            color: rgba(232, 160, 180, .3)
+        }
+
+        #sPg .sh .sa {
+            border-color: rgba(232, 160, 180, .3)
+        }
+
+        .vign {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 1;
+            background: radial-gradient(ellipse at center, transparent 35%, rgba(12, 8, 9, .7) 100%)
+        }
+
+        /* Floating romantic orbs */
+        .s-orb {
+            position: fixed;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 0;
+            filter: blur(50px)
+        }
+
+        .s-orb1 {
+            width: 220px;
+            height: 220px;
+            background: rgba(232, 160, 180, .05);
+            top: 8%;
+            left: 15%;
+            animation: oF1 12s ease-in-out infinite
+        }
+
+        .s-orb2 {
+            width: 180px;
+            height: 180px;
+            background: rgba(180, 130, 190, .04);
+            bottom: 15%;
+            right: 10%;
+            animation: oF2 14s ease-in-out infinite
+        }
+
+        .s-orb3 {
+            width: 140px;
+            height: 140px;
+            background: rgba(200, 140, 170, .04);
+            top: 55%;
+            left: 55%;
+            animation: oF3 16s ease-in-out infinite
+        }
+
+        @keyframes oF1 {
+
+            0%,
+            100% {
+                transform: translate(0, 0)
+            }
+
+            33% {
+                transform: translate(25px, -18px)
+            }
+
+            66% {
+                transform: translate(-18px, 12px)
+            }
+        }
+
+        @keyframes oF2 {
+
+            0%,
+            100% {
+                transform: translate(0, 0)
+            }
+
+            33% {
+                transform: translate(-20px, 18px)
+            }
+
+            66% {
+                transform: translate(12px, -22px)
+            }
+        }
+
+        @keyframes oF3 {
+
+            0%,
+            100% {
+                transform: translate(0, 0)
+            }
+
+            50% {
+                transform: translate(-25px, -15px)
+            }
+        }
+
+        /* ====== ভিজিটর থিম ====== */
+        .vt {
+            --acc: #8fb180;
+            --acc-rgb: 143, 177, 128;
+            --acc2: #6d8a60;
+            --card-bg: rgba(12, 15, 12, 0.85);
+        }
+
+        .vt .pf {
+            background: linear-gradient(90deg, var(--acc), var(--acc2));
+        }
+
+        .vt .cur {
+            background: var(--acc);
+        }
+
+        .vt .em {
+            color: var(--acc);
+        }
+
+        .vt .sh {
+            color: rgba(var(--acc-rgb), 0.4);
+        }
+
+        .vt .sh .sa {
+            border-color: rgba(var(--acc-rgb), 0.4);
+        }
+
+        .v-txt {
+            font-family: 'Hind Siliguri', sans-serif;
+            font-weight: 400;
+            font-size: clamp(1.05rem, 2.8vw, 1.22rem);
+            line-height: 2.3;
+            color: #eae4da
+        }
+
+        .v-ttl {
+            font-family: 'Cormorant Garamond', serif;
+            font-weight: 600;
+            font-size: clamp(1.1rem, 3vw, 1.5rem);
+            color: #5a7a4a;
+            letter-spacing: .08em;
+            margin-bottom: .8rem
+        }
+
+        .ld-ring {
+            width: 36px;
+            height: 36px;
+            border: 2.5px solid rgba(90, 122, 74, .15);
+            border-top-color: #5a7a4a;
+            border-radius: 50%;
+            animation: sp 1s linear infinite;
+            margin: 0 auto 1.2rem
+        }
+
+        @keyframes sp {
+            to {
+                transform: rotate(360deg)
+            }
+        }
+
+        .wm {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 9999;
+            opacity: .01;
+            background: repeating-linear-gradient(-45deg, transparent, transparent 120px, rgba(255, 255, 255, .02) 120px, rgba(255, 255, 255, .02) 121px)
+        }
+
+        @media(max-width: 640px) {
+            .crd {
+                padding: 2rem 1.3rem
+            }
+
+            .wo {
+                height: 110px
+            }
+
+            .rlb {
+                width: 34px;
+                height: 34px;
+                font-size: 14px
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div id="trail"></div>
+    <style>
+        #trail {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 10;
+        }
+
+        .sparkle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            border-radius: 50%;
+            background: white;
+            pointer-events: none;
+            opacity: 0;
+            animation: sparkleAnim 0.8s ease-out forwards;
+        }
+
+        @keyframes sparkleAnim {
+            0% {
+                transform: scale(0);
+                opacity: 0;
+            }
+
+            50% {
+                opacity: 0.8;
+            }
+
+            100% {
+                transform: scale(1.5) translate(var(--tx), var(--ty));
+                opacity: 0;
+            }
+        }
+    </style>
+    <div class="wm"></div>
+
+    <!-- ল্যান্ডিং -->
+    <div id="landPg" class="pg on">
+        <canvas id="landCv" class="bgcv"></canvas>
+        <div class="gl" style="width:280px;height:280px;background:var(--acc);top:20%;left:10%"></div>
+        <div class="gl" style="width:200px;height:200px;background:var(--acc2);bottom:15%;right:10%"></div>
+        <div class="crd" id="landCrd">
+            <h1
+                style="font-family:'Cormorant Garamond',serif;font-weight:700;font-size:1.8rem;color:var(--acc);margin-bottom:.3rem">
+                Secret Message</h1>
+            <p style="color:var(--dim);font-size:.82rem;font-weight:300;margin-bottom:.5rem">একটি গোপন বার্তা অপেক্ষা
+                করছে</p>
+            <div class="dv"></div>
+            <input type="password" id="pIn" class="ipt" placeholder="পাসওয়ার্ড" autocomplete="off">
+            <button id="lBtn" class="bt">প্রবেশ করুন</button>
+            <p id="eTxt" class="er"></p>
+        </div>
+    </div>
+
+    <!-- সিন্থি মেসেজ -->
+    <div id="sPg" class="pg">
+        <div class="vign"></div>
+        <canvas id="sCv" class="bgcv"></canvas>
+        <div class="gl" style="width:400px;height:400px;background:#e8a0b4;top:18%;left:10%;opacity:.04"></div>
+        <div class="gl" style="width:300px;height:300px;background:#b498c9;bottom:12%;right:8%;opacity:.04"></div>
+        <div class="s-orb s-orb1"></div>
+        <div class="s-orb s-orb2"></div>
+        <div class="s-orb s-orb3"></div>
+        <button id="sReload" class="rlb v" title="রিলোড">⟲</button>
+        <div style="position:relative;z-index:2;text-align:center;width:100%;padding:0 1.2rem">
+            <h1 class="s-ttl">Message for Sinthi</h1>
+            <div class="s-div">
+                <span></span>
+                <i>♡</i>
+                <span></span>
+            </div>
+            <div class="wo" id="sO" style="max-width:760px">
+                <div class="wi s-txt" id="sI"></div>
+            </div>
+            <div id="sSig" class="s-sig"
+                style="margin-top:1.5rem; opacity:0; transition:opacity 2.5s ease; font-family:'Cormorant Garamond', serif; font-style:italic; line-height:1.8; color:var(--acc)">
+                <div style="font-size:1.15rem; margin-bottom:0.4rem">— চিরকাল তোমার, রেজাউল</div>
+            </div>
+            <div class="em s-em" id="sE">ভালোবাসি তোমায়, সিন্থি ♡</div>
+        </div>
+        <div id="sFooter"
+            style="position:fixed; bottom:2rem; left:0; right:0; text-align:center; opacity:0; transition:opacity 3s ease; z-index:10">
+            <a href="https://imrezaulkrm.github.io/love/our-universe.html" target="_blank"
+                style="text-decoration:none; color:var(--acc); font-family:'Cormorant Garamond', serif; font-size:0.95rem; letter-spacing:0.05em; opacity:0.9">
+                <div style="font-size:0.75rem; margin-top:0.6rem; opacity:0.9; letter-spacing:0.15em; animation: blink 5s ease-in-out infinite">
+                    CLICK AND GO <br> ↓
+                </div>
+                <h3 style="font-weight: 400; margin-top: 0.3rem;">Welcome to our universe ♡</h3>
+            </a>
+        </div>
+        <div class="pt"
+            style="height:2px; background:rgba(255,255,255,0.03); position:absolute; bottom:0; left:0; right:0">
+            <div class="pf" id="sB"
+                style="width:0; height:100%; transition:width 0.4s ease; box-shadow:0 0 10px var(--acc)"></div>
+        </div>
+        <div class="sh" id="sH"><span>স্ক্রল করুন</span>
+            <div class="sa"></div>
+        </div>
+        <audio id="sAu" loop preload="auto">
+            <source src="music/sinthi.mp3" type="audio/mpeg">
+        </audio>
+    </div>
+
+    <!-- ভিজিটর নাম ইনপুট -->
+    <div id="vIPg" class="pg vt">
+        <canvas id="vICv" class="bgcv"></canvas>
+        <div class="gl" style="width:260px;height:260px;background:var(--acc);top:25%;left:12%;opacity:.07"></div>
+        <div class="gl" style="width:180px;height:180px;background:var(--acc2);bottom:20%;right:15%;opacity:.07"></div>
+        <div class="crd" id="vICrd">
+            <h1
+                style="font-family:'Cormorant Garamond',serif;font-weight:700;font-size:1.6rem;color:var(--acc);margin-bottom:.3rem">
+                আপনি কে?</h1>
+            <p style="color:var(--dim);font-size:.82rem;font-weight:300;margin-bottom:.5rem">আপনার নাম লিখুন</p>
+            <div class="dv"></div>
+            <input type="text" id="nIn" class="ipt" placeholder="আপনার নাম" autocomplete="off">
+            <button id="nBtn" class="bt">বার্তা দেখুন</button>
+            <p id="nEr" class="er"></p>
+        </div>
+    </div>
+
+    <!-- লোডিং -->
+    <div id="ldPg" class="pg vt">
+        <div style="text-align:center; position:relative; z-index:2">
+            <div class="ld-ring"
+                style="width:50px; height:50px; border:2px solid rgba(var(--acc-rgb), 0.1); border-top-color:var(--acc); border-radius:50%; animation:ringSpin 1s linear infinite; margin:0 auto 1.5rem">
+            </div>
+            <p style="color:var(--text); font-size:1.1rem; font-weight:300; letter-spacing:0.05em; animation:pulseText 2s ease-in-out infinite"
+                id="ldT">অনুগ্রহ করে অপেক্ষা করুন...</p>
+        </div>
+    </div>
+
+    <style>
+        @keyframes ringSpin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        @keyframes pulseText {
+
+            0%,
+            100% {
+                opacity: 0.5;
+            }
+
+            50% {
+                opacity: 1;
+            }
+        }
+    </style>
+
+    <!-- ভিজিটর মেসেজ -->
+    <div id="vMPg" class="pg vt">
+        <canvas id="vMCv" class="bgcv"></canvas>
+        <div class="gl" style="width:340px;height:340px;background:var(--acc);top:22%;left:14%;opacity:.07"></div>
+        <div class="gl" style="width:260px;height:260px;background:var(--acc2);bottom:16%;right:10%;opacity:.07"></div>
+        <button id="vReload" class="rlb v" title="রিলোড">⟲</button>
+        <div style="position:relative;z-index:2;text-align:center;width:100%;padding:0 1.5rem">
+            <h1 id="vTi" class="v-ttl"
+                style="font-family:'Cormorant Garamond',serif; font-size:1.8rem; letter-spacing:0.1em; color:var(--acc); margin-bottom:0.5rem">
+                Personal Message</h1>
+            <div
+                style="margin:0 auto 1.5rem; height:1px; width:60px; background:linear-gradient(90deg,transparent,var(--acc),transparent); border-radius:1px">
+            </div>
+            <div class="wo" id="vO">
+                <div class="wi v-txt" id="vI"></div>
+            </div>
+            <div class="em" id="vE"></div>
+        </div>
+        <div class="sh" id="vH"><span>স্ক্রল করুন</span>
+            <div class="sa"></div>
+        </div>
+        <div class="pt"
+            style="height:2px; background:rgba(255,255,255,0.03); position:absolute; bottom:0; left:0; right:0">
+            <div class="pf" id="vB"
+                style="width:0; height:100%; transition:width 0.4s ease; box-shadow:0 0 10px var(--acc)"></div>
+        </div>
+        <audio id="vAu" loop preload="auto">
+            <source src="music/visitor.mp3" type="audio/mpeg">
+        </audio>
+    </div>
+
+    <script>
+        const PASSWORD = "sinthi";
+        const SINTHI_MSG = `সিন্থি, এই বার্তা লেখার সময় আমার মনে অনেক কথা এসেছে যেগুলো সবসময় মুখে বলা হয় না। জীবনে অনেক মানুষ আসে যায়, কিন্তু কেউ কেউ থাকে শুধু তাদের উপস্থিতিতে সবকিছু অন্যরকম অনুভব হয়। তুমি সেই অনুভূতি নিয়ে এসেছ আমার জীবনে। আমরা একসাথে যত দিন কাটিয়েছি, প্রতিটি দিনে শিখেছি কিভাবে আরও ভালো হওয়া যায়। তোমার দৃষ্টিভঙ্গি, তোমার শক্তি, তোমার সাহস - এগুলো আমাকে প্রতিদিন অনুপ্রাণিত করে। সিন্থি, তুমি একটি সম্পূর্ণ মানুষ নিজেই, তোমার স্বপ্ন, তোমার লক্ষ্য, তোমার সম্ভাবনা - এই সবগুলো অসাধারণ। আমি গর্বিত যে আমি তোমার এই যাত্রার অংশ হতে পেরেছি। জীবন কঠিন হবে, কিন্তু যখন দুজন একসাথে থাকে তখন কোনো চ্যালেঞ্জই বড় নয়। আমি প্রতিশ্রুতি দিচ্ছি যে আমি সবসময় তোমার পাশে থাকবো - যখন সবকিছু ভালো থাকবে এবং যখন ঝড় আসবে উভয় সময়ে। তোমার স্বপ্ন বাস্তবায়নে আমি সর্বদা তোমার সহযোগী হতে চাই। এই যাত্রা চিরস্থায়ী হোক, এই ভালোবাসা চিরকাল থাক। সিন্থি, তুমি শুধু আমার সঙ্গী নও, তুমি আমার অনুপ্রেরণা। ভবিষ্যৎ উজ্জ্বল, কারণ তুমি আছ।`;
+
+        const toBn = n => String(n).split('').map(c => '০१२३४५६७८९'[+c] || c).join('');
+
+        function showPg(id) {
+            document.querySelectorAll('.pg').forEach(p => p.classList.remove('on'));
+            document.getElementById(id).classList.add('on');
+        }
+
+        function shake(el) {
+            el.style.animation = 'none'; void el.offsetHeight;
+            el.style.animation = 'shk .4s ease';
+        }
+
+        const pState = {};
+        function startP(key, cvId, colors, n, isPremium = false) {
+            if (pState[key]) return;
+            pState[key] = true;
+            const cv = document.getElementById(cvId);
+            const cx = cv.getContext('2d');
+            const P = [];
+            function sz() { cv.width = innerWidth; cv.height = innerHeight }
+            sz(); addEventListener('resize', sz);
+            for (let i = 0; i < n; i++) P.push(mkP(colors));
+
+            function mkP(c) {
+                const isHeart = isPremium && Math.random() < 0.1;
+                return {
+                    x: Math.random() * cv.width, y: Math.random() * cv.height,
+                    r: Math.random() * 2.5 + .3, vx: (Math.random() - .5) * .2, vy: -Math.random() * .4 - .05,
+                    o: Math.random() * .45 + .05, fd: Math.random() * .003 + .001, fi: true,
+                    c: c[Math.random() * c.length | 0], h: isHeart
+                };
+            }
+
+            function drawHeart(x, y, s, opacity) {
+                cx.beginPath();
+                cx.moveTo(x, y - s * 0.2);
+                cx.bezierCurveTo(x - s * 0.5, y - s * 0.7, x - s, y - s * 0.2, x, y + s * 0.5);
+                cx.bezierCurveTo(x + s, y - s * 0.2, x + s * 0.5, y - s * 0.7, x, y - s * 0.2);
+                cx.closePath();
+                cx.fillStyle = `rgba(${colors[0]},${opacity})`;
+                cx.fill();
+            }
+
+            (function draw() {
+                cx.clearRect(0, 0, cv.width, cv.height);
+                P.forEach(p => {
+                    p.x += p.vx; p.y += p.vy;
+                    if (p.fi) { p.o += p.fd; if (p.o >= .5) p.fi = false; }
+                    else { p.o -= p.fd; if (p.o <= 0) Object.assign(p, mkP(colors), { y: cv.height + 10 }); }
+                    if (p.y < -10 || p.x < -10 || p.x > cv.width + 10) Object.assign(p, mkP(colors), { y: cv.height + 10 });
+
+                    if (p.h) {
+                        drawHeart(p.x, p.y, Math.max(.1, p.r * 1.5), p.o);
+                    } else {
+                        const r = Math.max(.1, p.r);
+                        cx.beginPath(); cx.arc(p.x, p.y, r, 0, 6.283);
+                        cx.fillStyle = `rgba(${p.c},${p.o})`; cx.fill();
+                        const g = cx.createRadialGradient(p.x, p.y, 0, p.x, p.y, Math.max(.1, r * 3.5));
+                        g.addColorStop(0, `rgba(${p.c},${p.o * .15})`);
+                        g.addColorStop(1, `rgba(${p.c},0)`);
+                        cx.beginPath(); cx.arc(p.x, p.y, Math.max(.1, r * 3.5), 0, 6.283);
+                        cx.fillStyle = g; cx.fill();
+                    }
+                });
+                requestAnimationFrame(draw);
+            })();
+        }
+
+        class WordReveal {
+            constructor(oId, iId, bId, hId, eId) {
+                this.o = document.getElementById(oId);
+                this.i = document.getElementById(iId);
+                this.b = document.getElementById(bId);
+                this.h = document.getElementById(hId);
+                this.e = document.getElementById(eId);
+                this.words = []; this.shown = 0; this.busy = false; this.hOn = true; this.fin = false;
+                this.scrollSpeed = 12;
+            }
+            init(text) {
+                this.words = text.split(/\s+/).filter(w => w);
+                this.shown = 0; this.fin = false; this.hOn = true;
+                this.i.innerHTML = ''; this.i.style.transform = 'translateY(0)';
+                this.h.classList.remove('g'); this.e.classList.remove('i');
+            }
+            add(n) {
+                if (this.busy || this.fin) return false;
+                this.busy = true;
+                const cnt = Math.min(n, this.words.length - this.shown);
+                if (cnt <= 0) { this.busy = false; this.done(); return false; }
+                for (let i = 0; i < cnt; i++) {
+                    const s = document.createElement('span');
+                    s.className = 'ws';
+                    s.textContent = this.words[this.shown] + ' ';
+                    s.style.animationDelay = (i * 55) + 'ms';
+                    this.i.appendChild(s); this.shown++;
+                }
+                if (this.hOn && this.shown > 4) { this.h.classList.add('g'); this.hOn = false; }
+                this.adj();
+                if (this.shown >= this.words.length) this.done();
+                setTimeout(() => this.busy = false, cnt * 55 + 200);
+                return true;
+            }
+            rem(n) {
+                if (this.busy || this.shown <= 0) return;
+                this.busy = true;
+                const cnt = Math.min(n, this.shown);
+                for (let i = 0; i < cnt; i++) {
+                    if (this.i.lastChild) this.i.removeChild(this.i.lastChild);
+                    this.shown--;
+                }
+                this.e.classList.remove('i'); this.fin = false;
+                this.adj();
+                setTimeout(() => this.busy = false, 180);
+            }
+            adj() {
+                const ih = this.i.scrollHeight, oh = this.o.clientHeight;
+                this.i.style.transform = ih > oh ? `translateY(-${ih - oh}px)` : 'translateY(0)';
+                if (this.b) this.b.style.width = (this.shown / this.words.length * 100) + '%';
+            }
+            done() {
+                if (!this.fin) {
+                    this.fin = true;
+                    setTimeout(() => {
+                        const cur = document.createElement('span');
+                        cur.className = 'cur';
+                        cur.innerHTML = '​';
+                        this.i.appendChild(cur);
+                        this.e.classList.add('i');
+                        const sig = document.getElementById('sSig');
+                        const foot = document.getElementById('sFooter');
+                        if (sig && this.e.id === 'sE') sig.style.opacity = '1';
+                        if (foot && this.e.id === 'sE') foot.style.opacity = '1';
+                    }, 600);
+                }
+            }
+        }
+
+        function playMu(audioId, type) {
+            const au = document.getElementById(audioId);
+            au.volume = 0.35;
+            const p = au.play();
+            if (p && p.catch) p.catch(() => fallbackMu(type));
+        }
+
+        function fallbackMu(type) {
+            try {
+                const ac = new (window.AudioContext || window.webkitAudioContext)();
+                const m = ac.createGain(); m.gain.value = .07; m.connect(ac.destination);
+                const d = ac.createDelay(); d.delayTime.value = .3;
+                const f = ac.createGain(); f.gain.value = .3;
+                const l = ac.createBiquadFilter(); l.type = 'lowpass'; l.frequency.value = 1600;
+                d.connect(l); l.connect(f); f.connect(d); d.connect(m);
+                const warm = [[261.63, 392], [329.63, 493.88], [293.66, 440], [349.23, 523.25]];
+                const cool = [[220, 329.63], [261.63, 392], [246.94, 349.23], [293.66, 440]];
+                const pat = type === 'warm' ? warm : cool;
+                let t = ac.currentTime + .2;
+                for (let i = 0; i < 200; i++) {
+                    pat[i % pat.length].forEach(freq => {
+                        const o = ac.createOscillator(); o.type = 'sine'; o.frequency.value = freq;
+                        const g = ac.createGain();
+                        g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(.025, t + .6);
+                        g.gain.linearRampToValueAtTime(0, t + 2.6);
+                        o.connect(g); g.connect(m); g.connect(d); o.start(t); o.stop(t + 2.8);
+                    });
+                    t += 2.3;
+                }
+            } catch (e) { }
+        }
+
+        async function aiMsg(name) {
+            // Creative prompt for deep, human-like Bengali prose
+            const promptStr = `একটি গভীর আবেগপ্রবণ বাংলা গদ্য রচনা লিখো। বিষয়: মানুষের অস্তিত্বের গভীরতা ও সময়ের নিষ্ঠুরতা। "${name}" দিয়ে শুরু করবে। কমপক্ষে ৩৫০ শব্দ। কোনো উপদেশ দেবে না, শুধু কাব্যিক ভাষায় জীবনের সত্য বলবে। এটি কোনো এআই এর লেখা মনে হওয়া চলবে না। কোনো ইংরেজি শব্দ নয়।`;
+            const prompt = encodeURIComponent(promptStr);
+
+            try {
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 15000); 
+
+                // Fetching from pollinations with fallback and random seed
+                const url = `https://text.pollinations.ai/${prompt}?seed=${Math.floor(Math.random()*999999)}`;
+                console.log("Fetching AI message for:", name);
+
+                const res = await fetch(url, {
+                    method: 'GET',
+                    headers: { 'Accept': 'text/plain' },
+                    signal: controller.signal
+                });
+
+                clearTimeout(timeoutId);
+                if (!res.ok) throw new Error(`HTTP Error: ${res.status}`);
+                
+                let txt = await res.text();
+                txt = txt.replace(/[#*_`~\[\]()]/g, '').replace(/\n+/g, ' ').trim();
+                
+                if (txt.length < 200 || txt.toLowerCase().includes("error") || txt.toLowerCase().includes("sorry")) {
+                    console.warn("AI returned low quality or error text, using template.");
+                    return tplMsg(name);
+                }
+                
+                console.log("AI message generated successfully.");
+                return txt;
+            } catch (e) {
+                console.error("AI Generation Failed:", e.message);
+                return tplMsg(name);
+            }
+        }
+
+        function tplMsg(name) {
+            return `${name}, এই লেখাটা তোমার জন্য না, ঠিক করে বললে এটা কারো জন্যই না। এটা একটা সত্য যা আমি অনেকদিন ধরে অনুভব করছি কিন্তু কাউকে বলার সাহস পাচ্ছিলাম না। মানুষ সারাজীবন একটা অসমাপ্ত গল্পের মতো বাঁচে। জন্মের পর থেকেই আমরা একটা ছুঁয়ে যাওয়ার অপেক্ষায় থাকি, কিন্তু যখন সত্যিই কাউকে ছুঁয়ে দেখি, তখন বুঝি সেই ছোঁয়াটাও চিরকাল থাকে না। সময় একটা নিষ্ঠুর জিনিস। সে কাউকে থামায় না, কারো জন্য দ্রুত চলে না। নিজের গতিতে চলে, নিজের নিয়মে। আমরা সময়ের সাথে দৌড়াই, কিন্তু শেষে হেরে যাই। কারণ সময় কখনো দৌড়ায় না, সে শুধু চলে। রাতের বেলা একা বসে থাকলে কতগুলো কথা মনে আসে যা দিনের বেলা ভুলে থাকি। সেই কথাগুলো আসলে আমাদের সত্যিকারের নিজে। দিনের আলোয় আমরা সবাই একটা মুখোশ পরে থাকি — সমাজের জন্য, মানুষের জন্য, নিজের আত্মসম্মানের জন্য। কিন্তু রাত যখন নেমে আসে, সেই মুখোশটা আস্তে আস্তে খসে পড়ে। তখন যে মানুষটা দেখি সে অনেক ক্লান্ত, অনেক একা। মানুষ বলে একা থাকা খারাপ, কিন্তু একাকীত্ব মানুষের সবচেয়ে সৎ সঙ্গী। কারণ একাকীত্ব কখনো মিথ্যা বলে না, কখনো প্রতারণা করে না। সে যেটা আছে সেটাই দেখায় — কোনো আড়াল ছাড়া। জীবনটা খুব ছোট। এই ছোট জীবনে আমরা অনেক কিছু চাই, অনেক কিছু পাই, অনেক কিছু হারাই। কিন্তু শেষে যা থাকে সেটা হলো অনুভূতিগুলো — কিছু সুখের স্মৃতি, কিছু ব্যথার অনুভূতি, কিছু অপূর্ণতা। এই অপূর্ণতাগুলোই আসলে আমাদের পরিচয়। পূর্ণতা কারো নেই, ছিল না, থাকবেও না। আর এই অপূর্ণতা নিয়ে বাঁচাটাই হলো জীবনের সবচেয়ে কঠিন কাজ।`;
+        }
+
+        startP('land', 'landCv', ['232,160,180', '199,138,170', '166,148,138'], 60, false);
+        const sR = new WordReveal('sO', 'sI', 'sB', 'sH', 'sE');
+        const vR = new WordReveal('vO', 'vI', 'vB', 'vH', 'vE');
+
+        const $p = document.getElementById('pIn');
+        const $e = document.getElementById('eTxt');
+        const $c = document.getElementById('landCrd');
+
+        document.getElementById('lBtn').addEventListener('click', doLogin);
+        $p.addEventListener('keydown', e => { if (e.key === 'Enter') doLogin(); });
+
+        function doLogin() {
+            if ($p.value.trim() === PASSWORD) {
+                $e.textContent = '';
+                localStorage.removeItem('visitorName');
+                showPg('sPg');
+                setTimeout(() => {
+                    sR.init(SINTHI_MSG);
+                    startP('s', 'sCv', ['232,160,180', '199,138,170', '143,177,128'], 70, true);
+                    playMu('sAu', 'warm');
+                }, 100);
+            } else {
+                const savedName = localStorage.getItem('visitorName');
+                if (savedName) {
+                    $e.textContent = '';
+                    showPg('ldPg');
+                    setTimeout(() => loadVisitorMessage(savedName), 400);
+                } else {
+                    $e.textContent = 'পাসওয়ার্ড ভুল';
+                    shake($c);
+                    setTimeout(() => {
+                        showPg('vIPg');
+                        startP('vI', 'vICv', ['143,177,128', '109,138,96', '166,148,138'], 50, false);
+                        document.getElementById('nIn').focus();
+                    }, 1000);
+                }
+            }
+        }
+
+        document.getElementById('nBtn').addEventListener('click', doName);
+        document.getElementById('nIn').addEventListener('keydown', e => { if (e.key === 'Enter') doName(); });
+
+        async function doName() {
+            const name = document.getElementById('nIn').value.trim();
+            if (!name) { document.getElementById('nEr').textContent = 'নাম দিন'; return; }
+            document.getElementById('nEr').textContent = '';
+            localStorage.setItem('visitorName', name);
+            showPg('ldPg');
+            animateLoading();
+            const msg = await aiMsg(name);
+            displayVisitorMessage(name, msg);
+        }
+
+        async function loadVisitorMessage(name) {
+            animateLoading();
+            const msg = await aiMsg(name);
+            displayVisitorMessage(name, msg);
+        }
+
+        function animateLoading() {
+            let dots = 0;
+            const ldT = document.getElementById('ldT');
+            const iv = setInterval(() => {
+                dots = (dots + 1) % 4;
+                ldT.textContent = 'বার্তা তৈরি হচ্ছে' + '.'.repeat(dots);
+            }, 500);
+            setTimeout(() => clearInterval(iv), 8000);
+        }
+
+        function displayVisitorMessage(name, msg) {
+            document.getElementById('vTi').textContent = name + '-র জন্য বার্তা';
+            document.getElementById('vE').textContent = 'ভালো থেকো, ' + name;
+            showPg('vMPg');
+            setTimeout(() => {
+                vR.init(msg);
+                startP('vM', 'vMCv', ['34,139,34', '85,107,47', '0,100,0'], 70, true);
+                playMu('vAu', 'cool');
+            }, 100);
+        }
+
+        document.getElementById('sReload').addEventListener('click', () => location.reload());
+        document.getElementById('vReload').addEventListener('click', () => location.reload());
+
+        function scrollHandle(dir) {
+            if (document.getElementById('sPg').classList.contains('on')) sR.step(dir);
+            else if (document.getElementById('vMPg').classList.contains('on')) vR.step(dir);
+        }
+
+        WordReveal.prototype.step = function (dir) {
+            if (dir > 0 && this.shown < this.words.length) this.add(this.scrollSpeed);
+            else if (dir < 0 && this.shown > 0) this.rem(this.scrollSpeed);
+        };
+
+        function isMsgPg() {
+            return document.getElementById('sPg').classList.contains('on') || document.getElementById('vMPg').classList.contains('on');
+        }
+
+        document.addEventListener('wheel', e => {
+            if (!isMsgPg()) return;
+            e.preventDefault();
+            if (Math.abs(e.deltaY) > 12) scrollHandle(e.deltaY > 0 ? 1 : -1);
+        }, { passive: false });
+
+        let tY = 0, tT = 0;
+        document.addEventListener('touchstart', e => { tY = e.touches[0].clientY; tT = Date.now(); }, { passive: true });
+        document.addEventListener('touchmove', e => { if (isMsgPg()) e.preventDefault(); }, { passive: false });
+        document.addEventListener('touchend', e => {
+            if (!isMsgPg()) return;
+            const dy = tY - e.changedTouches[0].clientY;
+            if (Math.abs(dy) > 28 && Date.now() - tT < 600) scrollHandle(dy > 0 ? 1 : -1);
+        }, { passive: true });
+
+        document.addEventListener('keydown', e => {
+            if (!isMsgPg()) return;
+            if (e.key === 'ArrowDown' || e.key === ' ') { e.preventDefault(); scrollHandle(1); }
+            else if (e.key === 'ArrowUp') { e.preventDefault(); scrollHandle(-1); }
+        });
+
+        document.addEventListener('contextmenu', e => e.preventDefault());
+        document.addEventListener('copy', e => e.preventDefault());
+        document.addEventListener('cut', e => e.preventDefault());
+        document.addEventListener('paste', e => e.preventDefault());
+        document.addEventListener('selectstart', e => e.preventDefault());
+        document.addEventListener('dragstart', e => e.preventDefault());
+        document.addEventListener('keydown', e => {
+            if ((e.ctrlKey || e.metaKey) && 'cusp'.includes(e.key.toLowerCase())) e.preventDefault();
+            if (e.key === 'F12') e.preventDefault();
+            if ((e.ctrlKey || e.metaKey) && e.shiftKey && 'ijc'.includes(e.key.toLowerCase())) e.preventDefault();
+            if (e.key === 'PrintScreen') {
+                e.preventDefault();
+                document.body.style.filter = 'brightness(0)';
+                setTimeout(() => document.body.style.filter = '', 200);
+            }
+        });
+
+        function refreshParticles(key) {
+            delete pState[key];
+        }
+
+        document.getElementById('sReload').addEventListener('click', () => {
+            refreshParticles('s');
+            showPg('landPg');
+            $p.value = '';
+            setTimeout(() => $p.focus(), 100);
+        });
+
+        document.getElementById('vReload').addEventListener('click', () => {
+            localStorage.removeItem('visitorName');
+            location.reload();
+        });
+
+        const $trail = document.getElementById('trail');
+        let lastSparkle = 0;
+        document.addEventListener('mousemove', e => {
+            if (!document.getElementById('sPg').classList.contains('on')) return;
+            const now = Date.now();
+            if (now - lastSparkle < 50) return;
+            lastSparkle = now;
+
+            const s = document.createElement('div');
+            s.className = 'sparkle';
+            s.style.left = e.clientX + 'px';
+            s.style.top = e.clientY + 'px';
+            const tx = (Math.random() - 0.5) * 100;
+            const ty = (Math.random() - 0.5) * 100;
+            s.style.setProperty('--tx', `${tx}px`);
+            s.style.setProperty('--ty', `${ty}px`);
+            s.style.background = Math.random() > 0.5 ? 'var(--acc)' : 'white';
+            $trail.appendChild(s);
+            setTimeout(() => s.remove(), 800);
+        });
+
+        $p.focus();
+    </script>
+</body>
+
+</html>
