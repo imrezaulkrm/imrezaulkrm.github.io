@@ -320,115 +320,22 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     })();
 
+    // === ENHANCED PHOTO GALLERY — Frame-persistent, Folder-discovery, Lightbox ===
     // === PHOTO GALLERY ===
-    // (function initPhotoGallery() {
-    //     const gallery = document.getElementById('photo-wall');
-    //     if (!gallery) return;
-
-    //     // Photo manifest — loads from assets/photos folder
-    //     // Each entry: { src, aspect: 'landscape'|'portrait'|'square' }
-    //     // In production, scan folder server-side; here we use Unsplash placeholders
-    //     // and determine their aspect ratios to assign correct CSS frames.
-    //     const photos = [
-    //         { src: 'images/photo1.png', aspect: 'landscape' },
-    //         { src: 'images/photo2.png', aspect: 'square' },
-    //         { src: 'images/photo3.png', aspect: 'portrait' },
-    //         { src: 'images/photo4.png', aspect: 'landscape' },
-    //         { src: 'https://images.unsplash.com/photo-1475274047050-1d0c0975c63e?w=600&h=900&fit=crop', aspect: 'portrait' },
-    //         { src: 'https://images.unsplash.com/photo-1431890713044-d71e360a8a0a?w=500&h=500&fit=crop', aspect: 'square' },
-    //         { src: 'https://images.unsplash.com/photo-1506157786151-b8491531f063?w=800&h=500&fit=crop', aspect: 'landscape' },
-    //         { src: 'https://images.unsplash.com/photo-1501594907352-04cda38ebc29?w=600&h=900&fit=crop', aspect: 'portrait' },
-    //         { src: 'https://images.unsplash.com/photo-1511379938547-c1f69b13d835?w=500&h=500&fit=crop', aspect: 'square' },
-    //         { src: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=800&h=500&fit=crop', aspect: 'landscape' },
-    //         { src: 'https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?w=600&h=900&fit=crop', aspect: 'portrait' },
-    //         { src: 'https://images.unsplash.com/photo-1426604966848-d7adac402bff?w=500&h=500&fit=crop', aspect: 'square' },
-    //     ];
-
-    //     // Fisher-Yates shuffle
-    //     function shuffle(arr) {
-    //         const a = [...arr];
-    //         for (let i = a.length - 1; i > 0; i--) {
-    //             const j = Math.floor(Math.random() * (i + 1));
-    //             [a[i], a[j]] = [a[j], a[i]];
-    //         }
-    //         return a;
-    //     }
-
-    //     // To load from local folder: replace photos[] with dynamic list
-    //     // e.g., via fetch('/api/photos') or a pre-generated manifest.js
-    //     // Images will auto-detect aspect and fit correct frame via object-fit
-
-    //     let currentBatch = [];
-    //     const BATCH_SIZE = 12;
-
-    //     function renderGallery(photoList) {
-    //         gallery.innerHTML = '';
-    //         photoList.forEach((photo, index) => {
-    //             const item = document.createElement('div');
-    //             item.className = 'photo-item';
-    //             item.setAttribute('data-aspect', photo.aspect);
-
-    //             const img = document.createElement('img');
-    //             img.src = photo.src;
-    //             img.alt = `Photography ${index + 1}`;
-    //             img.loading = 'lazy';
-    //             // Ensure landscape images fill landscape frames, portrait fills portrait frames
-    //             img.style.objectPosition = 'center center';
-
-    //             item.appendChild(img);
-    //             gallery.appendChild(item);
-    //         });
-    //     }
-
-    //     function loadNextBatch() {
-    //         // Pick a fresh unique set of photos, cycling through all
-    //         const shuffled = shuffle(photos);
-    //         currentBatch = shuffled.slice(0, BATCH_SIZE);
-    //         renderGallery(currentBatch);
-    //     }
-
-    //     // Initial load
-    //     loadNextBatch();
-
-    //     // Rotate every 8 seconds — picks a fresh shuffle so each visible set has unique pics
-    //     // and ensures no photo repeats within the same 12-slot display
-    //     setInterval(() => {
-    //         loadNextBatch();
-    //     }, 8000);
-
-    //     // To load from local folder (assets/photos/):
-    //     // Replace the photos[] array above with dynamically loaded paths.
-    //     // Example:
-    //     //   fetch('/assets/photos/manifest.json')
-    //     //     .then(r => r.json())
-    //     //     .then(list => { photos = list; loadNextBatch(); });
-    // })();
-    // === PHOTO GALLERY — FOLDER WISE ===
     (function initPhotoGallery() {
         var gallery = document.getElementById('photo-wall');
         if (!gallery) return;
 
-        // ============================================================
-        //  CONFIG — এখানে তোমার ফোল্ডারগুলোর নাম লেখো
-        //  name: গ্যালারিতে যে নামে দেখাবে
-        //  path: আসল ফোল্ডার পাথ (photos/ থেকে শুরু)
-        //  নতুন ফোল্ডার যোগ করতে শুধু এখানে একটা লাইন যোগ করো
-        // ============================================================
-        var FOLDERS = [
-            { name: 'Nature', path: 'photos/nature' },
-            { name: 'Street', path: 'photos/street' },
-            { name: 'Architecture', path: 'photos/architecture' },
-            { name: 'Portrait', path: 'photos/portrait' },
-            { name: 'Travel', path: 'photos/travel' }
-        ];
-
+        // ---- CONFIG ----
+        var FOLDER = 'photos';
+        var PREFIX = 'photo-';
         var MAX_IDX = 50;
         var EXTS = ['jpg', 'jpeg', 'png', 'webp'];
         var SWAP_MS = 8000;
         var LP_MS = 5000;
         var FADE_MS = 650;
         var COUNT = 12;
-        var CIRC = 2 * Math.PI * 26;
+        var CIRC = 2 * Math.PI * 26; // ring circumference
 
         // ---- STATE ----
         var allPhotos = [];
@@ -437,9 +344,7 @@ document.addEventListener('DOMContentLoaded', () => {
         var lbIdx = -1;
         var busy = false;
 
-        // ============================================================
-        //  BUILD LIGHTBOX
-        // ============================================================
+        // ---- BUILD LIGHTBOX ----
         var lbOverlay = document.createElement('div');
         lbOverlay.setAttribute('id', 'lb-overlay');
         lbOverlay.style.cssText = 'position:fixed;inset:0;z-index:10000;display:flex;align-items:center;justify-content:center;background:rgba(5,7,12,0.96);backdrop-filter:blur(30px);opacity:0;visibility:hidden;transition:opacity .45s ease,visibility .45s ease;';
@@ -455,19 +360,16 @@ document.addEventListener('DOMContentLoaded', () => {
             '<button id="lb-n" style="position:absolute;top:50%;right:-68px;transform:translateY(-50%);width:50px;height:50px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:50%;color:#a0aec0;cursor:pointer;font-size:1.6rem;display:flex;align-items:center;justify-content:center;transition:all .3s ease;backdrop-filter:blur(8px);">&#8250;</button>' +
             '<div style="position:absolute;bottom:-44px;left:0;right:0;display:flex;justify-content:space-between;align-items:center;">' +
             '<span id="lb-cnt" style="font-family:var(--font-mono);font-size:.8rem;color:#718096;background:rgba(255,255,255,.04);padding:6px 16px;border-radius:20px;border:1px solid rgba(255,255,255,.06);"></span>' +
-            '<span id="lb-cat" style="font-family:var(--font-mono);font-size:.75rem;color:#00d4ff;opacity:.7;"></span>' +
+            '<span style="font-family:var(--font-mono);font-size:.65rem;color:#718096;opacity:.4;">ESC close &bull; Arrows navigate</span>' +
             '</div>' +
             '</div>';
         document.body.appendChild(lbOverlay);
 
         var lbImg = document.getElementById('lb-img');
         var lbCnt = document.getElementById('lb-cnt');
-        var lbCat = document.getElementById('lb-cat');
-        var lbX = document.getElementById('lb-x');
-        var lbP = document.getElementById('lb-p');
-        var lbN = document.getElementById('lb-n');
+        var lbBox = document.getElementById('lb-box');
 
-        // Shutter
+        // Shutter flash element
         var shutter = document.createElement('div');
         shutter.style.cssText = 'position:fixed;inset:0;background:#fff;z-index:10001;pointer-events:none;opacity:0;';
         document.body.appendChild(shutter);
@@ -481,7 +383,11 @@ document.addEventListener('DOMContentLoaded', () => {
             setTimeout(function () { shutter.style.opacity = '0'; }, 120);
         }
 
-        // Lightbox hover effects
+        // Lightbox hover effects via JS (no CSS dependency)
+        var lbX = document.getElementById('lb-x');
+        var lbP = document.getElementById('lb-p');
+        var lbN = document.getElementById('lb-n');
+
         lbX.onmouseenter = function () { this.style.background = 'rgba(239,68,68,.15)'; this.style.borderColor = 'rgba(239,68,68,.4)'; this.style.color = '#ef4444'; this.style.transform = 'rotate(90deg) scale(1.1)'; };
         lbX.onmouseleave = function () { this.style.background = 'rgba(255,255,255,.06)'; this.style.borderColor = 'rgba(255,255,255,.12)'; this.style.color = '#a0aec0'; this.style.transform = ''; };
         lbP.onmouseenter = function () { this.style.background = 'rgba(0,212,255,.12)'; this.style.borderColor = 'rgba(0,212,255,.35)'; this.style.color = '#00d4ff'; };
@@ -494,11 +400,10 @@ document.addEventListener('DOMContentLoaded', () => {
             lbIdx = idx;
             fireShutter();
             lbImg.src = shown[idx].src;
-            lbImg.alt = shown[idx].cat;
+            lbImg.alt = shown[idx].name;
             lbImg.style.opacity = '1';
             lbImg.style.transform = '';
             lbCnt.textContent = (idx + 1) + ' / ' + COUNT;
-            lbCat.textContent = shown[idx].cat;
             lbOverlay.style.opacity = '1';
             lbOverlay.style.visibility = 'visible';
             document.body.style.overflow = 'hidden';
@@ -525,9 +430,8 @@ document.addEventListener('DOMContentLoaded', () => {
             setTimeout(function () {
                 lbIdx = ni;
                 lbImg.src = shown[ni].src;
-                lbImg.alt = shown[ni].cat;
+                lbImg.alt = shown[ni].name;
                 lbCnt.textContent = (ni + 1) + ' / ' + COUNT;
-                lbCat.textContent = shown[ni].cat;
                 lbImg.style.transform = '';
                 lbImg.style.opacity = '1';
             }, 260);
@@ -536,7 +440,9 @@ document.addEventListener('DOMContentLoaded', () => {
         lbX.onclick = closeLb;
         lbP.onclick = function () { navLb(-1); };
         lbN.onclick = function () { navLb(1); };
-        lbOverlay.addEventListener('click', function (e) { if (e.target === lbOverlay) closeLb(); });
+        lbOverlay.addEventListener('click', function (e) {
+            if (e.target === lbOverlay) closeLb();
+        });
         document.addEventListener('keydown', function (e) {
             if (lbOverlay.style.visibility !== 'visible') return;
             if (e.key === 'Escape') closeLb();
@@ -551,51 +457,49 @@ document.addEventListener('DOMContentLoaded', () => {
             if (Math.abs(d) > 60) navLb(d > 0 ? 1 : -1);
         }, { passive: true });
 
-        // ============================================================
-        //  FOLDER SCANNER — প্রতিটি ফোল্ডার থেকে ছবি খুঁজে বের করে
-        // ============================================================
+        // ---- PHOTO DISCOVERY ----
         function exists(url) {
-            return new Promise(function (res) {
+            return new Promise(function (resolve) {
                 var im = new Image();
-                im.onload = function () { res(true); };
-                im.onerror = function () { res(false); };
+                im.onload = function () { resolve(true); };
+                im.onerror = function () { resolve(false); };
                 im.src = url;
             });
         }
 
-        function scanFolder(folderObj) {
-            return new Promise(function (resolve) {
-                var found = [];
-                var misses = 0;
-                var n = 1;
+        function scanPhotos() {
+            var found = [];
+            var misses = 0;
+            var idx = 1;
 
-                function next() {
-                    if (n > MAX_IDX || (found.length > 0 && misses >= 5)) {
+            return new Promise(function (resolve) {
+                function checkNext() {
+                    if (idx > MAX_IDX || (found.length > 0 && misses >= 5)) {
                         resolve(found);
                         return;
                     }
 
-                    var num = n;
-                    n++;
-                    var ei = 0;
+                    var n = idx;
+                    idx++;
+                    var tried = 0;
 
                     function tryExt() {
-                        if (ei >= EXTS.length) {
+                        if (tried >= EXTS.length * 2) {
                             misses++;
-                            next();
+                            checkNext();
                             return;
                         }
-                        var url = folderObj.path + '/' + num + '.' + EXTS[ei];
-                        ei++;
+
+                        var ext = EXTS[tried % EXTS.length];
+                        var prefix = tried < EXTS.length ? PREFIX : '';
+                        var url = FOLDER + '/' + prefix + n + '.' + ext;
+                        tried++;
+
                         exists(url).then(function (ok) {
                             if (ok) {
-                                found.push({
-                                    src: url,
-                                    name: folderObj.name + ' — ' + num,
-                                    cat: folderObj.name
-                                });
+                                found.push({ src: url, name: 'Photo ' + n });
                                 misses = 0;
-                                next();
+                                checkNext();
                             } else {
                                 tryExt();
                             }
@@ -605,38 +509,23 @@ document.addEventListener('DOMContentLoaded', () => {
                     tryExt();
                 }
 
-                next();
+                checkNext();
             });
         }
 
-        async function scanAllFolders() {
-            var results = {};
-            var total = 0;
-
-            for (var i = 0; i < FOLDERS.length; i++) {
-                var f = FOLDERS[i];
-                var photos = await scanFolder(f);
-                results[f.name] = photos;
-                total += photos.length;
-            }
-
-            return { results: results, total: total };
-        }
-
-        // Fallback
         var fallbacks = [
-            { src: 'https://images.unsplash.com/photo-1475274047050-1d0c0975c63e?w=600&h=900&fit=crop', name: 'Mountain', cat: 'Nature' },
-            { src: 'https://images.unsplash.com/photo-1431890713044-d71e360a8a0a?w=500&h=500&fit=crop', name: 'Reflection', cat: 'Nature' },
-            { src: 'https://images.unsplash.com/photo-1506157786151-b8491531f063?w=800&h=500&fit=crop', name: 'Fields', cat: 'Nature' },
-            { src: 'https://images.unsplash.com/photo-1501594907352-04cda38ebc29?w=600&h=900&fit=crop', name: 'City', cat: 'Street' },
-            { src: 'https://images.unsplash.com/photo-1511379938547-c1f69b13d835?w=500&h=500&fit=crop', name: 'Pattern', cat: 'Architecture' },
-            { src: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=800&h=500&fit=crop', name: 'Clouds', cat: 'Nature' },
-            { src: 'https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?w=600&h=900&fit=crop', name: 'Forest', cat: 'Nature' },
-            { src: 'https://images.unsplash.com/photo-1426604966848-d7adac402bff?w=500&h=500&fit=crop', name: 'Silhouette', cat: 'Portrait' },
-            { src: 'https://images.unsplash.com/photo-1519681393784-d120267933ba?w=800&h=500&fit=crop', name: 'Stars', cat: 'Nature' },
-            { src: 'https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=800&h=500&fit=crop', name: 'Fog', cat: 'Nature' },
-            { src: 'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=800&h=500&fit=crop', name: 'Sunlight', cat: 'Nature' },
-            { src: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=800&h=500&fit=crop', name: 'Beach', cat: 'Travel' }
+            { src: 'https://images.unsplash.com/photo-1475274047050-1d0c0975c63e?w=600&h=900&fit=crop', name: 'Mountain' },
+            { src: 'https://images.unsplash.com/photo-1431890713044-d71e360a8a0a?w=500&h=500&fit=crop', name: 'Reflection' },
+            { src: 'https://images.unsplash.com/photo-1506157786151-b8491531f063?w=800&h=500&fit=crop', name: 'Fields' },
+            { src: 'https://images.unsplash.com/photo-1501594907352-04cda38ebc29?w=600&h=900&fit=crop', name: 'City' },
+            { src: 'https://images.unsplash.com/photo-1511379938547-c1f69b13d835?w=500&h=500&fit=crop', name: 'Pattern' },
+            { src: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=800&h=500&fit=crop', name: 'Clouds' },
+            { src: 'https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?w=600&h=900&fit=crop', name: 'Forest' },
+            { src: 'https://images.unsplash.com/photo-1426604966848-d7adac402bff?w=500&h=500&fit=crop', name: 'Silhouette' },
+            { src: 'https://images.unsplash.com/photo-1519681393784-d120267933ba?w=800&h=500&fit=crop', name: 'Stars' },
+            { src: 'https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=800&h=500&fit=crop', name: 'Fog' },
+            { src: 'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=800&h=500&fit=crop', name: 'Sunlight' },
+            { src: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=800&h=500&fit=crop', name: 'Beach' }
         ];
 
         function shuffle(a) {
@@ -656,9 +545,7 @@ document.addEventListener('DOMContentLoaded', () => {
             return shuffle(src).slice(0, n);
         }
 
-        // ============================================================
-        //  BUILD GRID — একবারই তৈরি হয়, আর কখনো বদলায় না
-        // ============================================================
+        // ---- BUILD GRID (once) ----
         function buildGrid() {
             gallery.innerHTML = '';
             frames = [];
@@ -668,23 +555,28 @@ document.addEventListener('DOMContentLoaded', () => {
                 f.className = 'photo-frame';
                 f.setAttribute('data-fi', i);
 
+                // skeleton
                 var sk = document.createElement('div');
                 sk.className = 'photo-skeleton';
                 f.appendChild(sk);
 
+                // img wrap
                 var wr = document.createElement('div');
                 wr.className = 'photo-img-wrap';
                 f.appendChild(wr);
 
+                // flash
                 var fl = document.createElement('div');
                 fl.className = 'swap-flash';
                 f.appendChild(fl);
 
+                // info
                 var inf = document.createElement('div');
                 inf.className = 'photo-info-hover';
-                inf.innerHTML = '<p class="info-title"></p><span class="info-meta"></span>';
+                inf.innerHTML = '<p class="info-title"></p><span class="info-meta">Photography</span>';
                 f.appendChild(inf);
 
+                // long press ring
                 var rn = document.createElement('div');
                 rn.className = 'long-press-ring';
                 rn.innerHTML = '<svg viewBox="0 0 60 60"><circle class="r-bg" cx="30" cy="30" r="26"/><circle class="r-fg" cx="30" cy="30" r="26" stroke-dasharray="' + CIRC + '" stroke-dashoffset="' + CIRC + '"/></svg>';
@@ -696,20 +588,20 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
 
-        // ============================================================
-        //  FRAME EVENTS — click, tilt, long-press
-        // ============================================================
+        // ---- FRAME EVENTS ----
         function wireFrame(f, idx, ring) {
             var rfg = ring.querySelector('.r-fg');
             var lpRAF = 0;
             var lpStart = 0;
             var wasLP = false;
 
+            // Click -> lightbox
             f.addEventListener('click', function () {
                 if (wasLP) { wasLP = false; return; }
                 if (shown[idx]) openLb(idx);
             });
 
+            // 3D tilt (desktop)
             f.addEventListener('mousemove', function (e) {
                 if (window.innerWidth < 769) return;
                 var r = f.getBoundingClientRect();
@@ -724,6 +616,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 f.style.transition = '';
             });
 
+            // Long press (mobile)
             f.addEventListener('touchstart', function () {
                 if (window.innerWidth >= 769) return;
                 wasLP = false;
@@ -757,9 +650,7 @@ document.addEventListener('DOMContentLoaded', () => {
             f.addEventListener('touchmove', stopLP, { passive: true });
         }
 
-        // ============================================================
-        //  LOAD IMAGE INTO FRAME — crossfade, frame থাকে শুধু pic বদলায়
-        // ============================================================
+        // ---- LOAD IMAGE INTO FRAME (crossfade, no rebuild) ----
         function loadInto(idx, photo) {
             var f = frames[idx];
             if (!f || !photo) return;
@@ -768,16 +659,15 @@ document.addEventListener('DOMContentLoaded', () => {
             var wr = f.querySelector('.photo-img-wrap');
             var sk = f.querySelector('.photo-skeleton');
             var fl = f.querySelector('.swap-flash');
+            f.querySelector('.info-title').textContent = photo.name || '';
 
-            // hover info তে category দেখাও
-            f.querySelector('.info-title').textContent = photo.cat || '';
-            f.querySelector('.info-meta').textContent = 'Photography';
-
+            // new image — absolute, on top, hidden
             var ni = document.createElement('img');
             ni.src = photo.src;
-            ni.alt = photo.cat || '';
+            ni.alt = photo.name || '';
             ni.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;opacity:0;z-index:1;transition:opacity ' + FADE_MS + 'ms ease;filter:brightness(0.82) saturate(0.8) contrast(1.05);';
 
+            // find old image (not the new one we just added)
             var old = wr.querySelector('img');
             var leaving = wr.querySelector('img[data-lv]');
             if (leaving) leaving.remove();
@@ -785,35 +675,43 @@ document.addEventListener('DOMContentLoaded', () => {
             wr.appendChild(ni);
 
             ni.onload = function () {
+                // hide skeleton
                 if (sk) sk.style.display = 'none';
 
-                requestAnimationFrame(function () { ni.style.opacity = '1'; });
+                // fade in new
+                requestAnimationFrame(function () {
+                    ni.style.opacity = '1';
+                });
 
+                // fade out old
                 if (old && old !== ni) {
                     old.setAttribute('data-lv', '1');
                     old.style.transition = 'opacity ' + FADE_MS + 'ms ease';
                     old.style.opacity = '0';
                     setTimeout(function () {
                         if (old.parentNode) old.remove();
+                        // clean new img — remove inline styles, let CSS take over
                         ni.removeAttribute('style');
                     }, FADE_MS + 50);
                 } else {
-                    setTimeout(function () { ni.removeAttribute('style'); }, FADE_MS + 50);
+                    setTimeout(function () {
+                        ni.removeAttribute('style');
+                    }, FADE_MS + 50);
                 }
 
+                // flash
                 fl.classList.remove('flash-on');
                 void fl.offsetWidth;
                 fl.classList.add('flash-on');
             };
 
             ni.onerror = function () {
+                // remove failed new img, keep old
                 if (ni.parentNode) ni.remove();
             };
         }
 
-        // ============================================================
-        //  SWAP — পুরো grid না নাড়িয়ে শুধু frame এর ভেতরের pic বদলায়
-        // ============================================================
+        // ---- SWAP ALL FRAMES ----
         function swapAll() {
             if (busy || allPhotos.length < COUNT) return;
             busy = true;
@@ -831,22 +729,20 @@ document.addEventListener('DOMContentLoaded', () => {
             setTimeout(function () { busy = false; }, delay + FADE_MS + 100);
         }
 
-        // ============================================================
-        //  SCROLL REVEAL
-        // ============================================================
+        // ---- SCROLL REVEAL ----
         var fObs = new IntersectionObserver(function (entries) {
             entries.forEach(function (e) {
                 if (e.isIntersecting) {
                     var i = parseInt(e.target.getAttribute('data-fi'));
-                    setTimeout(function () { e.target.classList.add('frame-visible'); }, i * 60);
+                    setTimeout(function () {
+                        e.target.classList.add('frame-visible');
+                    }, i * 60);
                     fObs.unobserve(e.target);
                 }
             });
         }, { threshold: 0.05, rootMargin: '0px 0px -30px 0px' });
 
-        // ============================================================
-        //  INIT — সব শুরু হয় এখান থেকে
-        // ============================================================
+        // ---- INIT ----
         (async function () {
             buildGrid();
             frames.forEach(function (f) { fObs.observe(f); });
@@ -854,43 +750,29 @@ document.addEventListener('DOMContentLoaded', () => {
             // Status bar
             var sb = document.createElement('div');
             sb.className = 'gallery-status-bar';
-            sb.innerHTML = '<div class="gallery-status-left"><span class="gallery-status-dot"></span><span class="gallery-status-text" id="gs-t">Scanning folders...</span></div><span class="gallery-status-right" id="gs-c">—</span>';
+            sb.innerHTML = '<div class="gallery-status-left"><span class="gallery-status-dot"></span><span class="gallery-status-text" id="gs-t">Scanning library...</span></div><span class="gallery-status-right" id="gs-c">—</span>';
             gallery.parentElement.insertBefore(sb, gallery);
 
             var gsT = document.getElementById('gs-t');
             var gsC = document.getElementById('gs-c');
 
-            // প্রতিটি ফোল্ডার স্ক্যান করো
-            var scan = await scanAllFolders();
+            var found = await scanPhotos();
 
-            // Status bar এ ফোল্ডার অনুযায়ী কাউন্ট দেখাও
-            var parts = [];
-            for (var fname in scan.results) {
-                if (scan.results[fname].length > 0) {
-                    parts.push(fname + ': ' + scan.results[fname].length);
-                }
-            }
-
-            if (scan.total === 0) {
-                // কোনো ফোল্ডারে ছবি না পাওয়া গেলে fallback
+            if (found.length === 0) {
                 allPhotos = fallbacks.slice();
                 gsT.textContent = 'Sample gallery';
-                gsC.textContent = allPhotos.length + ' photos';
             } else {
-                // সব ফোল্ডারের ছবি একত্রিত করো
-                for (var key in scan.results) {
-                    allPhotos = allPhotos.concat(scan.results[key]);
-                }
-                gsT.textContent = parts.join(' · ');
-                gsC.textContent = scan.total + ' photos';
+                allPhotos = found;
+                gsT.textContent = found.length + ' photos in library';
             }
+            gsC.textContent = allPhotos.length + ' photos';
 
-            // যদি ফ্রেমের চেয়ে কম ছবি থাকে, duplicate করো
+            // Fill if not enough
             while (allPhotos.length < COUNT) {
                 allPhotos.push(allPhotos[Math.floor(Math.random() * allPhotos.length)]);
             }
 
-            // প্রথম লোড — random selection
+            // Initial load
             var init = shuffle(allPhotos).slice(0, COUNT);
             for (var i = 0; i < COUNT; i++) {
                 (function (fi) {
@@ -898,13 +780,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 })(i);
             }
 
-            // পর্যায়ক্রমিক swap
+            // Periodic swap
             if (allPhotos.length >= COUNT) {
                 setInterval(swapAll, SWAP_MS);
             }
         })();
     })();
-
     // === CONTACT FORM ===
     (function initContactForm() {
         const contactForm = document.getElementById('contact-form');
