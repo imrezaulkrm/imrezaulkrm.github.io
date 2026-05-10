@@ -91,6 +91,48 @@ document.addEventListener('DOMContentLoaded', () => {
         updateActiveSection();
     })();
 
+    // === MOBILE NAVIGATION LOGIC ===
+    (function initMobileNav() {
+        const toggle = document.getElementById('mobile-nav-toggle');
+        const menu = document.getElementById('mobile-menu');
+        const links = document.querySelectorAll('.mobile-nav-link');
+
+        if (!toggle || !menu) return;
+
+        function toggleMenu() {
+            toggle.classList.toggle('open');
+            menu.classList.toggle('open');
+            document.body.style.overflow = menu.classList.contains('open') ? 'hidden' : '';
+        }
+
+        toggle.addEventListener('click', toggleMenu);
+        toggle.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            toggleMenu();
+        });
+
+        links.forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const targetId = link.getAttribute('href').substring(1);
+                const target = document.getElementById(targetId);
+                
+                toggleMenu();
+
+                if (target) {
+                    setTimeout(() => {
+                        const offset = 60; // scroll-margin-top
+                        const targetPosition = target.getBoundingClientRect().top + window.pageYOffset - offset;
+                        window.scrollTo({
+                            top: targetPosition,
+                            behavior: 'smooth'
+                        });
+                    }, 400); // Wait for menu close animation
+                }
+            });
+        });
+    })();
+
     // === INFRA SVG VISUALIZATION ===
     const svg = document.getElementById('infra-svg');
     const logsContainer = document.getElementById('terminal-logs');
@@ -288,10 +330,10 @@ document.addEventListener('DOMContentLoaded', () => {
         // In production, scan folder server-side; here we use Unsplash placeholders
         // and determine their aspect ratios to assign correct CSS frames.
         const photos = [
-            { src: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&h=500&fit=crop', aspect: 'landscape' },
-            { src: 'https://images.unsplash.com/photo-1433086720384-a1e5c6f62eae?w=600&h=900&fit=crop', aspect: 'portrait' },
-            { src: 'https://images.unsplash.com/photo-1501616666990-6ec4ee3f28d0?w=500&h=500&fit=crop', aspect: 'square' },
-            { src: 'https://images.unsplash.com/photo-1502920917128-1aa500764cbd?w=800&h=500&fit=crop', aspect: 'landscape' },
+            { src: 'images/photo1.png', aspect: 'landscape' },
+            { src: 'images/photo2.png', aspect: 'square' },
+            { src: 'images/photo3.png', aspect: 'portrait' },
+            { src: 'images/photo4.png', aspect: 'landscape' },
             { src: 'https://images.unsplash.com/photo-1475274047050-1d0c0975c63e?w=600&h=900&fit=crop', aspect: 'portrait' },
             { src: 'https://images.unsplash.com/photo-1431890713044-d71e360a8a0a?w=500&h=500&fit=crop', aspect: 'square' },
             { src: 'https://images.unsplash.com/photo-1506157786151-b8491531f063?w=800&h=500&fit=crop', aspect: 'landscape' },

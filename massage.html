@@ -692,18 +692,60 @@
 
         @media(max-width: 640px) {
             .crd {
-                padding: 2rem 1.3rem
+                padding: 2.2rem 1.5rem;
+                border-radius: 1.2rem;
             }
 
             .wo {
-                height: 110px
+                height: 120px;
             }
 
             .rlb {
-                width: 34px;
-                height: 34px;
-                font-size: 14px
+                width: 36px;
+                height: 36px;
+                font-size: 14px;
             }
+        }
+
+        @media(max-width: 380px) {
+            .crd {
+                padding: 1.8rem 1.1rem;
+                width: 92%;
+            }
+
+            .s-ttl {
+                font-size: 1.6rem;
+            }
+
+            .s-txt {
+                font-size: 1.05rem;
+                line-height: 2.4;
+            }
+
+            .ipt, .bt {
+                padding: 0.8rem;
+                font-size: 0.9rem;
+            }
+
+            .wo {
+                height: 100px;
+            }
+        }
+
+        /* WOW Effect: Pulsing Glow */
+        .crd::after {
+            content: '';
+            position: absolute;
+            inset: -1px;
+            background: linear-gradient(135deg, transparent, rgba(var(--acc-rgb), 0.2), transparent);
+            border-radius: inherit;
+            z-index: -1;
+            animation: borderGlow 4s ease-in-out infinite;
+        }
+
+        @keyframes borderGlow {
+            0%, 100% { opacity: 0.3; transform: scale(1); }
+            50% { opacity: 0.8; transform: scale(1.02); }
         }
     </style>
 </head>
@@ -795,7 +837,8 @@
             style="position:fixed; bottom:2rem; left:0; right:0; text-align:center; opacity:0; transition:opacity 3s ease; z-index:10">
             <a href="https://imrezaulkrm.github.io/love/our-universe.html" target="_blank"
                 style="text-decoration:none; color:var(--acc); font-family:'Cormorant Garamond', serif; font-size:0.95rem; letter-spacing:0.05em; opacity:0.9">
-                <div style="font-size:0.75rem; margin-top:0.6rem; opacity:0.9; letter-spacing:0.15em; animation: blink 5s ease-in-out infinite">
+                <div
+                    style="font-size:0.75rem; margin-top:0.6rem; opacity:0.9; letter-spacing:0.15em; animation: blink 5s ease-in-out infinite">
                     CLICK AND GO <br> ↓
                 </div>
                 <h3 style="font-weight: 400; margin-top: 0.3rem;">Welcome to our universe ♡</h3>
@@ -973,7 +1016,7 @@
                 this.h = document.getElementById(hId);
                 this.e = document.getElementById(eId);
                 this.words = []; this.shown = 0; this.busy = false; this.hOn = true; this.fin = false;
-                this.scrollSpeed = 12;
+                this.scrollSpeed = 15;
             }
             init(text) {
                 this.words = text.split(/\s+/).filter(w => w);
@@ -1073,10 +1116,10 @@
 
             try {
                 const controller = new AbortController();
-                const timeoutId = setTimeout(() => controller.abort(), 15000); 
+                const timeoutId = setTimeout(() => controller.abort(), 15000);
 
                 // Fetching from pollinations with fallback and random seed
-                const url = `https://text.pollinations.ai/${prompt}?seed=${Math.floor(Math.random()*999999)}`;
+                const url = `https://text.pollinations.ai/${prompt}?seed=${Math.floor(Math.random() * 999999)}`;
                 console.log("Fetching AI message for:", name);
 
                 const res = await fetch(url, {
@@ -1087,15 +1130,15 @@
 
                 clearTimeout(timeoutId);
                 if (!res.ok) throw new Error(`HTTP Error: ${res.status}`);
-                
+
                 let txt = await res.text();
                 txt = txt.replace(/[#*_`~\[\]()]/g, '').replace(/\n+/g, ' ').trim();
-                
+
                 if (txt.length < 200 || txt.toLowerCase().includes("error") || txt.toLowerCase().includes("sorry")) {
                     console.warn("AI returned low quality or error text, using template.");
                     return tplMsg(name);
                 }
-                
+
                 console.log("AI message generated successfully.");
                 return txt;
             } catch (e) {
