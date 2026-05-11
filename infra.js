@@ -419,7 +419,9 @@ document.addEventListener('DOMContentLoaded', () => {
             { name: 'Street', path: 'photos/street' },
             { name: 'Architecture', path: 'photos/architecture' },
             { name: 'Portrait', path: 'photos/portrait' },
-            { name: 'Travel', path: 'photos/travel' }
+            { name: 'Travel', path: 'photos/travel' },
+            { name: 'Persona', path: 'photos/persona' },
+
         ];
 
         var MAX_IDX = 50;

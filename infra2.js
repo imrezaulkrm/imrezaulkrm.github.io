@@ -321,72 +321,369 @@ document.addEventListener('DOMContentLoaded', () => {
     })();
 
     // === ENHANCED PHOTO GALLERY — Frame-persistent, Folder-discovery, Lightbox ===
-    // === PHOTO GALLERY ===
+    // === PHOTO GALLERY — FOLDER WISE ===
+    // (function initPhotoGallery() {
+    //     var gallery = document.getElementById('photo-wall');
+    //     if (!gallery) return;
+
+    //     var FOLDERS = [
+    //         { name: 'Nature', path: 'photos/nature' },
+    //         { name: 'Street', path: 'photos/street' },
+    //         { name: 'Architecture', path: 'photos/architecture' },
+    //         { name: 'Portrait', path: 'photos/portrait' },
+    //         { name: 'Travel', path: 'photos/travel' },
+    //         { name: 'Persona', path: 'photos/persona' },
+    //     ];
+
+    //     var MAX_IDX = 50;
+    //     var EXTS = ['jpg', 'jpeg', 'png', 'webp'];
+    //     var SWAP_MS = 8000;
+    //     var LP_MS = 5000;
+    //     var FADE_MS = 850; // Smooth transition time increased
+    //     var COUNT = 12;
+    //     var CIRC = 2 * Math.PI * 26;
+
+    //     var allPhotos = [];
+    //     var shown = [];
+    //     var frames = [];
+    //     var lbIdx = -1;
+    //     var busy = false;
+
+    //     // ============================================================
+    //     //  AI CAPTION GENERATOR (Local Smart Template System)
+    //     // ============================================================
+    //     function generateAICaption(category, src) {
+    //         var seed = 0;
+    //         if (src) {
+    //             var match = src.match(/(\d+)\.\w+$/);
+    //             if (match) seed = parseInt(match[1]);
+    //         }
+
+    //         var lines = {
+    //             'Nature': ["Where light whispers through the canopy", "A moment frozen in emerald time", "Silent echoes of the wild", "Nature breathing in colors", "The earth's quiet symphony", "Sunlight dancing on still water"],
+    //             'Street': ["Stories hidden in concrete shadows", "The rhythm of a million footsteps", "Life unfolding in the urban grid", "Neon dreams and quiet corners", "City lights painting the night", "A glance across the avenue"],
+    //             'Architecture': ["Geometry reaching for the sky", "Steel and glass dreaming awake", "Lines that define our space", "Structure born from pure thought", "Monuments of human ambition", "Where math becomes beauty"],
+    //             'Portrait': ["Eyes holding a thousand unsaid words", "A soul captured in a breath", "The quiet universe of a glance", "Light tracing the human story", "Raw, unfiltered existence", "Truth resting in a silhouette"],
+    //             'Travel': ["Chasing horizons beyond the map", "Memories etched in foreign light", "The world waiting to be discovered", "Footsteps in untouched sands", "Wandering into the unknown", "A postcard from the edge of reality"],
+    //             'Persona': ["A reflection of the inner self", "Fragments of an untold story", "Wearing the universe within", "Between who I am and who I seem", "An echo of silent identity", "Unveiling the hidden canvas"]
+    //         };
+
+    //         var catLines = lines[category] || lines['Nature'];
+    //         return catLines[seed % catLines.length];
+    //     }
+
+    //     // ============================================================
+    //     //  BUILD LIGHTBOX
+    //     // ============================================================
+    //     var lbOverlay = document.createElement('div');
+    //     lbOverlay.setAttribute('id', 'lb-overlay');
+    //     lbOverlay.style.cssText = 'position:fixed;inset:0;z-index:10000;display:flex;align-items:center;justify-content:center;background:rgba(5,7,12,0.96);backdrop-filter:blur(30px);opacity:0;visibility:hidden;transition:opacity .45s ease,visibility .45s ease;';
+    //     lbOverlay.innerHTML = '<div id="lb-box" style="position:relative;max-width:92vw;max-height:88vh;"><button id="lb-x" style="position:absolute;top:-54px;right:0;width:44px;height:44px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:50%;color:#a0aec0;cursor:pointer;font-size:1.3rem;display:flex;align-items:center;justify-content:center;transition:all .3s ease;z-index:5;backdrop-filter:blur(8px);">&#10005;</button><div style="position:relative;padding:10px;background:linear-gradient(145deg,rgba(255,255,255,.06),rgba(255,255,255,.02));border-radius:18px;border:1px solid rgba(255,255,255,.1);box-shadow:0 40px 100px rgba(0,0,0,.7),0 0 60px rgba(0,212,255,.06);"><div style="padding:14px;background:rgba(10,15,28,.9);border-radius:10px;border:1px solid rgba(255,255,255,.04);overflow:hidden;"><img id="lb-img" src="" alt="" style="display:block;max-width:85vw;max-height:78vh;object-fit:contain;border-radius:6px;transition:opacity .3s ease,transform .3s ease;"></div></div><button id="lb-p" style="position:absolute;top:50%;left:-68px;transform:translateY(-50%);width:50px;height:50px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:50%;color:#a0aec0;cursor:pointer;font-size:1.6rem;display:flex;align-items:center;justify-content:center;transition:all .3s ease;backdrop-filter:blur(8px);">&#8249;</button><button id="lb-n" style="position:absolute;top:50%;right:-68px;transform:translateY(-50%);width:50px;height:50px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:50%;color:#a0aec0;cursor:pointer;font-size:1.6rem;display:flex;align-items:center;justify-content:center;transition:all .3s ease;backdrop-filter:blur(8px);">&#8250;</button><div style="position:absolute;bottom:-44px;left:0;right:0;display:flex;justify-content:space-between;align-items:center;"><span id="lb-cnt" style="font-family:var(--font-mono);font-size:.8rem;color:#718096;background:rgba(255,255,255,.04);padding:6px 16px;border-radius:20px;border:1px solid rgba(255,255,255,.06);"></span><span id="lb-cat" style="font-family:var(--font-mono);font-size:.75rem;color:#00d4ff;opacity:.7;"></span></div></div>';
+    //     document.body.appendChild(lbOverlay);
+
+    //     var lbImg = document.getElementById('lb-img');
+    //     var lbCnt = document.getElementById('lb-cnt');
+    //     var lbCat = document.getElementById('lb-cat');
+    //     var lbX = document.getElementById('lb-x');
+    //     var lbP = document.getElementById('lb-p');
+    //     var lbN = document.getElementById('lb-n');
+
+    //     var shutter = document.createElement('div');
+    //     shutter.style.cssText = 'position:fixed;inset:0;background:#fff;z-index:10001;pointer-events:none;opacity:0;';
+    //     document.body.appendChild(shutter);
+
+    //     function fireShutter() {
+    //         shutter.style.transition = 'none'; shutter.style.opacity = '0'; void shutter.offsetWidth;
+    //         shutter.style.transition = 'opacity .35s ease'; shutter.style.opacity = '0.12';
+    //         setTimeout(function () { shutter.style.opacity = '0'; }, 120);
+    //     }
+
+    //     lbX.onmouseenter = function () { this.style.background = 'rgba(239,68,68,.15)'; this.style.borderColor = 'rgba(239,68,68,.4)'; this.style.color = '#ef4444'; this.style.transform = 'rotate(90deg) scale(1.1)'; };
+    //     lbX.onmouseleave = function () { this.style.background = 'rgba(255,255,255,.06)'; this.style.borderColor = 'rgba(255,255,255,.12)'; this.style.color = '#a0aec0'; this.style.transform = ''; };
+    //     lbP.onmouseenter = function () { this.style.background = 'rgba(0,212,255,.12)'; this.style.borderColor = 'rgba(0,212,255,.35)'; this.style.color = '#00d4ff'; };
+    //     lbP.onmouseleave = function () { this.style.background = 'rgba(255,255,255,.05)'; this.style.borderColor = 'rgba(255,255,255,.1)'; this.style.color = '#a0aec0'; };
+    //     lbN.onmouseenter = function () { this.style.background = 'rgba(0,212,255,.12)'; this.style.borderColor = 'rgba(0,212,255,.35)'; this.style.color = '#00d4ff'; };
+    //     lbN.onmouseleave = function () { this.style.background = 'rgba(255,255,255,.05)'; this.style.borderColor = 'rgba(255,255,255,.1)'; this.style.color = '#a0aec0'; };
+
+    //     function openLb(idx) {
+    //         if (!shown[idx]) return; lbIdx = idx; fireShutter();
+    //         lbImg.src = shown[idx].src; lbImg.alt = shown[idx].cat; lbImg.style.opacity = '1'; lbImg.style.transform = '';
+    //         lbCnt.textContent = (idx + 1) + ' / ' + COUNT; lbCat.textContent = shown[idx].cat;
+    //         lbOverlay.style.opacity = '1'; lbOverlay.style.visibility = 'visible'; document.body.style.overflow = 'hidden';
+    //         if (navigator.vibrate) navigator.vibrate(25);
+    //     }
+
+    //     function closeLb() { lbOverlay.style.opacity = '0'; lbOverlay.style.visibility = 'hidden'; document.body.style.overflow = ''; lbIdx = -1; }
+
+    //     function navLb(dir) {
+    //         if (lbIdx < 0) return; var ni = lbIdx;
+    //         for (var i = 0; i < COUNT; i++) { ni = (ni + dir + COUNT) % COUNT; if (shown[ni]) break; }
+    //         if (ni === lbIdx) return;
+    //         lbImg.style.opacity = '0'; lbImg.style.transform = dir > 0 ? 'translateX(12px)' : 'translateX(-12px)';
+    //         setTimeout(function () { lbIdx = ni; lbImg.src = shown[ni].src; lbImg.alt = shown[ni].cat; lbCnt.textContent = (ni + 1) + ' / ' + COUNT; lbCat.textContent = shown[ni].cat; lbImg.style.transform = ''; lbImg.style.opacity = '1'; }, 260);
+    //     }
+
+    //     lbX.onclick = closeLb; lbP.onclick = function () { navLb(-1); }; lbN.onclick = function () { navLb(1); };
+    //     lbOverlay.addEventListener('click', function (e) { if (e.target === lbOverlay) closeLb(); });
+    //     document.addEventListener('keydown', function (e) { if (lbOverlay.style.visibility !== 'visible') return; if (e.key === 'Escape') closeLb(); if (e.key === 'ArrowLeft') navLb(-1); if (e.key === 'ArrowRight') navLb(1); });
+
+    //     var txS = 0;
+    //     lbOverlay.addEventListener('touchstart', function (e) { txS = e.changedTouches[0].screenX; }, { passive: true });
+    //     lbOverlay.addEventListener('touchend', function (e) { var d = txS - e.changedTouches[0].screenX; if (Math.abs(d) > 60) navLb(d > 0 ? 1 : -1); }, { passive: true });
+
+    //     // ============================================================
+    //     //  FOLDER SCANNER
+    //     // ============================================================
+    //     function exists(url) { return new Promise(function (res) { var im = new Image(); im.onload = function () { res(true); }; im.onerror = function () { res(false); }; im.src = url; }); }
+
+    //     function scanFolder(folderObj) {
+    //         return new Promise(function (resolve) {
+    //             var found = [], misses = 0, n = 1;
+    //             function next() {
+    //                 if (n > MAX_IDX || (found.length > 0 && misses >= 5)) { resolve(found); return; }
+    //                 var num = n; n++; var ei = 0;
+    //                 function tryExt() {
+    //                     if (ei >= EXTS.length) { misses++; next(); return; }
+    //                     var url = folderObj.path + '/' + num + '.' + EXTS[ei]; ei++;
+    //                     exists(url).then(function (ok) { if (ok) { found.push({ src: url, name: folderObj.name + ' — ' + num, cat: folderObj.name }); misses = 0; next(); } else { tryExt(); } });
+    //                 }
+    //                 tryExt();
+    //             }
+    //             next();
+    //         });
+    //     }
+
+    //     async function scanAllFolders() {
+    //         var results = {}, total = 0;
+    //         for (var i = 0; i < FOLDERS.length; i++) { var f = FOLDERS[i]; var photos = await scanFolder(f); results[f.name] = photos; total += photos.length; }
+    //         return { results: results, total: total };
+    //     }
+
+    //     var fallbacks = [
+    //         { src: 'https://images.unsplash.com/photo-1475274047050-1d0c0975c63e?w=600&h=900&fit=crop', name: 'Mountain', cat: 'Nature' },
+    //         { src: 'https://images.unsplash.com/photo-1431890713044-d71e360a8a0a?w=500&h=500&fit=crop', name: 'Reflection', cat: 'Nature' },
+    //         { src: 'https://images.unsplash.com/photo-1506157786151-b8491531f063?w=800&h=500&fit=crop', name: 'Fields', cat: 'Nature' },
+    //         { src: 'https://images.unsplash.com/photo-1501594907352-04cda38ebc29?w=600&h=900&fit=crop', name: 'City', cat: 'Street' },
+    //         { src: 'https://images.unsplash.com/photo-1511379938547-c1f69b13d835?w=500&h=500&fit=crop', name: 'Pattern', cat: 'Architecture' },
+    //         { src: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=800&h=500&fit=crop', name: 'Clouds', cat: 'Nature' },
+    //         { src: 'https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?w=600&h=900&fit=crop', name: 'Forest', cat: 'Nature' },
+    //         { src: 'https://images.unsplash.com/photo-1426604966848-d7adac402bff?w=500&h=500&fit=crop', name: 'Silhouette', cat: 'Portrait' },
+    //         { src: 'https://images.unsplash.com/photo-1519681393784-d120267933ba?w=800&h=500&fit=crop', name: 'Stars', cat: 'Nature' },
+    //         { src: 'https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=800&h=500&fit=crop', name: 'Fog', cat: 'Nature' },
+    //         { src: 'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=800&h=500&fit=crop', name: 'Sunlight', cat: 'Nature' },
+    //         { src: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=800&h=500&fit=crop', name: 'Beach', cat: 'Travel' }
+    //     ];
+
+    //     function shuffle(a) { var b = a.slice(); for (var i = b.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var t = b[i]; b[i] = b[j]; b[j] = t; } return b; }
+    //     function pick(pool, n, excl) { var avail = pool.filter(function (p) { return !excl.some(function (e) { return e.src === p.src; }); }); var src = avail.length >= n ? avail : pool; return shuffle(src).slice(0, n); }
+
+    //     // ============================================================
+    //     //  BUILD GRID
+    //     // ============================================================
+    //     function buildGrid() {
+    //         gallery.innerHTML = ''; frames = [];
+    //         for (var i = 0; i < COUNT; i++) {
+    //             var f = document.createElement('div'); f.className = 'photo-frame'; f.setAttribute('data-fi', i);
+    //             var sk = document.createElement('div'); sk.className = 'photo-skeleton'; f.appendChild(sk);
+    //             var wr = document.createElement('div'); wr.className = 'photo-img-wrap'; f.appendChild(wr);
+    //             var fl = document.createElement('div'); fl.className = 'swap-flash'; f.appendChild(fl);
+    //             var inf = document.createElement('div'); inf.className = 'photo-info-hover';
+    //             // Added info-ai-line element
+    //             inf.innerHTML = '<p class="info-title"></p><span class="info-meta"></span><p class="info-ai-line"></p>';
+    //             f.appendChild(inf);
+    //             var rn = document.createElement('div'); rn.className = 'long-press-ring'; rn.innerHTML = '<svg viewBox="0 0 60 60"><circle class="r-bg" cx="30" cy="30" r="26"/><circle class="r-fg" cx="30" cy="30" r="26" stroke-dasharray="' + CIRC + '" stroke-dashoffset="' + CIRC + '"/></svg>'; f.appendChild(rn);
+    //             wireFrame(f, i, rn); gallery.appendChild(f); frames.push(f);
+    //         }
+    //     }
+
+    //     // ============================================================
+    //     //  FRAME EVENTS
+    //     // ============================================================
+    //     function wireFrame(f, idx, ring) {
+    //         var rfg = ring.querySelector('.r-fg'), lpRAF = 0, lpStart = 0, wasLP = false;
+    //         f.addEventListener('click', function () { if (wasLP) { wasLP = false; return; } if (shown[idx]) openLb(idx); });
+    //         f.addEventListener('mousemove', function (e) {
+    //             if (window.innerWidth < 769) return; var r = f.getBoundingClientRect();
+    //             var rx = ((e.clientY - r.top - r.height / 2) / (r.height / 2)) * 4;
+    //             var ry = ((r.width / 2 - e.clientX + r.left) / (r.width / 2)) * 4;
+    //             f.style.transform = 'perspective(800px) rotateX(' + rx + 'deg) rotateY(' + ry + 'deg) translateZ(6px)';
+    //             f.style.transition = 'border-color .4s ease, box-shadow .5s ease';
+    //         });
+    //         f.addEventListener('mouseleave', function () { f.style.transform = ''; f.style.transition = ''; });
+    //         f.addEventListener('touchstart', function () {
+    //             if (window.innerWidth >= 769) return; wasLP = false; lpStart = Date.now(); ring.classList.add('ring-show'); rfg.style.strokeDashoffset = CIRC;
+    //             function tick() { var p = Math.min((Date.now() - lpStart) / LP_MS, 1); rfg.style.strokeDashoffset = CIRC * (1 - p); if (p < 1) { lpRAF = requestAnimationFrame(tick); } else { wasLP = true; ring.classList.remove('ring-show'); rfg.style.strokeDashoffset = CIRC; if (shown[idx]) openLb(idx); } }
+    //             lpRAF = requestAnimationFrame(tick);
+    //         }, { passive: true });
+    //         function stopLP() { cancelAnimationFrame(lpRAF); ring.classList.remove('ring-show'); rfg.style.strokeDashoffset = CIRC; }
+    //         f.addEventListener('touchend', function () { stopLP(); setTimeout(function () { wasLP = false; }, 60); }, { passive: true });
+    //         f.addEventListener('touchcancel', stopLP, { passive: true }); f.addEventListener('touchmove', stopLP, { passive: true });
+    //     }
+
+    //     // ============================================================
+    //     //  LOAD IMAGE INTO FRAME — Dynamic Ratio & Smooth Swap
+    //     // ============================================================
+    //     function loadInto(idx, photo) {
+    //         var f = frames[idx]; if (!f || !photo) return;
+    //         shown[idx] = photo;
+    //         var wr = f.querySelector('.photo-img-wrap'), sk = f.querySelector('.photo-skeleton'), fl = f.querySelector('.swap-flash');
+
+    //         f.querySelector('.info-title').textContent = photo.cat || '';
+    //         f.querySelector('.info-meta').textContent = 'Photography';
+
+    //         // Generate AI Line
+    //         var aiLineEl = f.querySelector('.info-ai-line');
+    //         aiLineEl.textContent = generateAICaption(photo.cat, photo.src);
+
+    //         var ni = document.createElement('img');
+    //         ni.src = photo.src; ni.alt = photo.cat || '';
+    //         ni.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;opacity:0;z-index:1;filter:brightness(0.82) saturate(0.8) contrast(1.05);transform:scale(1.05);transition:opacity ' + FADE_MS + 'ms cubic-bezier(0.4, 0, 0.2, 1), transform ' + FADE_MS + 'ms cubic-bezier(0.4, 0, 0.2, 1);';
+
+    //         var old = wr.querySelector('img');
+    //         var leaving = wr.querySelector('img[data-lv]');
+    //         if (leaving) leaving.remove();
+
+    //         wr.appendChild(ni);
+
+    //         ni.onload = function () {
+    //             if (sk) sk.style.display = 'none';
+
+    //             // Dynamic Frame Resizing Logic based on Aspect Ratio
+    //             var ratio = ni.naturalWidth / ni.naturalHeight;
+    //             f.classList.remove('frame-landscape', 'frame-portrait', 'frame-square');
+    //             if (ratio > 1.3) { f.classList.add('frame-landscape'); }
+    //             else if (ratio < 0.8) { f.classList.add('frame-portrait'); }
+    //             else { f.classList.add('frame-square'); }
+
+    //             // Smooth Crossfade Animation
+    //             requestAnimationFrame(function () {
+    //                 ni.style.opacity = '1';
+    //                 ni.style.transform = 'scale(1)';
+    //             });
+
+    //             if (old && old !== ni) {
+    //                 old.setAttribute('data-lv', '1');
+    //                 old.style.zIndex = '0';
+    //                 old.style.transition = 'opacity ' + FADE_MS + 'ms cubic-bezier(0.4, 0, 0.2, 1), transform ' + FADE_MS + 'ms cubic-bezier(0.4, 0, 0.2, 1)';
+    //                 old.style.opacity = '0';
+    //                 old.style.transform = 'scale(0.95)'; // Old image zooms out slightly
+    //                 setTimeout(function () { if (old.parentNode) old.remove(); }, FADE_MS + 50);
+    //             } else {
+    //                 setTimeout(function () { ni.removeAttribute('style'); }, FADE_MS + 50);
+    //             }
+
+    //             fl.classList.remove('flash-on'); void fl.offsetWidth; fl.classList.add('flash-on');
+    //         };
+
+    //         ni.onerror = function () { if (ni.parentNode) ni.remove(); };
+    //     }
+
+    //     // ============================================================
+    //     //  SWAP & SCROLL REVEAL
+    //     // ============================================================
+    //     function swapAll() {
+    //         if (busy || allPhotos.length < COUNT) return; busy = true;
+    //         var next = pick(allPhotos, COUNT, shown), delay = 0;
+    //         for (var i = 0; i < COUNT; i++) { (function (fi, d) { setTimeout(function () { loadInto(fi, next[fi]); }, d); })(i, delay); delay += 100; }
+    //         setTimeout(function () { busy = false; }, delay + FADE_MS + 100);
+    //     }
+
+    //     var fObs = new IntersectionObserver(function (entries) {
+    //         entries.forEach(function (e) { if (e.isIntersecting) { var i = parseInt(e.target.getAttribute('data-fi')); setTimeout(function () { e.target.classList.add('frame-visible'); }, i * 60); fObs.unobserve(e.target); } });
+    //     }, { threshold: 0.05, rootMargin: '0px 0px -30px 0px' });
+
+    //     // ============================================================
+    //     //  INIT
+    //     // ============================================================
+    //     (async function () {
+    //         buildGrid(); frames.forEach(function (f) { fObs.observe(f); });
+    //         var sb = document.createElement('div'); sb.className = 'gallery-status-bar'; sb.innerHTML = '<div class="gallery-status-left"><span class="gallery-status-dot"></span><span class="gallery-status-text" id="gs-t">Scanning folders...</span></div><span class="gallery-status-right" id="gs-c">—</span>'; gallery.parentElement.insertBefore(sb, gallery);
+    //         var gsT = document.getElementById('gs-t'), gsC = document.getElementById('gs-c');
+    //         var scan = await scanAllFolders(); var parts = [];
+    //         for (var fname in scan.results) { if (scan.results[fname].length > 0) parts.push(fname + ': ' + scan.results[fname].length); }
+    //         if (scan.total === 0) { allPhotos = fallbacks.slice(); gsT.textContent = 'Sample gallery'; gsC.textContent = allPhotos.length + ' photos'; }
+    //         else { for (var key in scan.results) { allPhotos = allPhotos.concat(scan.results[key]); } gsT.textContent = parts.join(' · '); gsC.textContent = scan.total + ' photos'; }
+    //         while (allPhotos.length < COUNT) { allPhotos.push(allPhotos[Math.floor(Math.random() * allPhotos.length)]); }
+    //         var init = shuffle(allPhotos).slice(0, COUNT);
+    //         for (var i = 0; i < COUNT; i++) { (function (fi) { setTimeout(function () { loadInto(fi, init[fi]); }, fi * 80); })(i); }
+    //         if (allPhotos.length >= COUNT) { setInterval(swapAll, SWAP_MS); }
+    //     })();
+    // })();
+
+    // === PHOTO GALLERY — DYNAMIC RATIO + SMART CAPTION ===
     (function initPhotoGallery() {
         var gallery = document.getElementById('photo-wall');
         if (!gallery) return;
 
-        // ---- CONFIG ----
-        var FOLDER = 'photos';
-        var PREFIX = 'photo-';
+        // ============================================================
+        //  ⚙️ কনফিগারেশন (CONFIGURATION)
+        // ============================================================
+        var FOLDERS = [
+            { name: 'Nature', path: 'photos/nature' },
+            { name: 'Street', path: 'photos/street' },
+            { name: 'Architecture', path: 'photos/architecture' },
+            { name: 'Portrait', path: 'photos/portrait' },
+            { name: 'Travel', path: 'photos/travel' },
+            { name: 'Persona', path: 'photos/persona' }
+        ];
+
         var MAX_IDX = 50;
         var EXTS = ['jpg', 'jpeg', 'png', 'webp'];
-        var SWAP_MS = 8000;
+        var SWAP_INTERVAL_SEC = 10; // ছবি কত সেকেন্ড পর পর চেঞ্জ হবে
         var LP_MS = 5000;
         var FADE_MS = 650;
         var COUNT = 12;
-        var CIRC = 2 * Math.PI * 26; // ring circumference
+        var CIRC = 2 * Math.PI * 26;
 
-        // ---- STATE ----
+        // রেশিও কন্ট্রোল (এখান থেকে তুমি বাড়িয়ে কমিয়ে দেখতে পারো)
+        var RATIO_WIDE = 1.35;   // এর চেয়ে বেশি হলে Landscape (frame-wide)
+        var RATIO_TALL = 0.75;   // এর চেয়ে কম হলে Portrait (frame-tall)
+        // এই দুইয়ের মাঝামাঝি হলে Square (frame-square)
+
         var allPhotos = [];
         var shown = [];
         var frames = [];
         var lbIdx = -1;
         var busy = false;
 
-        // ---- BUILD LIGHTBOX ----
+        // ============================================================
+        //  SMART CAPTION GENERATOR (AI এর চেয়ে ভালো ও ফাস্ট)
+        // ============================================================
+        function generateSmartCaption(photo) {
+            var seed = 0;
+            var match = photo.src.match(/(\d+)\.\w+$/);
+            if (match) seed = parseInt(match[1]);
+
+            var captions = {
+                'Nature': ["Where light whispers through the canopy", "A moment frozen in emerald time", "Silent echoes of the wild", "Nature breathing in colors", "The earth's quiet symphony", "Sunlight dancing on still water", "A quiet place far away", "Forest of forgotten dreams"],
+                'Street': ["Stories hidden in concrete shadows", "The rhythm of a million footsteps", "Life unfolding in the urban grid", "Neon dreams and quiet corners", "City lights painting the night", "A glance across the avenue", "Pavements holding untold tales", "Midnight reflections in glass"],
+                'Architecture': ["Geometry reaching for the sky", "Steel and glass dreaming awake", "Lines that define our space", "Structure born from pure thought", "Monuments of human ambition", "Where math becomes beauty", "Symmetry in concrete", "The weight of empty space"],
+                'Portrait': ["Eyes holding a thousand unsaid words", "A soul captured in a breath", "The quiet universe of a glance", "Light tracing the human story", "Raw, unfiltered existence", "Truth resting in a silhouette", "Unspoken words in stillness", "Framed humanity"],
+                'Travel': ["Chasing horizons beyond the map", "Memories etched in foreign light", "The world waiting to be discovered", "Footsteps in untouched sands", "Wandering into the unknown", "A postcard from reality", "Breathing distant air", "Time moving slowly here"],
+                'Persona': ["A reflection of the inner self", "Fragments of an untold story", "Wearing the universe within", "Between who I am and who I seem", "An echo of silent identity", "Unveiling the hidden canvas", "Just me, without the code", "The mind behind the machine"]
+            };
+
+            var lines = captions[photo.cat] || captions['Nature'];
+            // Seed এর উপর ভিত্তি করে সবসময় একই ছবির জন্য একই লাইন আসবে
+            return lines[seed % lines.length];
+        }
+
+        // ============================================================
+        //  LIGHTBOX (ইফেক্ট সহ)
+        // ============================================================
         var lbOverlay = document.createElement('div');
         lbOverlay.setAttribute('id', 'lb-overlay');
         lbOverlay.style.cssText = 'position:fixed;inset:0;z-index:10000;display:flex;align-items:center;justify-content:center;background:rgba(5,7,12,0.96);backdrop-filter:blur(30px);opacity:0;visibility:hidden;transition:opacity .45s ease,visibility .45s ease;';
-        lbOverlay.innerHTML =
-            '<div id="lb-box" style="position:relative;max-width:92vw;max-height:88vh;">' +
-            '<button id="lb-x" style="position:absolute;top:-54px;right:0;width:44px;height:44px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:50%;color:#a0aec0;cursor:pointer;font-size:1.3rem;display:flex;align-items:center;justify-content:center;transition:all .3s ease;z-index:5;backdrop-filter:blur(8px);">&#10005;</button>' +
-            '<div style="position:relative;padding:10px;background:linear-gradient(145deg,rgba(255,255,255,.06),rgba(255,255,255,.02));border-radius:18px;border:1px solid rgba(255,255,255,.1);box-shadow:0 40px 100px rgba(0,0,0,.7),0 0 60px rgba(0,212,255,.06);">' +
-            '<div style="padding:14px;background:rgba(10,15,28,.9);border-radius:10px;border:1px solid rgba(255,255,255,.04);overflow:hidden;">' +
-            '<img id="lb-img" src="" alt="" style="display:block;max-width:85vw;max-height:78vh;object-fit:contain;border-radius:6px;transition:opacity .3s ease,transform .3s ease;">' +
-            '</div>' +
-            '</div>' +
-            '<button id="lb-p" style="position:absolute;top:50%;left:-68px;transform:translateY(-50%);width:50px;height:50px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:50%;color:#a0aec0;cursor:pointer;font-size:1.6rem;display:flex;align-items:center;justify-content:center;transition:all .3s ease;backdrop-filter:blur(8px);">&#8249;</button>' +
-            '<button id="lb-n" style="position:absolute;top:50%;right:-68px;transform:translateY(-50%);width:50px;height:50px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:50%;color:#a0aec0;cursor:pointer;font-size:1.6rem;display:flex;align-items:center;justify-content:center;transition:all .3s ease;backdrop-filter:blur(8px);">&#8250;</button>' +
-            '<div style="position:absolute;bottom:-44px;left:0;right:0;display:flex;justify-content:space-between;align-items:center;">' +
-            '<span id="lb-cnt" style="font-family:var(--font-mono);font-size:.8rem;color:#718096;background:rgba(255,255,255,.04);padding:6px 16px;border-radius:20px;border:1px solid rgba(255,255,255,.06);"></span>' +
-            '<span style="font-family:var(--font-mono);font-size:.65rem;color:#718096;opacity:.4;">ESC close &bull; Arrows navigate</span>' +
-            '</div>' +
-            '</div>';
+        lbOverlay.innerHTML = '<div id="lb-box" style="position:relative;max-width:92vw;max-height:88vh;"><button id="lb-x" style="position:absolute;top:-54px;right:0;width:44px;height:44px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:50%;color:#a0aec0;cursor:pointer;font-size:1.3rem;display:flex;align-items:center;justify-content:center;transition:all .3s ease;z-index:5;backdrop-filter:blur(8px);">&#10005;</button><div style="position:relative;padding:10px;background:linear-gradient(145deg,rgba(255,255,255,.06),rgba(255,255,255,.02));border-radius:18px;border:1px solid rgba(255,255,255,.1);box-shadow:0 40px 100px rgba(0,0,0,.7),0 0 60px rgba(0,212,255,.06);"><div style="padding:14px;background:rgba(10,15,28,.9);border-radius:10px;border:1px solid rgba(255,255,255,.04);overflow:hidden;"><img id="lb-img" src="" alt="" style="display:block;max-width:85vw;max-height:78vh;object-fit:contain;border-radius:6px;transition:opacity .3s ease,transform .3s ease;"></div></div><button id="lb-p" style="position:absolute;top:50%;left:-68px;transform:translateY(-50%);width:50px;height:50px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:50%;color:#a0aec0;cursor:pointer;font-size:1.6rem;display:flex;align-items:center;justify-content:center;transition:all .3s ease;backdrop-filter:blur(8px);">&#8249;</button><button id="lb-n" style="position:absolute;top:50%;right:-68px;transform:translateY(-50%);width:50px;height:50px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:50%;color:#a0aec0;cursor:pointer;font-size:1.6rem;display:flex;align-items:center;justify-content:center;transition:all .3s ease;backdrop-filter:blur(8px);">&#8250;</button><div style="position:absolute;bottom:-44px;left:0;right:0;display:flex;justify-content:space-between;align-items:center;"><span id="lb-cnt" style="font-family:var(--font-mono);font-size:.8rem;color:#718096;background:rgba(255,255,255,.04);padding:6px 16px;border-radius:20px;border:1px solid rgba(255,255,255,.06);"></span><span id="lb-cat" style="font-family:var(--font-mono);font-size:.75rem;color:#00d4ff;opacity:.7;"></span></div></div>';
         document.body.appendChild(lbOverlay);
 
-        var lbImg = document.getElementById('lb-img');
-        var lbCnt = document.getElementById('lb-cnt');
-        var lbBox = document.getElementById('lb-box');
+        var lbImg = document.getElementById('lb-img'), lbCnt = document.getElementById('lb-cnt'), lbCat = document.getElementById('lb-cat'), lbX = document.getElementById('lb-x'), lbP = document.getElementById('lb-p'), lbN = document.getElementById('lb-n');
 
-        // Shutter flash element
         var shutter = document.createElement('div');
         shutter.style.cssText = 'position:fixed;inset:0;background:#fff;z-index:10001;pointer-events:none;opacity:0;';
         document.body.appendChild(shutter);
 
-        function fireShutter() {
-            shutter.style.transition = 'none';
-            shutter.style.opacity = '0';
-            void shutter.offsetWidth;
-            shutter.style.transition = 'opacity .35s ease';
-            shutter.style.opacity = '0.12';
-            setTimeout(function () { shutter.style.opacity = '0'; }, 120);
-        }
-
-        // Lightbox hover effects via JS (no CSS dependency)
-        var lbX = document.getElementById('lb-x');
-        var lbP = document.getElementById('lb-p');
-        var lbN = document.getElementById('lb-n');
+        function fireShutter() { shutter.style.transition = 'none'; shutter.style.opacity = '0'; void shutter.offsetWidth; shutter.style.transition = 'opacity .35s ease'; shutter.style.opacity = '0.12'; setTimeout(function () { shutter.style.opacity = '0'; }, 120); }
 
         lbX.onmouseenter = function () { this.style.background = 'rgba(239,68,68,.15)'; this.style.borderColor = 'rgba(239,68,68,.4)'; this.style.color = '#ef4444'; this.style.transform = 'rotate(90deg) scale(1.1)'; };
         lbX.onmouseleave = function () { this.style.background = 'rgba(255,255,255,.06)'; this.style.borderColor = 'rgba(255,255,255,.12)'; this.style.color = '#a0aec0'; this.style.transform = ''; };
@@ -395,397 +692,179 @@ document.addEventListener('DOMContentLoaded', () => {
         lbN.onmouseenter = function () { this.style.background = 'rgba(0,212,255,.12)'; this.style.borderColor = 'rgba(0,212,255,.35)'; this.style.color = '#00d4ff'; };
         lbN.onmouseleave = function () { this.style.background = 'rgba(255,255,255,.05)'; this.style.borderColor = 'rgba(255,255,255,.1)'; this.style.color = '#a0aec0'; };
 
-        function openLb(idx) {
-            if (!shown[idx]) return;
-            lbIdx = idx;
-            fireShutter();
-            lbImg.src = shown[idx].src;
-            lbImg.alt = shown[idx].name;
-            lbImg.style.opacity = '1';
-            lbImg.style.transform = '';
-            lbCnt.textContent = (idx + 1) + ' / ' + COUNT;
-            lbOverlay.style.opacity = '1';
-            lbOverlay.style.visibility = 'visible';
-            document.body.style.overflow = 'hidden';
-            if (navigator.vibrate) navigator.vibrate(25);
-        }
+        function openLb(idx) { if (!shown[idx]) return; lbIdx = idx; fireShutter(); lbImg.src = shown[idx].src; lbImg.alt = shown[idx].cat; lbImg.style.opacity = '1'; lbImg.style.transform = ''; lbCnt.textContent = (idx + 1) + ' / ' + COUNT; lbCat.textContent = shown[idx].cat; lbOverlay.style.opacity = '1'; lbOverlay.style.visibility = 'visible'; document.body.style.overflow = 'hidden'; if (navigator.vibrate) navigator.vibrate(25); }
+        function closeLb() { lbOverlay.style.opacity = '0'; lbOverlay.style.visibility = 'hidden'; document.body.style.overflow = ''; lbIdx = -1; }
+        function navLb(dir) { if (lbIdx < 0) return; var ni = lbIdx; for (var i = 0; i < COUNT; i++) { ni = (ni + dir + COUNT) % COUNT; if (shown[ni]) break; } if (ni === lbIdx) return; lbImg.style.opacity = '0'; lbImg.style.transform = dir > 0 ? 'translateX(12px)' : 'translateX(-12px)'; setTimeout(function () { lbIdx = ni; lbImg.src = shown[ni].src; lbImg.alt = shown[ni].cat; lbCnt.textContent = (ni + 1) + ' / ' + COUNT; lbCat.textContent = shown[ni].cat; lbImg.style.transform = ''; lbImg.style.opacity = '1'; }, 260); }
 
-        function closeLb() {
-            lbOverlay.style.opacity = '0';
-            lbOverlay.style.visibility = 'hidden';
-            document.body.style.overflow = '';
-            lbIdx = -1;
-        }
-
-        function navLb(dir) {
-            if (lbIdx < 0) return;
-            var ni = lbIdx;
-            for (var i = 0; i < COUNT; i++) {
-                ni = (ni + dir + COUNT) % COUNT;
-                if (shown[ni]) break;
-            }
-            if (ni === lbIdx) return;
-            lbImg.style.opacity = '0';
-            lbImg.style.transform = dir > 0 ? 'translateX(12px)' : 'translateX(-12px)';
-            setTimeout(function () {
-                lbIdx = ni;
-                lbImg.src = shown[ni].src;
-                lbImg.alt = shown[ni].name;
-                lbCnt.textContent = (ni + 1) + ' / ' + COUNT;
-                lbImg.style.transform = '';
-                lbImg.style.opacity = '1';
-            }, 260);
-        }
-
-        lbX.onclick = closeLb;
-        lbP.onclick = function () { navLb(-1); };
-        lbN.onclick = function () { navLb(1); };
-        lbOverlay.addEventListener('click', function (e) {
-            if (e.target === lbOverlay) closeLb();
-        });
-        document.addEventListener('keydown', function (e) {
-            if (lbOverlay.style.visibility !== 'visible') return;
-            if (e.key === 'Escape') closeLb();
-            if (e.key === 'ArrowLeft') navLb(-1);
-            if (e.key === 'ArrowRight') navLb(1);
-        });
+        lbX.onclick = closeLb; lbP.onclick = function () { navLb(-1); }; lbN.onclick = function () { navLb(1); };
+        lbOverlay.addEventListener('click', function (e) { if (e.target === lbOverlay) closeLb(); });
+        document.addEventListener('keydown', function (e) { if (lbOverlay.style.visibility !== 'visible') return; if (e.key === 'Escape') closeLb(); if (e.key === 'ArrowLeft') navLb(-1); if (e.key === 'ArrowRight') navLb(1); });
 
         var txS = 0;
         lbOverlay.addEventListener('touchstart', function (e) { txS = e.changedTouches[0].screenX; }, { passive: true });
-        lbOverlay.addEventListener('touchend', function (e) {
-            var d = txS - e.changedTouches[0].screenX;
-            if (Math.abs(d) > 60) navLb(d > 0 ? 1 : -1);
-        }, { passive: true });
+        lbOverlay.addEventListener('touchend', function (e) { var d = txS - e.changedTouches[0].screenX; if (Math.abs(d) > 60) navLb(d > 0 ? 1 : -1); }, { passive: true });
 
-        // ---- PHOTO DISCOVERY ----
-        function exists(url) {
-            return new Promise(function (resolve) {
-                var im = new Image();
-                im.onload = function () { resolve(true); };
-                im.onerror = function () { resolve(false); };
-                im.src = url;
-            });
-        }
-
-        function scanPhotos() {
-            var found = [];
-            var misses = 0;
-            var idx = 1;
-
-            return new Promise(function (resolve) {
-                function checkNext() {
-                    if (idx > MAX_IDX || (found.length > 0 && misses >= 5)) {
-                        resolve(found);
-                        return;
-                    }
-
-                    var n = idx;
-                    idx++;
-                    var tried = 0;
-
-                    function tryExt() {
-                        if (tried >= EXTS.length * 2) {
-                            misses++;
-                            checkNext();
-                            return;
-                        }
-
-                        var ext = EXTS[tried % EXTS.length];
-                        var prefix = tried < EXTS.length ? PREFIX : '';
-                        var url = FOLDER + '/' + prefix + n + '.' + ext;
-                        tried++;
-
-                        exists(url).then(function (ok) {
-                            if (ok) {
-                                found.push({ src: url, name: 'Photo ' + n });
-                                misses = 0;
-                                checkNext();
-                            } else {
-                                tryExt();
-                            }
-                        });
-                    }
-
-                    tryExt();
-                }
-
-                checkNext();
-            });
-        }
+        // ============================================================
+        //  FOLDER SCANNER
+        // ============================================================
+        function exists(url) { return new Promise(function (res) { var im = new Image(); im.onload = function () { res(true); }; im.onerror = function () { res(false); }; im.src = url; }); }
+        function scanFolder(folderObj) { return new Promise(function (resolve) { var found = [], misses = 0, n = 1; function next() { if (n > MAX_IDX || (found.length > 0 && misses >= 5)) { resolve(found); return; } var num = n; n++; var ei = 0; function tryExt() { if (ei >= EXTS.length) { misses++; next(); return; } var url = folderObj.path + '/' + num + '.' + EXTS[ei]; ei++; exists(url).then(function (ok) { if (ok) { found.push({ src: url, name: folderObj.name + ' — ' + num, cat: folderObj.name }); misses = 0; next(); } else { tryExt(); } }); } tryExt(); } next(); }); }
+        async function scanAllFolders() { var results = {}, total = 0; for (var i = 0; i < FOLDERS.length; i++) { var f = FOLDERS[i]; var photos = await scanFolder(f); results[f.name] = photos; total += photos.length; } return { results: results, total: total }; }
 
         var fallbacks = [
-            { src: 'https://images.unsplash.com/photo-1475274047050-1d0c0975c63e?w=600&h=900&fit=crop', name: 'Mountain' },
-            { src: 'https://images.unsplash.com/photo-1431890713044-d71e360a8a0a?w=500&h=500&fit=crop', name: 'Reflection' },
-            { src: 'https://images.unsplash.com/photo-1506157786151-b8491531f063?w=800&h=500&fit=crop', name: 'Fields' },
-            { src: 'https://images.unsplash.com/photo-1501594907352-04cda38ebc29?w=600&h=900&fit=crop', name: 'City' },
-            { src: 'https://images.unsplash.com/photo-1511379938547-c1f69b13d835?w=500&h=500&fit=crop', name: 'Pattern' },
-            { src: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=800&h=500&fit=crop', name: 'Clouds' },
-            { src: 'https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?w=600&h=900&fit=crop', name: 'Forest' },
-            { src: 'https://images.unsplash.com/photo-1426604966848-d7adac402bff?w=500&h=500&fit=crop', name: 'Silhouette' },
-            { src: 'https://images.unsplash.com/photo-1519681393784-d120267933ba?w=800&h=500&fit=crop', name: 'Stars' },
-            { src: 'https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=800&h=500&fit=crop', name: 'Fog' },
-            { src: 'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=800&h=500&fit=crop', name: 'Sunlight' },
-            { src: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=800&h=500&fit=crop', name: 'Beach' }
+            { src: 'https://images.unsplash.com/photo-1475274047050-1d0c0975c63e?w=600&h=900&fit=crop', name: 'Mountain', cat: 'Nature' },
+            { src: 'https://images.unsplash.com/photo-1431890713044-d71e360a8a0a?w=500&h=500&fit=crop', name: 'Reflection', cat: 'Nature' },
+            { src: 'https://images.unsplash.com/photo-1506157786151-b8491531f063?w=800&h=500&fit=crop', name: 'Fields', cat: 'Nature' },
+            { src: 'https://images.unsplash.com/photo-1501594907352-04cda38ebc29?w=600&h=900&fit=crop', name: 'City', cat: 'Street' },
+            { src: 'https://images.unsplash.com/photo-1511379938547-c1f69b13d835?w=500&h=500&fit=crop', name: 'Pattern', cat: 'Architecture' },
+            { src: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=800&h=500&fit=crop', name: 'Clouds', cat: 'Nature' },
+            { src: 'https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?w=600&h=900&fit=crop', name: 'Forest', cat: 'Nature' },
+            { src: 'https://images.unsplash.com/photo-1426604966848-d7adac402bff?w=500&h=500&fit=crop', name: 'Silhouette', cat: 'Portrait' },
+            { src: 'https://images.unsplash.com/photo-1519681393784-d120267933ba?w=800&h=500&fit=crop', name: 'Stars', cat: 'Nature' },
+            { src: 'https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=800&h=500&fit=crop', name: 'Fog', cat: 'Nature' },
+            { src: 'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=800&h=500&fit=crop', name: 'Sunlight', cat: 'Nature' },
+            { src: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=800&h=500&fit=crop', name: 'Beach', cat: 'Travel' }
         ];
 
-        function shuffle(a) {
-            var b = a.slice();
-            for (var i = b.length - 1; i > 0; i--) {
-                var j = Math.floor(Math.random() * (i + 1));
-                var t = b[i]; b[i] = b[j]; b[j] = t;
-            }
-            return b;
-        }
+        function shuffle(a) { var b = a.slice(); for (var i = b.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var t = b[i]; b[i] = b[j]; b[j] = t; } return b; }
+        function pickRandom(pool, n, excl) { var avail = pool.filter(function (p) { return !excl.some(function (e) { return e.src === p.src; }); }); var src = avail.length >= n ? avail : pool; return shuffle(src).slice(0, n); }
 
-        function pick(pool, n, excl) {
-            var avail = pool.filter(function (p) {
-                return !excl.some(function (e) { return e.src === p.src; });
-            });
-            var src = avail.length >= n ? avail : pool;
-            return shuffle(src).slice(0, n);
-        }
-
-        // ---- BUILD GRID (once) ----
+        // ============================================================
+        //  BUILD GRID
+        // ============================================================
         function buildGrid() {
-            gallery.innerHTML = '';
-            frames = [];
-
+            gallery.innerHTML = ''; frames = [];
             for (var i = 0; i < COUNT; i++) {
-                var f = document.createElement('div');
-                f.className = 'photo-frame';
-                f.setAttribute('data-fi', i);
-
-                // skeleton
-                var sk = document.createElement('div');
-                sk.className = 'photo-skeleton';
-                f.appendChild(sk);
-
-                // img wrap
-                var wr = document.createElement('div');
-                wr.className = 'photo-img-wrap';
-                f.appendChild(wr);
-
-                // flash
-                var fl = document.createElement('div');
-                fl.className = 'swap-flash';
-                f.appendChild(fl);
-
-                // info
-                var inf = document.createElement('div');
-                inf.className = 'photo-info-hover';
-                inf.innerHTML = '<p class="info-title"></p><span class="info-meta">Photography</span>';
+                var f = document.createElement('div'); f.className = 'photo-frame frame-square'; f.setAttribute('data-fi', i);
+                var sk = document.createElement('div'); sk.className = 'photo-skeleton'; f.appendChild(sk);
+                var wr = document.createElement('div'); wr.className = 'photo-img-wrap'; f.appendChild(wr);
+                var fl = document.createElement('div'); fl.className = 'swap-flash'; f.appendChild(fl);
+                var inf = document.createElement('div'); inf.className = 'photo-info-hover';
+                inf.innerHTML = '<p class="info-title"></p><p class="info-ai-line"></p><span class="info-meta">Photography</span>';
                 f.appendChild(inf);
-
-                // long press ring
-                var rn = document.createElement('div');
-                rn.className = 'long-press-ring';
-                rn.innerHTML = '<svg viewBox="0 0 60 60"><circle class="r-bg" cx="30" cy="30" r="26"/><circle class="r-fg" cx="30" cy="30" r="26" stroke-dasharray="' + CIRC + '" stroke-dashoffset="' + CIRC + '"/></svg>';
-                f.appendChild(rn);
-
-                wireFrame(f, i, rn);
-                gallery.appendChild(f);
-                frames.push(f);
+                var rn = document.createElement('div'); rn.className = 'long-press-ring'; rn.innerHTML = '<svg viewBox="0 0 60 60"><circle class="r-bg" cx="30" cy="30" r="26"/><circle class="r-fg" cx="30" cy="30" r="26" stroke-dasharray="' + CIRC + '" stroke-dashoffset="' + CIRC + '"/></svg>'; f.appendChild(rn);
+                wireFrame(f, i, rn); gallery.appendChild(f); frames.push(f);
             }
         }
 
-        // ---- FRAME EVENTS ----
+        // ============================================================
+        //  FRAME EVENTS
+        // ============================================================
         function wireFrame(f, idx, ring) {
-            var rfg = ring.querySelector('.r-fg');
-            var lpRAF = 0;
-            var lpStart = 0;
-            var wasLP = false;
-
-            // Click -> lightbox
-            f.addEventListener('click', function () {
-                if (wasLP) { wasLP = false; return; }
-                if (shown[idx]) openLb(idx);
-            });
-
-            // 3D tilt (desktop)
+            var rfg = ring.querySelector('.r-fg'), lpRAF = 0, lpStart = 0, wasLP = false;
+            f.addEventListener('click', function () { if (wasLP) { wasLP = false; return; } if (shown[idx]) openLb(idx); });
             f.addEventListener('mousemove', function (e) {
-                if (window.innerWidth < 769) return;
-                var r = f.getBoundingClientRect();
+                if (window.innerWidth < 769) return; var r = f.getBoundingClientRect();
                 var rx = ((e.clientY - r.top - r.height / 2) / (r.height / 2)) * 4;
                 var ry = ((r.width / 2 - e.clientX + r.left) / (r.width / 2)) * 4;
                 f.style.transform = 'perspective(800px) rotateX(' + rx + 'deg) rotateY(' + ry + 'deg) translateZ(6px)';
                 f.style.transition = 'border-color .4s ease, box-shadow .5s ease';
             });
-
-            f.addEventListener('mouseleave', function () {
-                f.style.transform = '';
-                f.style.transition = '';
-            });
-
-            // Long press (mobile)
+            f.addEventListener('mouseleave', function () { f.style.transform = ''; f.style.transition = ''; });
             f.addEventListener('touchstart', function () {
-                if (window.innerWidth >= 769) return;
-                wasLP = false;
-                lpStart = Date.now();
-                ring.classList.add('ring-show');
-                rfg.style.strokeDashoffset = CIRC;
-
-                function tick() {
-                    var p = Math.min((Date.now() - lpStart) / LP_MS, 1);
-                    rfg.style.strokeDashoffset = CIRC * (1 - p);
-                    if (p < 1) {
-                        lpRAF = requestAnimationFrame(tick);
-                    } else {
-                        wasLP = true;
-                        ring.classList.remove('ring-show');
-                        rfg.style.strokeDashoffset = CIRC;
-                        if (shown[idx]) openLb(idx);
-                    }
-                }
+                if (window.innerWidth >= 769) return; wasLP = false; lpStart = Date.now(); ring.classList.add('ring-show'); rfg.style.strokeDashoffset = CIRC;
+                function tick() { var p = Math.min((Date.now() - lpStart) / LP_MS, 1); rfg.style.strokeDashoffset = CIRC * (1 - p); if (p < 1) { lpRAF = requestAnimationFrame(tick); } else { wasLP = true; ring.classList.remove('ring-show'); rfg.style.strokeDashoffset = CIRC; if (shown[idx]) openLb(idx); } }
                 lpRAF = requestAnimationFrame(tick);
             }, { passive: true });
-
-            function stopLP() {
-                cancelAnimationFrame(lpRAF);
-                ring.classList.remove('ring-show');
-                rfg.style.strokeDashoffset = CIRC;
-            }
-
+            function stopLP() { cancelAnimationFrame(lpRAF); ring.classList.remove('ring-show'); rfg.style.strokeDashoffset = CIRC; }
             f.addEventListener('touchend', function () { stopLP(); setTimeout(function () { wasLP = false; }, 60); }, { passive: true });
-            f.addEventListener('touchcancel', stopLP, { passive: true });
-            f.addEventListener('touchmove', stopLP, { passive: true });
+            f.addEventListener('touchcancel', stopLP, { passive: true }); f.addEventListener('touchmove', stopLP, { passive: true });
         }
 
-        // ---- LOAD IMAGE INTO FRAME (crossfade, no rebuild) ----
+        // ============================================================
+        //  LOAD IMAGE — Ratio Detection এবং Dynamic Class
+        // ============================================================
         function loadInto(idx, photo) {
-            var f = frames[idx];
-            if (!f || !photo) return;
-
+            var f = frames[idx]; if (!f || !photo) return;
             shown[idx] = photo;
-            var wr = f.querySelector('.photo-img-wrap');
-            var sk = f.querySelector('.photo-skeleton');
-            var fl = f.querySelector('.swap-flash');
-            f.querySelector('.info-title').textContent = photo.name || '';
+            var wr = f.querySelector('.photo-img-wrap'), sk = f.querySelector('.photo-skeleton'), fl = f.querySelector('.swap-flash');
 
-            // new image — absolute, on top, hidden
+            f.querySelector('.info-title').textContent = photo.cat || '';
+            f.querySelector('.info-ai-line').textContent = generateSmartCaption(photo);
+
             var ni = document.createElement('img');
-            ni.src = photo.src;
-            ni.alt = photo.name || '';
-            ni.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;opacity:0;z-index:1;transition:opacity ' + FADE_MS + 'ms ease;filter:brightness(0.82) saturate(0.8) contrast(1.05);';
+            ni.src = photo.src; ni.alt = photo.cat || '';
+            ni.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;opacity:0;z-index:1;filter:brightness(0.82) saturate(0.8) contrast(1.05);transition:opacity ' + FADE_MS + 'ms ease, transform ' + FADE_MS + 'ms ease;transform:scale(1.03);';
 
-            // find old image (not the new one we just added)
             var old = wr.querySelector('img');
             var leaving = wr.querySelector('img[data-lv]');
             if (leaving) leaving.remove();
-
             wr.appendChild(ni);
 
             ni.onload = function () {
-                // hide skeleton
                 if (sk) sk.style.display = 'none';
 
-                // fade in new
-                requestAnimationFrame(function () {
-                    ni.style.opacity = '1';
-                });
+                // ছবির রেশিও বুঝে ফ্রেমের ক্লাস চেঞ্জ করা (ফাঁকা জায়গা দূর করার ম্যাজিক)
+                var ratio = ni.naturalWidth / ni.naturalHeight;
+                f.classList.remove('frame-wide', 'frame-tall', 'frame-square');
+                if (ratio > RATIO_WIDE) f.classList.add('frame-wide');
+                else if (ratio < RATIO_TALL) f.classList.add('frame-tall');
+                else f.classList.add('frame-square');
 
-                // fade out old
+                requestAnimationFrame(function () { ni.style.opacity = '1'; ni.style.transform = 'scale(1)'; });
+
                 if (old && old !== ni) {
                     old.setAttribute('data-lv', '1');
-                    old.style.transition = 'opacity ' + FADE_MS + 'ms ease';
-                    old.style.opacity = '0';
-                    setTimeout(function () {
-                        if (old.parentNode) old.remove();
-                        // clean new img — remove inline styles, let CSS take over
-                        ni.removeAttribute('style');
-                    }, FADE_MS + 50);
+                    old.style.transition = 'opacity ' + FADE_MS + 'ms ease, transform ' + FADE_MS + 'ms ease';
+                    old.style.opacity = '0'; old.style.transform = 'scale(0.95)';
+                    setTimeout(function () { if (old.parentNode) old.remove(); }, FADE_MS + 50);
                 } else {
-                    setTimeout(function () {
-                        ni.removeAttribute('style');
-                    }, FADE_MS + 50);
+                    setTimeout(function () { ni.removeAttribute('style'); }, FADE_MS + 50);
                 }
-
-                // flash
-                fl.classList.remove('flash-on');
-                void fl.offsetWidth;
-                fl.classList.add('flash-on');
+                fl.classList.remove('flash-on'); void fl.offsetWidth; fl.classList.add('flash-on');
             };
-
-            ni.onerror = function () {
-                // remove failed new img, keep old
-                if (ni.parentNode) ni.remove();
-            };
+            ni.onerror = function () { if (ni.parentNode) ni.remove(); };
         }
 
-        // ---- SWAP ALL FRAMES ----
-        function swapAll() {
+        // ============================================================
+        //  SHUFFLE + SWAP (ফ্রেম সরায় না, শুধু ছবি বদলায়)
+        // ============================================================
+        function shuffleAndSwap() {
             if (busy || allPhotos.length < COUNT) return;
             busy = true;
+            frames.forEach(function (f) { f.classList.add('shuffling'); });
 
-            var next = pick(allPhotos, COUNT, shown);
-            var delay = 0;
-
-            for (var i = 0; i < COUNT; i++) {
-                (function (fi, d) {
-                    setTimeout(function () { loadInto(fi, next[fi]); }, d);
-                })(i, delay);
-                delay += 100;
-            }
-
-            setTimeout(function () { busy = false; }, delay + FADE_MS + 100);
+            setTimeout(function () {
+                var candidates = pickRandom(allPhotos, COUNT, shown);
+                for (var i = 0; i < COUNT; i++) {
+                    if (candidates[i]) loadInto(i, candidates[i]);
+                }
+                var delay = 0;
+                for (var i = 0; i < COUNT; i++) {
+                    (function (fi, d) {
+                        setTimeout(function () { frames[fi].classList.remove('shuffling'); }, d);
+                    })(i, delay);
+                    delay += 60;
+                }
+                setTimeout(function () { busy = false; }, delay + FADE_MS + 100);
+            }, 400);
         }
 
-        // ---- SCROLL REVEAL ----
+        // ============================================================
+        //  SCROLL REVEAL + INIT
+        // ============================================================
         var fObs = new IntersectionObserver(function (entries) {
-            entries.forEach(function (e) {
-                if (e.isIntersecting) {
-                    var i = parseInt(e.target.getAttribute('data-fi'));
-                    setTimeout(function () {
-                        e.target.classList.add('frame-visible');
-                    }, i * 60);
-                    fObs.unobserve(e.target);
-                }
-            });
+            entries.forEach(function (e) { if (e.isIntersecting) { var i = Array.prototype.indexOf.call(frames, e.target); setTimeout(function () { e.target.classList.add('frame-visible'); }, i * 60); fObs.unobserve(e.target); } });
         }, { threshold: 0.05, rootMargin: '0px 0px -30px 0px' });
 
-        // ---- INIT ----
         (async function () {
-            buildGrid();
-            frames.forEach(function (f) { fObs.observe(f); });
+            buildGrid(); frames.forEach(function (f) { fObs.observe(f); });
+            var sb = document.createElement('div'); sb.className = 'gallery-status-bar'; sb.innerHTML = '<div class="gallery-status-left"><span class="gallery-status-dot"></span><span class="gallery-status-text" id="gs-t">Scanning folders...</span></div><span class="gallery-status-right" id="gs-c">—</span>'; gallery.parentElement.insertBefore(sb, gallery);
+            var gsT = document.getElementById('gs-t'), gsC = document.getElementById('gs-c');
+            var scan = await scanAllFolders(); var parts = [];
+            for (var fname in scan.results) { if (scan.results[fname].length > 0) parts.push(fname + ': ' + scan.results[fname].length); }
+            if (scan.total === 0) { allPhotos = fallbacks.slice(); gsT.textContent = 'Sample gallery'; gsC.textContent = allPhotos.length + ' photos'; }
+            else { for (var key in scan.results) { allPhotos = allPhotos.concat(scan.results[key]); } gsT.textContent = parts.join(' · '); gsC.textContent = scan.total + ' photos'; }
+            while (allPhotos.length < COUNT) { allPhotos.push(allPhotos[Math.floor(Math.random() * allPhotos.length)]); }
 
-            // Status bar
-            var sb = document.createElement('div');
-            sb.className = 'gallery-status-bar';
-            sb.innerHTML = '<div class="gallery-status-left"><span class="gallery-status-dot"></span><span class="gallery-status-text" id="gs-t">Scanning library...</span></div><span class="gallery-status-right" id="gs-c">—</span>';
-            gallery.parentElement.insertBefore(sb, gallery);
+            var initPhotos = shuffle(allPhotos).slice(0, COUNT);
+            for (var i = 0; i < COUNT; i++) { (function (fi) { setTimeout(function () { loadInto(fi, initPhotos[fi]); }, fi * 80); })(i); }
 
-            var gsT = document.getElementById('gs-t');
-            var gsC = document.getElementById('gs-c');
-
-            var found = await scanPhotos();
-
-            if (found.length === 0) {
-                allPhotos = fallbacks.slice();
-                gsT.textContent = 'Sample gallery';
-            } else {
-                allPhotos = found;
-                gsT.textContent = found.length + ' photos in library';
-            }
-            gsC.textContent = allPhotos.length + ' photos';
-
-            // Fill if not enough
-            while (allPhotos.length < COUNT) {
-                allPhotos.push(allPhotos[Math.floor(Math.random() * allPhotos.length)]);
-            }
-
-            // Initial load
-            var init = shuffle(allPhotos).slice(0, COUNT);
-            for (var i = 0; i < COUNT; i++) {
-                (function (fi) {
-                    setTimeout(function () { loadInto(fi, init[fi]); }, fi * 80);
-                })(i);
-            }
-
-            // Periodic swap
-            if (allPhotos.length >= COUNT) {
-                setInterval(swapAll, SWAP_MS);
-            }
+            if (allPhotos.length >= COUNT) { setInterval(shuffleAndSwap, SWAP_INTERVAL_SEC * 1000); }
         })();
     })();
+
+    // == SCROLL EFFECT: CONTACT BUTTON STICK TO RIGHT --//
     // === CONTACT FORM ===
     (function initContactForm() {
         const contactForm = document.getElementById('contact-form');
