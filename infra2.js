@@ -1008,14 +1008,19 @@ document.addEventListener('DOMContentLoaded', () => {
                 var sizeOrder = { 'large': 1, 'tall': 2, 'wide': 3, 'square': 4 };
                 chosen.sort(function (a, b) { return sizeOrder[a] - sizeOrder[b]; });
             } else {
-                // 2 Columns Mobile logic: 2 cols × 7 rows = 14 cells
-                // Wide(2 cells) + Square(1 cell). W + S = 12 AND 2W + S = 14 => W = 2, S = 10
+                // 2 Columns Mobile logic: 2 cols × 8 rows = 16 cells
+                // T(2) + W(2) + S(1) = 12 frames AND 2T + 2W + S = 16 cells
+                // Example: 4 Tall + 8 Square = 16 cells
                 var mobileTemplates = [
-                    ['wide', 'wide', 'square', 'square', 'square', 'square', 'square', 'square', 'square', 'square', 'square', 'square'],
-                    ['wide', 'wide', 'square', 'square', 'square', 'square', 'square', 'square', 'square', 'square', 'square', 'square']
+                    ['tall', 'tall', 'tall', 'tall', 'square', 'square', 'square', 'square', 'square', 'square', 'square', 'square'],
+                    ['tall', 'tall', 'wide', 'wide', 'square', 'square', 'square', 'square', 'square', 'square', 'square', 'square']
                 ];
                 chosen = mobileTemplates[Math.floor(Math.random() * mobileTemplates.length)].slice();
-                chosen.sort(function (a, b) { return a === 'wide' ? 1 : 2; }); // Wide first for mobile
+                // Sort: Tall first, then Wide, then Square for perfect dense packing
+                chosen.sort(function (a, b) {
+                    var order = { 'tall': 1, 'wide': 2, 'square': 3 };
+                    return order[a] - order[b];
+                });
             }
             return chosen;
         }

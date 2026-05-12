@@ -4076,9 +4076,10 @@ body::before {
         font-size: clamp(1.5rem, 4.5vw, 2.5rem);
     }
 
+    /* এখানে repeat(7, 1fr) এর জায়গায় repeat(8, 1fr) করে দাও */
     .photo-gallery {
         grid-template-columns: repeat(2, 1fr);
-        grid-template-rows: repeat(7, 1fr);
+        grid-template-rows: repeat(8, 1fr);
         height: 80vh;
         min-height: 500px;
         gap: 6px;
