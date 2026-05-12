@@ -320,89 +320,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     })();
 
-    // === PHOTO GALLERY ===
-    // (function initPhotoGallery() {
-    //     const gallery = document.getElementById('photo-wall');
-    //     if (!gallery) return;
-
-    //     // Photo manifest — loads from assets/photos folder
-    //     // Each entry: { src, aspect: 'landscape'|'portrait'|'square' }
-    //     // In production, scan folder server-side; here we use Unsplash placeholders
-    //     // and determine their aspect ratios to assign correct CSS frames.
-    //     const photos = [
-    //         { src: 'images/photo1.png', aspect: 'landscape' },
-    //         { src: 'images/photo2.png', aspect: 'square' },
-    //         { src: 'images/photo3.png', aspect: 'portrait' },
-    //         { src: 'images/photo4.png', aspect: 'landscape' },
-    //         { src: 'https://images.unsplash.com/photo-1475274047050-1d0c0975c63e?w=600&h=900&fit=crop', aspect: 'portrait' },
-    //         { src: 'https://images.unsplash.com/photo-1431890713044-d71e360a8a0a?w=500&h=500&fit=crop', aspect: 'square' },
-    //         { src: 'https://images.unsplash.com/photo-1506157786151-b8491531f063?w=800&h=500&fit=crop', aspect: 'landscape' },
-    //         { src: 'https://images.unsplash.com/photo-1501594907352-04cda38ebc29?w=600&h=900&fit=crop', aspect: 'portrait' },
-    //         { src: 'https://images.unsplash.com/photo-1511379938547-c1f69b13d835?w=500&h=500&fit=crop', aspect: 'square' },
-    //         { src: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=800&h=500&fit=crop', aspect: 'landscape' },
-    //         { src: 'https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?w=600&h=900&fit=crop', aspect: 'portrait' },
-    //         { src: 'https://images.unsplash.com/photo-1426604966848-d7adac402bff?w=500&h=500&fit=crop', aspect: 'square' },
-    //     ];
-
-    //     // Fisher-Yates shuffle
-    //     function shuffle(arr) {
-    //         const a = [...arr];
-    //         for (let i = a.length - 1; i > 0; i--) {
-    //             const j = Math.floor(Math.random() * (i + 1));
-    //             [a[i], a[j]] = [a[j], a[i]];
-    //         }
-    //         return a;
-    //     }
-
-    //     // To load from local folder: replace photos[] with dynamic list
-    //     // e.g., via fetch('/api/photos') or a pre-generated manifest.js
-    //     // Images will auto-detect aspect and fit correct frame via object-fit
-
-    //     let currentBatch = [];
-    //     const BATCH_SIZE = 12;
-
-    //     function renderGallery(photoList) {
-    //         gallery.innerHTML = '';
-    //         photoList.forEach((photo, index) => {
-    //             const item = document.createElement('div');
-    //             item.className = 'photo-item';
-    //             item.setAttribute('data-aspect', photo.aspect);
-
-    //             const img = document.createElement('img');
-    //             img.src = photo.src;
-    //             img.alt = `Photography ${index + 1}`;
-    //             img.loading = 'lazy';
-    //             // Ensure landscape images fill landscape frames, portrait fills portrait frames
-    //             img.style.objectPosition = 'center center';
-
-    //             item.appendChild(img);
-    //             gallery.appendChild(item);
-    //         });
-    //     }
-
-    //     function loadNextBatch() {
-    //         // Pick a fresh unique set of photos, cycling through all
-    //         const shuffled = shuffle(photos);
-    //         currentBatch = shuffled.slice(0, BATCH_SIZE);
-    //         renderGallery(currentBatch);
-    //     }
-
-    //     // Initial load
-    //     loadNextBatch();
-
-    //     // Rotate every 8 seconds — picks a fresh shuffle so each visible set has unique pics
-    //     // and ensures no photo repeats within the same 12-slot display
-    //     setInterval(() => {
-    //         loadNextBatch();
-    //     }, 8000);
-
-    //     // To load from local folder (assets/photos/):
-    //     // Replace the photos[] array above with dynamically loaded paths.
-    //     // Example:
-    //     //   fetch('/assets/photos/manifest.json')
-    //     //     .then(r => r.json())
-    //     //     .then(list => { photos = list; loadNextBatch(); });
-    // })();
     // === PHOTO GALLERY — BULLETPROOF SHUFFLE + PERFECT MOBILE ===
     (function initPhotoGallery() {
         var gallery = document.getElementById('photo-wall');
@@ -419,7 +336,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         var MAX_IDX = 50;
         var EXTS = ['jpg', 'jpeg', 'png', 'webp'];
-        var SWAP_MS = 10000;  // 10 সেকেন্ডে ছবি চেঞ্জ
+        var SWAP_MS = 15000;  // 10 সেকেন্ডে ছবি চেঞ্জ
         var SHUFFLE_MS = 60000; // 1 মিনিটে ফ্রেম লেআউট চেঞ্জ
         var FADE_MS = 550;
         var COUNT = 12;
@@ -651,6 +568,14 @@ document.addEventListener('DOMContentLoaded', () => {
             f.querySelector('.info-caption').textContent = '';
 
             var ni = document.createElement('img'); ni.src = photo.src; ni.alt = photo.cat || '';
+            if (idx < 2) {
+                ni.loading = "eager";
+                ni.fetchPriority = "high";
+            } else {
+                ni.loading = "lazy";
+                ni.fetchPriority = "low";
+            }
+            ni.decoding = "async";
             ni.style.cssText = 'position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;display:block;opacity:0;z-index:1;transition:opacity ' + FADE_MS + 'ms ease;filter:brightness(.82) saturate(.8) contrast(1.05);';
 
             var old = wr.querySelector('img:not([data-lv])'); var leaving = wr.querySelector('img[data-lv]'); if (leaving) leaving.remove();
