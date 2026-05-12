@@ -610,14 +610,350 @@ document.addEventListener('DOMContentLoaded', () => {
     //     })();
     // })();
 
-    // === PHOTO GALLERY — DYNAMIC RATIO + SMART CAPTION ===
+    // // === PHOTO GALLERY — RESPONSIVE GAPLESS + SHUFFLE FIX ===
+    // (function initPhotoGallery() {
+    //     var gallery = document.getElementById('photo-wall');
+    //     if (!gallery) return;
+
+    //     var FOLDERS = [
+    //         { name: 'Nature', path: 'photos/nature' },
+    //         { name: 'Street', path: 'photos/street' },
+    //         { name: 'Architecture', path: 'photos/architecture' },
+    //         { name: 'Portrait', path: 'photos/portrait' },
+    //         { name: 'Travel', path: 'photos/travel' },
+    //         { name: 'Persona', path: 'photos/persona' }
+    //     ];
+
+    //     var MAX_IDX = 50;
+    //     var EXTS = ['jpg', 'jpeg', 'png', 'webp'];
+    //     var SWAP_MS = 10000;  // 10 সেকেন্ডে ছবি চেঞ্জ
+    //     var SHUFFLE_MS = 60000; // 1 মিনিটে ফ্রেম লেআউট চেঞ্জ
+    //     var FADE_MS = 550;
+    //     var COUNT = 12;
+    //     var CIRC = 2 * Math.PI * 26;
+
+    //     var allPhotos = [];
+    //     var landscapePool = [];
+    //     var portraitPool = [];
+    //     var neutralPool = [];
+
+    //     var shown = [];
+    //     var frames = [];
+    //     var currentLayout = [];
+    //     var lbIdx = -1;
+    //     var busy = false;
+
+    //     // ============================================================
+    //     //  RESPONSIVE LAYOUT SYSTEM
+    //     // ============================================================
+    //     function getCurrentColumns() {
+    //         if (window.innerWidth >= 1024) return 6;
+    //         if (window.innerWidth >= 768) return 4;
+    //         if (window.innerWidth >= 640) return 3;
+    //         return 2; // Small mobile
+    //     }
+
+    //     function generateRandomLayout() {
+    //         var cols = getCurrentColumns();
+    //         var chosen = [];
+
+    //         if (cols >= 3) {
+    //             // 24 cells logic: 3L + W + T = 12
+    //             var templates = [
+    //                 ['large', 'large', 'wide', 'wide', 'wide', 'tall', 'tall', 'tall', 'square', 'square', 'square', 'square'],
+    //                 ['large', 'large', 'large', 'wide', 'tall', 'tall', 'square', 'square', 'square', 'square', 'square', 'square'],
+    //                 ['large', 'wide', 'wide', 'wide', 'wide', 'tall', 'tall', 'tall', 'tall', 'tall', 'square', 'square'],
+    //                 ['large', 'large', 'large', 'large', 'square', 'square', 'square', 'square', 'square', 'square', 'square', 'square']
+    //             ];
+    //             chosen = templates[Math.floor(Math.random() * templates.length)].slice();
+    //             // Sort by size for gapless packing
+    //             var sizeOrder = { 'large': 1, 'tall': 2, 'wide': 3, 'square': 4 };
+    //             chosen.sort(function (a, b) { return sizeOrder[a] - sizeOrder[b]; });
+    //         } else {
+    //             // 2 Columns Mobile logic: 12 cells (2 cols × 6 rows)
+    //             // Only Square and Tall to prevent gaps
+    //             var mobileTemplates = [
+    //                 ['tall', 'tall', 'tall', 'square', 'square', 'square', 'square', 'square', 'square', 'square', 'square', 'square'],
+    //                 ['tall', 'tall', 'square', 'square', 'square', 'square', 'square', 'square', 'square', 'square', 'square', 'square']
+    //             ];
+    //             chosen = mobileTemplates[Math.floor(Math.random() * mobileTemplates.length)].slice();
+    //             chosen.sort(function (a, b) { return a === 'tall' ? 1 : 2; }); // Tall first for mobile
+    //         }
+    //         return chosen;
+    //     }
+
+    //     // ============================================================
+    //     //  RATIO POOL SYSTEM
+    //     // ============================================================
+    //     function categorizePhotos() {
+    //         landscapePool = []; portraitPool = []; neutralPool = [];
+    //         for (var i = 0; i < allPhotos.length; i++) {
+    //             var p = allPhotos[i];
+    //             if (p.ratio >= 1.2) landscapePool.push(p);
+    //             else if (p.ratio <= 0.85) portraitPool.push(p);
+    //             else neutralPool.push(p);
+    //         }
+    //         if (landscapePool.length === 0) landscapePool = allPhotos.slice();
+    //         if (portraitPool.length === 0) portraitPool = allPhotos.slice();
+    //         if (neutralPool.length === 0) neutralPool = allPhotos.slice();
+    //     }
+
+    //     function smartAssign(layoutTypes) {
+    //         var needL = 0, needP = 0, needN = 0;
+    //         for (var i = 0; i < layoutTypes.length; i++) {
+    //             if (layoutTypes[i] === 'large' || layoutTypes[i] === 'wide') needL++;
+    //             else if (layoutTypes[i] === 'tall') needP++;
+    //             else needN++;
+    //         }
+
+    //         var lSrc = shuffle(landscapePool.slice()).slice(0, needL);
+    //         var pSrc = shuffle(portraitPool.slice()).slice(0, needP);
+    //         var nSrc = shuffle(neutralPool.slice()).slice(0, needN);
+
+    //         while (lSrc.length < needL) lSrc.push(allPhotos[Math.floor(Math.random() * allPhotos.length)]);
+    //         while (pSrc.length < needP) pSrc.push(allPhotos[Math.floor(Math.random() * allPhotos.length)]);
+    //         while (nSrc.length < needN) nSrc.push(allPhotos[Math.floor(Math.random() * allPhotos.length)]);
+
+    //         var assigned = [];
+    //         for (var i = 0; i < layoutTypes.length; i++) {
+    //             var type = layoutTypes[i];
+    //             var photo;
+    //             if (type === 'large' || type === 'wide') photo = lSrc.shift();
+    //             else if (type === 'tall') photo = pSrc.shift();
+    //             else photo = nSrc.shift();
+
+    //             assigned.push({ photo: photo, type: type });
+    //         }
+    //         return assigned;
+    //     }
+
+    //     // ============================================================
+    //     //  CAPTIONS
+    //     // ============================================================
+    //     var captions = {
+    //         'Nature': { landscape: ['A horizon stretched beyond what the eye could hold', 'Where the land meets the sky in golden silence'], portrait: ['Standing at the base of something ancient and tall', 'Looking up — the canopy filters light into ribbons'], square: ['A single frame where nature arranged itself perfectly', 'Details the camera chose — light, texture, stillness'] },
+    //         'Street': { landscape: ['The city unfolds — every block tells a different story', 'Urban panorama — life flowing through concrete veins'], portrait: ['Looking up between buildings — a slice of sky remains', 'Vertical city — walls of glass reaching for clouds'], square: ['A moment the street offered without asking', 'Someone walked through this frame and left a story'] },
+    //         'Architecture': { landscape: ['Structure repeated — rhythm built in concrete and glass'], portrait: ['Looking straight up — the building converges to a point'], square: ['One detail of a building most people walk past'] },
+    //         'Portrait': { landscape: ['A person in their environment — context tells the story'], portrait: ['Full presence — head to toe, completely themselves'], square: ['The face fills the frame — nothing else matters here'] },
+    //         'Travel': { landscape: ['A new landscape — the kind that makes you reset'], portrait: ['Looking up in a place you have never been before'], square: ['One square of a place you might never see again'] },
+    //         'Persona': { landscape: ['Not just the person — the space they inhabit'], portrait: ['Full height — this is how I actually stand in the world'], square: ['Just me — no context needed, no explanation required'] }
+    //     };
+
+    //     function generateCaption(photo) {
+    //         var catCaps = captions[photo.cat];
+    //         if (catCaps) {
+    //             var orient = photo.ratio > 1.2 ? 'landscape' : (photo.ratio < 0.85 ? 'portrait' : 'square');
+    //             var typeCaps = catCaps[orient];
+    //             if (typeCaps && typeCaps.length > 0) return typeCaps[Math.floor(Math.random() * typeCaps.length)];
+    //         }
+    //         return 'The lens found something worth stopping for';
+    //     }
+
+    //     // ============================================================
+    //     //  LIGHTBOX
+    //     // ============================================================
+    //     var lbOverlay = document.createElement('div');
+    //     lbOverlay.setAttribute('id', 'lb-overlay');
+    //     lbOverlay.style.cssText = 'position:fixed;inset:0;z-index:10000;display:flex;align-items:center;justify-content:center;background:rgba(5,7,12,.96);backdrop-filter:blur(30px);opacity:0;visibility:hidden;transition:opacity .45s ease,visibility .45s ease;';
+    //     lbOverlay.innerHTML = '<div id="lb-box" style="position:relative;max-width:92vw;max-height:88vh;"><button id="lb-x" style="position:absolute;top:-54px;right:0;width:44px;height:44px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:50%;color:#a0aec0;cursor:pointer;font-size:1.3rem;display:flex;align-items:center;justify-content:center;transition:all .3s ease;z-index:5;backdrop-filter:blur(8px);">&#10005;</button><div style="position:relative;padding:10px;background:linear-gradient(145deg,rgba(255,255,255,.06),rgba(255,255,255,.02));border-radius:18px;border:1px solid rgba(255,255,255,.1);box-shadow:0 40px 100px rgba(0,0,0,.7),0 0 60px rgba(0,212,255,.06);"><div style="padding:14px;background:rgba(10,15,28,.9);border-radius:10px;border:1px solid rgba(255,255,255,.04);overflow:hidden;"><img id="lb-img" src="" alt="" style="display:block;max-width:85vw;max-height:78vh;object-fit:contain;border-radius:6px;transition:opacity .3s ease,transform .3s ease;"></div></div><button id="lb-p" style="position:absolute;top:50%;left:-68px;transform:translateY(-50%);width:50px;height:50px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:50%;color:#a0aec0;cursor:pointer;font-size:1.6rem;display:flex;align-items:center;justify-content:center;transition:all .3s ease;backdrop-filter:blur(8px);">&#8249;</button><button id="lb-n" style="position:absolute;top:50%;right:-68px;transform:translateY(-50%);width:50px;height:50px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:50%;color:#a0aec0;cursor:pointer;font-size:1.6rem;display:flex;align-items:center;justify-content:center;transition:all .3s ease;backdrop-filter:blur(8px);">&#8250;</button><div style="position:absolute;bottom:-44px;left:0;right:0;display:flex;justify-content:space-between;align-items:center;"><span id="lb-cnt" style="font-family:var(--font-mono);font-size:.8rem;color:#718096;background:rgba(255,255,255,.04);padding:6px 16px;border-radius:20px;border:1px solid rgba(255,255,255,.06);"></span><span id="lb-cat" style="font-family:var(--font-mono);font-size:.75rem;color:#00d4ff;opacity:.7;"></span></div></div>';
+    //     document.body.appendChild(lbOverlay);
+
+    //     var lbImg = document.getElementById('lb-img'), lbCnt = document.getElementById('lb-cnt'), lbCat = document.getElementById('lb-cat'), lbX = document.getElementById('lb-x'), lbP = document.getElementById('lb-p'), lbN = document.getElementById('lb-n');
+    //     var shutter = document.createElement('div');
+    //     shutter.style.cssText = 'position:fixed;inset:0;background:#fff;z-index:10001;pointer-events:none;opacity:0;';
+    //     document.body.appendChild(shutter);
+
+    //     function fireShutter() { shutter.style.transition = 'none'; shutter.style.opacity = '0'; void shutter.offsetWidth; shutter.style.transition = 'opacity .35s ease'; shutter.style.opacity = '.12'; setTimeout(function () { shutter.style.opacity = '0'; }, 120); }
+    //     lbX.onmouseenter = function () { this.style.background = 'rgba(239,68,68,.15)'; this.style.borderColor = 'rgba(239,68,68,.4)'; this.style.color = '#ef4444'; this.style.transform = 'rotate(90deg) scale(1.1)'; };
+    //     lbX.onmouseleave = function () { this.style.background = 'rgba(255,255,255,.06)'; this.style.borderColor = 'rgba(255,255,255,.12)'; this.style.color = '#a0aec0'; this.style.transform = ''; };
+    //     lbP.onmouseenter = function () { this.style.background = 'rgba(0,212,255,.12)'; this.style.borderColor = 'rgba(0,212,255,.35)'; this.style.color = '#00d4ff'; };
+    //     lbP.onmouseleave = function () { this.style.background = 'rgba(255,255,255,.05)'; this.style.borderColor = 'rgba(255,255,255,.1)'; this.style.color = '#a0aec0'; };
+    //     lbN.onmouseenter = function () { this.style.background = 'rgba(0,212,255,.12)'; this.style.borderColor = 'rgba(0,212,255,.35)'; this.style.color = '#00d4ff'; };
+    //     lbN.onmouseleave = function () { this.style.background = 'rgba(255,255,255,.05)'; this.style.borderColor = 'rgba(255,255,255,.1)'; this.style.color = '#a0aec0'; };
+
+    //     function openLb(idx) { if (!shown[idx]) return; lbIdx = idx; fireShutter(); lbImg.src = shown[idx].src; lbImg.alt = shown[idx].cat; lbImg.style.opacity = '1'; lbImg.style.transform = ''; lbCnt.textContent = (idx + 1) + ' / ' + COUNT; lbCat.textContent = shown[idx].cat; lbOverlay.style.opacity = '1'; lbOverlay.style.visibility = 'visible'; document.body.style.overflow = 'hidden'; if (navigator.vibrate) navigator.vibrate(25); }
+    //     function closeLb() { lbOverlay.style.opacity = '0'; lbOverlay.style.visibility = 'hidden'; document.body.style.overflow = ''; lbIdx = -1; }
+    //     function navLb(dir) { if (lbIdx < 0) return; var ni = lbIdx; for (var i = 0; i < COUNT; i++) { ni = (ni + dir + COUNT) % COUNT; if (shown[ni]) break; } if (ni === lbIdx) return; lbImg.style.opacity = '0'; lbImg.style.transform = dir > 0 ? 'translateX(12px)' : 'translateX(-12px)'; setTimeout(function () { lbIdx = ni; lbImg.src = shown[ni].src; lbImg.alt = shown[ni].cat; lbCnt.textContent = (ni + 1) + ' / ' + COUNT; lbCat.textContent = shown[ni].cat; lbImg.style.transform = ''; lbImg.style.opacity = '1'; }, 260); }
+
+    //     lbX.onclick = closeLb; lbP.onclick = function () { navLb(-1); }; lbN.onclick = function () { navLb(1); };
+    //     lbOverlay.addEventListener('click', function (e) { if (e.target === lbOverlay) closeLb(); });
+    //     document.addEventListener('keydown', function (e) { if (lbOverlay.style.visibility !== 'visible') return; if (e.key === 'Escape') closeLb(); if (e.key === 'ArrowLeft') navLb(-1); if (e.key === 'ArrowRight') navLb(1); });
+    //     var txS = 0;
+    //     lbOverlay.addEventListener('touchstart', function (e) { txS = e.changedTouches[0].screenX; }, { passive: true });
+    //     lbOverlay.addEventListener('touchend', function (e) { var d = txS - e.changedTouches[0].screenX; if (Math.abs(d) > 60) navLb(d > 0 ? 1 : -1); }, { passive: true });
+
+    //     // ============================================================
+    //     //  SCANNER
+    //     // ============================================================
+    //     function probe(url) { return new Promise(function (res) { var im = new Image(); im.onload = function () { var r = im.naturalWidth / im.naturalHeight; res({ ok: true, ratio: r }); }; im.onerror = function () { res({ ok: false }); }; im.src = url; }); }
+    //     function scanFolder(fo) { return new Promise(function (resolve) { var found = [], misses = 0, n = 1; function next() { if (n > MAX_IDX || (found.length > 0 && misses >= 5)) { resolve(found); return; } var num = n; n++; var ei = 0; function tryExt() { if (ei >= EXTS.length) { misses++; next(); return; } var url = fo.path + '/' + num + '.' + EXTS[ei]; ei++; probe(url).then(function (info) { if (info.ok) { found.push({ src: url, name: fo.name + ' — ' + num, cat: fo.name, ratio: info.ratio }); misses = 0; next(); } else { tryExt(); } }); } tryExt(); } next(); }); }
+    //     async function scanAllFolders() { var results = {}, total = 0; for (var i = 0; i < FOLDERS.length; i++) { var photos = await scanFolder(FOLDERS[i]); results[FOLDERS[i].name] = photos; total += photos.length; } return { results: results, total: total }; }
+
+    //     var fallbacks = [
+    //         { src: 'https://images.unsplash.com/photo-1475274047050-1d0c0975c63e?w=600&h=900&fit=crop', name: 'Mountain', cat: 'Nature', ratio: 0.667 },
+    //         { src: 'https://images.unsplash.com/photo-1431890713044-d71e360a8a0a?w=500&h=500&fit=crop', name: 'Reflection', cat: 'Nature', ratio: 1.0 },
+    //         { src: 'https://images.unsplash.com/photo-1506157786151-b8491531f063?w=800&h=500&fit=crop', name: 'Fields', cat: 'Nature', ratio: 1.6 },
+    //         { src: 'https://images.unsplash.com/photo-1501594907352-04cda38ebc29?w=600&h=900&fit=crop', name: 'City', cat: 'Street', ratio: 0.667 },
+    //         { src: 'https://images.unsplash.com/photo-1511379938547-c1f69b13d835?w=500&h=500&fit=crop', name: 'Pattern', cat: 'Architecture', ratio: 1.0 },
+    //         { src: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=800&h=500&fit=crop', name: 'Clouds', cat: 'Nature', ratio: 1.6 },
+    //         { src: 'https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?w=600&h=900&fit=crop', name: 'Forest', cat: 'Nature', ratio: 0.667 },
+    //         { src: 'https://images.unsplash.com/photo-1426604966848-d7adac402bff?w=500&h=500&fit=crop', name: 'Silhouette', cat: 'Portrait', ratio: 1.0 },
+    //         { src: 'https://images.unsplash.com/photo-1519681393784-d120267933ba?w=800&h=500&fit=crop', name: 'Stars', cat: 'Nature', ratio: 1.6 },
+    //         { src: 'https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=800&h=500&fit=crop', name: 'Fog', cat: 'Nature', ratio: 1.6 },
+    //         { src: 'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=800&h=500&fit=crop', name: 'Sunlight', cat: 'Nature', ratio: 1.6 },
+    //         { src: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=800&h=500&fit=crop', name: 'Beach', cat: 'Travel', ratio: 1.6 }
+    //     ];
+
+    //     function shuffle(arr) { var a = arr.slice(); for (var i = a.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var t = a[i]; a[i] = a[j]; a[j] = t; } return a; }
+
+    //     // ============================================================
+    //     //  BUILD GRID
+    //     // ============================================================
+    //     function buildGrid() {
+    //         gallery.innerHTML = ''; frames = [];
+    //         for (var i = 0; i < COUNT; i++) {
+    //             var f = document.createElement('div'); f.className = 'photo-frame';
+    //             var sk = document.createElement('div'); sk.className = 'photo-skeleton'; f.appendChild(sk);
+    //             var wr = document.createElement('div'); wr.className = 'photo-img-wrap'; f.appendChild(wr);
+    //             var fl = document.createElement('div'); fl.className = 'swap-flash'; f.appendChild(fl);
+    //             var inf = document.createElement('div'); inf.className = 'photo-info-hover';
+    //             inf.innerHTML = '<p class="info-title"></p><p class="info-caption"></p><span class="info-meta">Photography</span>';
+    //             f.appendChild(inf);
+    //             var rn = document.createElement('div'); rn.className = 'long-press-ring'; rn.innerHTML = '<svg viewBox="0 0 60 60"><circle class="r-bg" cx="30" cy="30" r="26"/><circle class="r-fg" cx="30" cy="30" r="26" stroke-dasharray="' + CIRC + '" stroke-dashoffset="' + CIRC + '"/></svg>'; f.appendChild(rn);
+    //             wireFrame(f, i, rn); gallery.appendChild(f); frames.push(f);
+    //         }
+    //     }
+
+    //     // ============================================================
+    //     //  FRAME EVENTS
+    //     // ============================================================
+    //     function wireFrame(f, idx, ring) {
+    //         var rfg = ring.querySelector('.r-fg'), lpRAF = 0, lpStart = 0, wasLP = false;
+    //         f.addEventListener('click', function () { if (wasLP) { wasLP = false; return; } if (shown[idx]) openLb(idx); });
+    //         f.addEventListener('mousemove', function (e) { if (window.innerWidth < 769) return; var r = f.getBoundingClientRect(); var rx = ((e.clientY - r.top - r.height / 2) / (r.height / 2)) * 4; var ry = ((r.width / 2 - e.clientX + r.left) / (r.width / 2)) * 4; f.style.transform = 'perspective(800px) rotateX(' + rx + 'deg) rotateY(' + ry + 'deg) translateZ(6px)'; f.style.transition = 'border-color .4s ease, box-shadow .5s ease'; });
+    //         f.addEventListener('mouseleave', function () { f.style.transform = ''; f.style.transition = ''; });
+    //         f.addEventListener('mouseenter', function () { if (shown[idx]) { var capEl = f.querySelector('.info-caption'); if (capEl && !capEl.textContent) { var cap = generateCaption(shown[idx]); capEl.textContent = cap; } } });
+    //         f.addEventListener('touchstart', function () { if (window.innerWidth >= 769) return; wasLP = false; lpStart = Date.now(); ring.classList.add('ring-show'); rfg.style.strokeDashoffset = CIRC; function tick() { var p = Math.min((Date.now() - lpStart) / 5000, 1); rfg.style.strokeDashoffset = CIRC * (1 - p); if (p < 1) { lpRAF = requestAnimationFrame(tick); } else { wasLP = true; ring.classList.remove('ring-show'); rfg.style.strokeDashoffset = CIRC; if (shown[idx]) openLb(idx); } } lpRAF = requestAnimationFrame(tick); }, { passive: true });
+    //         function stopLP() { cancelAnimationFrame(lpRAF); ring.classList.remove('ring-show'); rfg.style.strokeDashoffset = CIRC; }
+    //         f.addEventListener('touchend', function () { stopLP(); setTimeout(function () { wasLP = false; }, 60); }, { passive: true });
+    //         f.addEventListener('touchcancel', stopLP, { passive: true }); f.addEventListener('touchmove', stopLP, { passive: true });
+    //     }
+
+    //     // ============================================================
+    //     //  LOAD IMAGE INTO FRAME (BUG FIXED - Preserves shuffling class)
+    //     // ============================================================
+    //     function loadInto(idx, photo, frameType) {
+    //         var f = frames[idx]; if (!f || !photo) return;
+    //         shown[idx] = photo;
+    //         var wr = f.querySelector('.photo-img-wrap'), sk = f.querySelector('.photo-skeleton'), fl = f.querySelector('.swap-flash');
+
+    //         // THE ULTIMATE FIX: Use classList instead of className to preserve 'shuffling'
+    //         f.classList.remove('frame-large', 'frame-wide', 'frame-tall', 'frame-square');
+    //         f.classList.add('frame-visible', 'frame-' + frameType);
+
+    //         f.querySelector('.info-title').textContent = photo.cat || '';
+    //         f.querySelector('.info-caption').textContent = '';
+
+    //         var ni = document.createElement('img'); ni.src = photo.src; ni.alt = photo.cat || '';
+    //         ni.style.cssText = 'position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;display:block;opacity:0;z-index:1;transition:opacity ' + FADE_MS + 'ms ease;filter:brightness(.82) saturate(.8) contrast(1.05);';
+
+    //         var old = wr.querySelector('img:not([data-lv])'); var leaving = wr.querySelector('img[data-lv]'); if (leaving) leaving.remove();
+    //         wr.appendChild(ni);
+
+    //         ni.onload = function () {
+    //             if (sk) sk.style.display = 'none';
+    //             requestAnimationFrame(function () { ni.style.opacity = '1'; });
+    //             if (old) { old.setAttribute('data-lv', '1'); old.style.transition = 'opacity ' + FADE_MS + 'ms ease'; old.style.opacity = '0'; setTimeout(function () { if (old.parentNode) old.remove(); ni.removeAttribute('style'); }, FADE_MS + 50); }
+    //             else { setTimeout(function () { ni.removeAttribute('style'); }, FADE_MS + 50); }
+    //             fl.classList.remove('flash-on'); void fl.offsetWidth; fl.classList.add('flash-on');
+    //         };
+    //         ni.onerror = function () { if (ni.parentNode) ni.remove(); };
+    //     }
+
+    //     // ============================================================
+    //     //  SWAP IMAGES (10 sec)
+    //     // ============================================================
+    //     function swapImages() {
+    //         if (busy || allPhotos.length < COUNT) return;
+    //         busy = true;
+    //         var assigned = smartAssign(currentLayout);
+    //         for (var i = 0; i < COUNT; i++) { if (assigned[i]) { (function (fi, d) { setTimeout(function () { loadInto(fi, assigned[fi].photo, assigned[fi].type); }, d); })(i, i * 80); } }
+    //         setTimeout(function () { busy = false; }, COUNT * 80 + FADE_MS + 100);
+    //     }
+
+    //     // ============================================================
+    //     //  SHUFFLE LAYOUT (60 sec) — BUG FIXED
+    //     // ============================================================
+    //     async function shuffleLayout() {
+    //         if (busy) return;
+    //         busy = true;
+
+    //         // 1. Fade out all frames
+    //         for (var i = 0; i < COUNT; i++) { frames[i].classList.add('shuffling'); }
+    //         await new Promise(function (r) { setTimeout(r, 450); });
+
+    //         // 2. Generate new layout based on current screen size
+    //         currentLayout = generateRandomLayout();
+    //         var assigned = smartAssign(currentLayout);
+
+    //         // 3. Apply new layout & images while invisible
+    //         for (var i = 0; i < COUNT; i++) {
+    //             if (assigned[i]) loadInto(i, assigned[i].photo, assigned[i].type);
+    //         }
+
+    //         // 4. Force DOM Reflow
+    //         void gallery.offsetHeight;
+
+    //         // 5. Fade in with stagger
+    //         for (var i = 0; i < COUNT; i++) {
+    //             (function (fi) {
+    //                 setTimeout(function () { frames[fi].classList.remove('shuffling'); }, fi * 50);
+    //             })(i);
+    //         }
+
+    //         setTimeout(function () { busy = false; }, COUNT * 50 + 500);
+    //     }
+
+    //     // ============================================================
+    //     //  INIT
+    //     // ============================================================
+    //     var fObs = new IntersectionObserver(function (entries) { entries.forEach(function (e) { if (e.isIntersecting) { var i = Array.prototype.indexOf.call(frames, e.target); if (i < 0) i = 0; setTimeout(function () { e.target.classList.add('frame-visible'); }, i * 50); fObs.unobserve(e.target); } }); }, { threshold: 0.05, rootMargin: '0px 0px -30px 0px' });
+
+    //     (async function () {
+    //         buildGrid(); frames.forEach(function (f) { fObs.observe(f); });
+    //         var sb = document.createElement('div'); sb.className = 'gallery-status-bar'; sb.innerHTML = '<div class="gallery-status-left"><span class="gallery-status-dot"></span><span class="gallery-status-text" id="gs-t">Scanning folders...</span></div><span class="gallery-status-right" id="gs-c">—</span>'; gallery.parentElement.insertBefore(sb, gallery);
+    //         var gsT = document.getElementById('gs-t'), gsC = document.getElementById('gs-c');
+    //         var scan = await scanAllFolders(); var parts = [];
+    //         for (var fname in scan.results) { if (scan.results[fname].length > 0) parts.push(fname + ': ' + scan.results[fname].length); }
+    //         if (scan.total === 0) { allPhotos = fallbacks.slice(); gsT.textContent = 'Sample gallery'; gsC.textContent = allPhotos.length + ' photos'; }
+    //         else { for (var key in scan.results) { allPhotos = allPhotos.concat(scan.results[key]); } gsT.textContent = parts.join(' · '); gsC.textContent = scan.total + ' photos'; }
+    //         while (allPhotos.length < COUNT) { allPhotos.push(allPhotos[Math.floor(Math.random() * allPhotos.length)]); }
+
+    //         categorizePhotos();
+
+    //         currentLayout = generateRandomLayout();
+    //         var initAssigned = smartAssign(currentLayout);
+    //         for (var i = 0; i < COUNT; i++) { (function (fi) { setTimeout(function () { loadInto(fi, initAssigned[fi].photo, initAssigned[fi].type); }, fi * 70); })(i); }
+
+    //         setInterval(swapImages, SWAP_MS);
+    //         setInterval(shuffleLayout, SHUFFLE_MS);
+
+    //         // Handle Screen Resize dynamically
+    //         var resizeTimer;
+    //         window.addEventListener('resize', function () {
+    //             clearTimeout(resizeTimer);
+    //             resizeTimer = setTimeout(function () {
+    //                 shuffleLayout();
+    //             }, 300);
+    //         });
+    //     })();
+    // })();
+
+    // === PHOTO GALLERY — BULLETPROOF SHUFFLE + PERFECT MOBILE ===
     (function initPhotoGallery() {
         var gallery = document.getElementById('photo-wall');
         if (!gallery) return;
 
-        // ============================================================
-        //  ⚙️ কনফিগারেশন (CONFIGURATION)
-        // ============================================================
         var FOLDERS = [
             { name: 'Nature', path: 'photos/nature' },
             { name: 'Street', path: 'photos/street' },
@@ -629,62 +965,143 @@ document.addEventListener('DOMContentLoaded', () => {
 
         var MAX_IDX = 50;
         var EXTS = ['jpg', 'jpeg', 'png', 'webp'];
-        var SWAP_INTERVAL_SEC = 10; // ছবি কত সেকেন্ড পর পর চেঞ্জ হবে
-        var LP_MS = 5000;
-        var FADE_MS = 650;
+        var SWAP_MS = 10000;  // 10 সেকেন্ডে ছবি চেঞ্জ
+        var SHUFFLE_MS = 60000; // 1 মিনিটে ফ্রেম লেআউট চেঞ্জ
+        var FADE_MS = 550;
         var COUNT = 12;
         var CIRC = 2 * Math.PI * 26;
 
-        // রেশিও কন্ট্রোল (এখান থেকে তুমি বাড়িয়ে কমিয়ে দেখতে পারো)
-        var RATIO_WIDE = 1.35;   // এর চেয়ে বেশি হলে Landscape (frame-wide)
-        var RATIO_TALL = 0.75;   // এর চেয়ে কম হলে Portrait (frame-tall)
-        // এই দুইয়ের মাঝামাঝি হলে Square (frame-square)
-
         var allPhotos = [];
+        var landscapePool = [];
+        var portraitPool = [];
+        var neutralPool = [];
+
         var shown = [];
         var frames = [];
+        var currentLayout = [];
         var lbIdx = -1;
         var busy = false;
 
         // ============================================================
-        //  SMART CAPTION GENERATOR (AI এর চেয়ে ভালো ও ফাস্ট)
+        //  RESPONSIVE LAYOUT SYSTEM
         // ============================================================
-        function generateSmartCaption(photo) {
-            var seed = 0;
-            var match = photo.src.match(/(\d+)\.\w+$/);
-            if (match) seed = parseInt(match[1]);
+        function getCurrentColumns() {
+            if (window.innerWidth >= 1024) return 6;
+            if (window.innerWidth >= 768) return 4;
+            if (window.innerWidth >= 640) return 3;
+            return 2; // Small mobile
+        }
 
-            var captions = {
-                'Nature': ["Where light whispers through the canopy", "A moment frozen in emerald time", "Silent echoes of the wild", "Nature breathing in colors", "The earth's quiet symphony", "Sunlight dancing on still water", "A quiet place far away", "Forest of forgotten dreams"],
-                'Street': ["Stories hidden in concrete shadows", "The rhythm of a million footsteps", "Life unfolding in the urban grid", "Neon dreams and quiet corners", "City lights painting the night", "A glance across the avenue", "Pavements holding untold tales", "Midnight reflections in glass"],
-                'Architecture': ["Geometry reaching for the sky", "Steel and glass dreaming awake", "Lines that define our space", "Structure born from pure thought", "Monuments of human ambition", "Where math becomes beauty", "Symmetry in concrete", "The weight of empty space"],
-                'Portrait': ["Eyes holding a thousand unsaid words", "A soul captured in a breath", "The quiet universe of a glance", "Light tracing the human story", "Raw, unfiltered existence", "Truth resting in a silhouette", "Unspoken words in stillness", "Framed humanity"],
-                'Travel': ["Chasing horizons beyond the map", "Memories etched in foreign light", "The world waiting to be discovered", "Footsteps in untouched sands", "Wandering into the unknown", "A postcard from reality", "Breathing distant air", "Time moving slowly here"],
-                'Persona': ["A reflection of the inner self", "Fragments of an untold story", "Wearing the universe within", "Between who I am and who I seem", "An echo of silent identity", "Unveiling the hidden canvas", "Just me, without the code", "The mind behind the machine"]
-            };
+        function generateRandomLayout() {
+            var cols = getCurrentColumns();
+            var chosen = [];
 
-            var lines = captions[photo.cat] || captions['Nature'];
-            // Seed এর উপর ভিত্তি করে সবসময় একই ছবির জন্য একই লাইন আসবে
-            return lines[seed % lines.length];
+            if (cols >= 3) {
+                // 24 cells logic: 3L + W + T = 12
+                var templates = [
+                    ['large', 'large', 'wide', 'wide', 'wide', 'tall', 'tall', 'tall', 'square', 'square', 'square', 'square'],
+                    ['large', 'large', 'large', 'wide', 'tall', 'tall', 'square', 'square', 'square', 'square', 'square', 'square'],
+                    ['large', 'wide', 'wide', 'wide', 'wide', 'tall', 'tall', 'tall', 'tall', 'tall', 'square', 'square'],
+                    ['large', 'large', 'large', 'large', 'square', 'square', 'square', 'square', 'square', 'square', 'square', 'square']
+                ];
+                chosen = templates[Math.floor(Math.random() * templates.length)].slice();
+                var sizeOrder = { 'large': 1, 'tall': 2, 'wide': 3, 'square': 4 };
+                chosen.sort(function (a, b) { return sizeOrder[a] - sizeOrder[b]; });
+            } else {
+                // 2 Columns Mobile logic: 2 cols × 7 rows = 14 cells
+                // Wide(2 cells) + Square(1 cell). W + S = 12 AND 2W + S = 14 => W = 2, S = 10
+                var mobileTemplates = [
+                    ['wide', 'wide', 'square', 'square', 'square', 'square', 'square', 'square', 'square', 'square', 'square', 'square'],
+                    ['wide', 'wide', 'square', 'square', 'square', 'square', 'square', 'square', 'square', 'square', 'square', 'square']
+                ];
+                chosen = mobileTemplates[Math.floor(Math.random() * mobileTemplates.length)].slice();
+                chosen.sort(function (a, b) { return a === 'wide' ? 1 : 2; }); // Wide first for mobile
+            }
+            return chosen;
         }
 
         // ============================================================
-        //  LIGHTBOX (ইফেক্ট সহ)
+        //  RATIO POOL SYSTEM
+        // ============================================================
+        function categorizePhotos() {
+            landscapePool = []; portraitPool = []; neutralPool = [];
+            for (var i = 0; i < allPhotos.length; i++) {
+                var p = allPhotos[i];
+                if (p.ratio >= 1.2) landscapePool.push(p);
+                else if (p.ratio <= 0.85) portraitPool.push(p);
+                else neutralPool.push(p);
+            }
+            if (landscapePool.length === 0) landscapePool = allPhotos.slice();
+            if (portraitPool.length === 0) portraitPool = allPhotos.slice();
+            if (neutralPool.length === 0) neutralPool = allPhotos.slice();
+        }
+
+        function smartAssign(layoutTypes) {
+            var needL = 0, needP = 0, needN = 0;
+            for (var i = 0; i < layoutTypes.length; i++) {
+                if (layoutTypes[i] === 'large' || layoutTypes[i] === 'wide') needL++;
+                else if (layoutTypes[i] === 'tall') needP++;
+                else needN++;
+            }
+
+            var lSrc = shuffle(landscapePool.slice()).slice(0, needL);
+            var pSrc = shuffle(portraitPool.slice()).slice(0, needP);
+            var nSrc = shuffle(neutralPool.slice()).slice(0, needN);
+
+            while (lSrc.length < needL) lSrc.push(allPhotos[Math.floor(Math.random() * allPhotos.length)]);
+            while (pSrc.length < needP) pSrc.push(allPhotos[Math.floor(Math.random() * allPhotos.length)]);
+            while (nSrc.length < needN) nSrc.push(allPhotos[Math.floor(Math.random() * allPhotos.length)]);
+
+            var assigned = [];
+            for (var i = 0; i < layoutTypes.length; i++) {
+                var type = layoutTypes[i];
+                var photo;
+                if (type === 'large' || type === 'wide') photo = lSrc.shift();
+                else if (type === 'tall') photo = pSrc.shift();
+                else photo = nSrc.shift();
+
+                assigned.push({ photo: photo, type: type });
+            }
+            return assigned;
+        }
+
+        // ============================================================
+        //  CAPTIONS
+        // ============================================================
+        var captions = {
+            'Nature': { landscape: ['A horizon stretched beyond what the eye could hold', 'Where the land meets the sky in golden silence'], portrait: ['Standing at the base of something ancient and tall', 'Looking up — the canopy filters light into ribbons'], square: ['A single frame where nature arranged itself perfectly', 'Details the camera chose — light, texture, stillness'] },
+            'Street': { landscape: ['The city unfolds — every block tells a different story', 'Urban panorama — life flowing through concrete veins'], portrait: ['Looking up between buildings — a slice of sky remains', 'Vertical city — walls of glass reaching for clouds'], square: ['A moment the street offered without asking', 'Someone walked through this frame and left a story'] },
+            'Architecture': { landscape: ['Structure repeated — rhythm built in concrete and glass'], portrait: ['Looking straight up — the building converges to a point'], square: ['One detail of a building most people walk past'] },
+            'Portrait': { landscape: ['A person in their environment — context tells the story'], portrait: ['Full presence — head to toe, completely themselves'], square: ['The face fills the frame — nothing else matters here'] },
+            'Travel': { landscape: ['A new landscape — the kind that makes you reset'], portrait: ['Looking up in a place you have never been before'], square: ['One square of a place you might never see again'] },
+            'Persona': { landscape: ['Not just the person — the space they inhabit'], portrait: ['Full height — this is how I actually stand in the world'], square: ['Just me — no context needed, no explanation required'] }
+        };
+
+        function generateCaption(photo) {
+            var catCaps = captions[photo.cat];
+            if (catCaps) {
+                var orient = photo.ratio > 1.2 ? 'landscape' : (photo.ratio < 0.85 ? 'portrait' : 'square');
+                var typeCaps = catCaps[orient];
+                if (typeCaps && typeCaps.length > 0) return typeCaps[Math.floor(Math.random() * typeCaps.length)];
+            }
+            return 'The lens found something worth stopping for';
+        }
+
+        // ============================================================
+        //  LIGHTBOX
         // ============================================================
         var lbOverlay = document.createElement('div');
         lbOverlay.setAttribute('id', 'lb-overlay');
-        lbOverlay.style.cssText = 'position:fixed;inset:0;z-index:10000;display:flex;align-items:center;justify-content:center;background:rgba(5,7,12,0.96);backdrop-filter:blur(30px);opacity:0;visibility:hidden;transition:opacity .45s ease,visibility .45s ease;';
+        lbOverlay.style.cssText = 'position:fixed;inset:0;z-index:10000;display:flex;align-items:center;justify-content:center;background:rgba(5,7,12,.96);backdrop-filter:blur(30px);opacity:0;visibility:hidden;transition:opacity .45s ease,visibility .45s ease;';
         lbOverlay.innerHTML = '<div id="lb-box" style="position:relative;max-width:92vw;max-height:88vh;"><button id="lb-x" style="position:absolute;top:-54px;right:0;width:44px;height:44px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:50%;color:#a0aec0;cursor:pointer;font-size:1.3rem;display:flex;align-items:center;justify-content:center;transition:all .3s ease;z-index:5;backdrop-filter:blur(8px);">&#10005;</button><div style="position:relative;padding:10px;background:linear-gradient(145deg,rgba(255,255,255,.06),rgba(255,255,255,.02));border-radius:18px;border:1px solid rgba(255,255,255,.1);box-shadow:0 40px 100px rgba(0,0,0,.7),0 0 60px rgba(0,212,255,.06);"><div style="padding:14px;background:rgba(10,15,28,.9);border-radius:10px;border:1px solid rgba(255,255,255,.04);overflow:hidden;"><img id="lb-img" src="" alt="" style="display:block;max-width:85vw;max-height:78vh;object-fit:contain;border-radius:6px;transition:opacity .3s ease,transform .3s ease;"></div></div><button id="lb-p" style="position:absolute;top:50%;left:-68px;transform:translateY(-50%);width:50px;height:50px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:50%;color:#a0aec0;cursor:pointer;font-size:1.6rem;display:flex;align-items:center;justify-content:center;transition:all .3s ease;backdrop-filter:blur(8px);">&#8249;</button><button id="lb-n" style="position:absolute;top:50%;right:-68px;transform:translateY(-50%);width:50px;height:50px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:50%;color:#a0aec0;cursor:pointer;font-size:1.6rem;display:flex;align-items:center;justify-content:center;transition:all .3s ease;backdrop-filter:blur(8px);">&#8250;</button><div style="position:absolute;bottom:-44px;left:0;right:0;display:flex;justify-content:space-between;align-items:center;"><span id="lb-cnt" style="font-family:var(--font-mono);font-size:.8rem;color:#718096;background:rgba(255,255,255,.04);padding:6px 16px;border-radius:20px;border:1px solid rgba(255,255,255,.06);"></span><span id="lb-cat" style="font-family:var(--font-mono);font-size:.75rem;color:#00d4ff;opacity:.7;"></span></div></div>';
         document.body.appendChild(lbOverlay);
 
         var lbImg = document.getElementById('lb-img'), lbCnt = document.getElementById('lb-cnt'), lbCat = document.getElementById('lb-cat'), lbX = document.getElementById('lb-x'), lbP = document.getElementById('lb-p'), lbN = document.getElementById('lb-n');
-
         var shutter = document.createElement('div');
         shutter.style.cssText = 'position:fixed;inset:0;background:#fff;z-index:10001;pointer-events:none;opacity:0;';
         document.body.appendChild(shutter);
 
-        function fireShutter() { shutter.style.transition = 'none'; shutter.style.opacity = '0'; void shutter.offsetWidth; shutter.style.transition = 'opacity .35s ease'; shutter.style.opacity = '0.12'; setTimeout(function () { shutter.style.opacity = '0'; }, 120); }
-
+        function fireShutter() { shutter.style.transition = 'none'; shutter.style.opacity = '0'; void shutter.offsetWidth; shutter.style.transition = 'opacity .35s ease'; shutter.style.opacity = '.12'; setTimeout(function () { shutter.style.opacity = '0'; }, 120); }
         lbX.onmouseenter = function () { this.style.background = 'rgba(239,68,68,.15)'; this.style.borderColor = 'rgba(239,68,68,.4)'; this.style.color = '#ef4444'; this.style.transform = 'rotate(90deg) scale(1.1)'; };
         lbX.onmouseleave = function () { this.style.background = 'rgba(255,255,255,.06)'; this.style.borderColor = 'rgba(255,255,255,.12)'; this.style.color = '#a0aec0'; this.style.transform = ''; };
         lbP.onmouseenter = function () { this.style.background = 'rgba(0,212,255,.12)'; this.style.borderColor = 'rgba(0,212,255,.35)'; this.style.color = '#00d4ff'; };
@@ -699,35 +1116,33 @@ document.addEventListener('DOMContentLoaded', () => {
         lbX.onclick = closeLb; lbP.onclick = function () { navLb(-1); }; lbN.onclick = function () { navLb(1); };
         lbOverlay.addEventListener('click', function (e) { if (e.target === lbOverlay) closeLb(); });
         document.addEventListener('keydown', function (e) { if (lbOverlay.style.visibility !== 'visible') return; if (e.key === 'Escape') closeLb(); if (e.key === 'ArrowLeft') navLb(-1); if (e.key === 'ArrowRight') navLb(1); });
-
         var txS = 0;
         lbOverlay.addEventListener('touchstart', function (e) { txS = e.changedTouches[0].screenX; }, { passive: true });
         lbOverlay.addEventListener('touchend', function (e) { var d = txS - e.changedTouches[0].screenX; if (Math.abs(d) > 60) navLb(d > 0 ? 1 : -1); }, { passive: true });
 
         // ============================================================
-        //  FOLDER SCANNER
+        //  SCANNER
         // ============================================================
-        function exists(url) { return new Promise(function (res) { var im = new Image(); im.onload = function () { res(true); }; im.onerror = function () { res(false); }; im.src = url; }); }
-        function scanFolder(folderObj) { return new Promise(function (resolve) { var found = [], misses = 0, n = 1; function next() { if (n > MAX_IDX || (found.length > 0 && misses >= 5)) { resolve(found); return; } var num = n; n++; var ei = 0; function tryExt() { if (ei >= EXTS.length) { misses++; next(); return; } var url = folderObj.path + '/' + num + '.' + EXTS[ei]; ei++; exists(url).then(function (ok) { if (ok) { found.push({ src: url, name: folderObj.name + ' — ' + num, cat: folderObj.name }); misses = 0; next(); } else { tryExt(); } }); } tryExt(); } next(); }); }
-        async function scanAllFolders() { var results = {}, total = 0; for (var i = 0; i < FOLDERS.length; i++) { var f = FOLDERS[i]; var photos = await scanFolder(f); results[f.name] = photos; total += photos.length; } return { results: results, total: total }; }
+        function probe(url) { return new Promise(function (res) { var im = new Image(); im.onload = function () { var r = im.naturalWidth / im.naturalHeight; res({ ok: true, ratio: r }); }; im.onerror = function () { res({ ok: false }); }; im.src = url; }); }
+        function scanFolder(fo) { return new Promise(function (resolve) { var found = [], misses = 0, n = 1; function next() { if (n > MAX_IDX || (found.length > 0 && misses >= 5)) { resolve(found); return; } var num = n; n++; var ei = 0; function tryExt() { if (ei >= EXTS.length) { misses++; next(); return; } var url = fo.path + '/' + num + '.' + EXTS[ei]; ei++; probe(url).then(function (info) { if (info.ok) { found.push({ src: url, name: fo.name + ' — ' + num, cat: fo.name, ratio: info.ratio }); misses = 0; next(); } else { tryExt(); } }); } tryExt(); } next(); }); }
+        async function scanAllFolders() { var results = {}, total = 0; for (var i = 0; i < FOLDERS.length; i++) { var photos = await scanFolder(FOLDERS[i]); results[FOLDERS[i].name] = photos; total += photos.length; } return { results: results, total: total }; }
 
         var fallbacks = [
-            { src: 'https://images.unsplash.com/photo-1475274047050-1d0c0975c63e?w=600&h=900&fit=crop', name: 'Mountain', cat: 'Nature' },
-            { src: 'https://images.unsplash.com/photo-1431890713044-d71e360a8a0a?w=500&h=500&fit=crop', name: 'Reflection', cat: 'Nature' },
-            { src: 'https://images.unsplash.com/photo-1506157786151-b8491531f063?w=800&h=500&fit=crop', name: 'Fields', cat: 'Nature' },
-            { src: 'https://images.unsplash.com/photo-1501594907352-04cda38ebc29?w=600&h=900&fit=crop', name: 'City', cat: 'Street' },
-            { src: 'https://images.unsplash.com/photo-1511379938547-c1f69b13d835?w=500&h=500&fit=crop', name: 'Pattern', cat: 'Architecture' },
-            { src: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=800&h=500&fit=crop', name: 'Clouds', cat: 'Nature' },
-            { src: 'https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?w=600&h=900&fit=crop', name: 'Forest', cat: 'Nature' },
-            { src: 'https://images.unsplash.com/photo-1426604966848-d7adac402bff?w=500&h=500&fit=crop', name: 'Silhouette', cat: 'Portrait' },
-            { src: 'https://images.unsplash.com/photo-1519681393784-d120267933ba?w=800&h=500&fit=crop', name: 'Stars', cat: 'Nature' },
-            { src: 'https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=800&h=500&fit=crop', name: 'Fog', cat: 'Nature' },
-            { src: 'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=800&h=500&fit=crop', name: 'Sunlight', cat: 'Nature' },
-            { src: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=800&h=500&fit=crop', name: 'Beach', cat: 'Travel' }
+            { src: 'https://images.unsplash.com/photo-1475274047050-1d0c0975c63e?w=600&h=900&fit=crop', name: 'Mountain', cat: 'Nature', ratio: 0.667 },
+            { src: 'https://images.unsplash.com/photo-1431890713044-d71e360a8a0a?w=500&h=500&fit=crop', name: 'Reflection', cat: 'Nature', ratio: 1.0 },
+            { src: 'https://images.unsplash.com/photo-1506157786151-b8491531f063?w=800&h=500&fit=crop', name: 'Fields', cat: 'Nature', ratio: 1.6 },
+            { src: 'https://images.unsplash.com/photo-1501594907352-04cda38ebc29?w=600&h=900&fit=crop', name: 'City', cat: 'Street', ratio: 0.667 },
+            { src: 'https://images.unsplash.com/photo-1511379938547-c1f69b13d835?w=500&h=500&fit=crop', name: 'Pattern', cat: 'Architecture', ratio: 1.0 },
+            { src: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=800&h=500&fit=crop', name: 'Clouds', cat: 'Nature', ratio: 1.6 },
+            { src: 'https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?w=600&h=900&fit=crop', name: 'Forest', cat: 'Nature', ratio: 0.667 },
+            { src: 'https://images.unsplash.com/photo-1426604966848-d7adac402bff?w=500&h=500&fit=crop', name: 'Silhouette', cat: 'Portrait', ratio: 1.0 },
+            { src: 'https://images.unsplash.com/photo-1519681393784-d120267933ba?w=800&h=500&fit=crop', name: 'Stars', cat: 'Nature', ratio: 1.6 },
+            { src: 'https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=800&h=500&fit=crop', name: 'Fog', cat: 'Nature', ratio: 1.6 },
+            { src: 'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=800&h=500&fit=crop', name: 'Sunlight', cat: 'Nature', ratio: 1.6 },
+            { src: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=800&h=500&fit=crop', name: 'Beach', cat: 'Travel', ratio: 1.6 }
         ];
 
-        function shuffle(a) { var b = a.slice(); for (var i = b.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var t = b[i]; b[i] = b[j]; b[j] = t; } return b; }
-        function pickRandom(pool, n, excl) { var avail = pool.filter(function (p) { return !excl.some(function (e) { return e.src === p.src; }); }); var src = avail.length >= n ? avail : pool; return shuffle(src).slice(0, n); }
+        function shuffle(arr) { var a = arr.slice(); for (var i = a.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var t = a[i]; a[i] = a[j]; a[j] = t; } return a; }
 
         // ============================================================
         //  BUILD GRID
@@ -735,12 +1150,12 @@ document.addEventListener('DOMContentLoaded', () => {
         function buildGrid() {
             gallery.innerHTML = ''; frames = [];
             for (var i = 0; i < COUNT; i++) {
-                var f = document.createElement('div'); f.className = 'photo-frame frame-square'; f.setAttribute('data-fi', i);
+                var f = document.createElement('div'); f.className = 'photo-frame';
                 var sk = document.createElement('div'); sk.className = 'photo-skeleton'; f.appendChild(sk);
                 var wr = document.createElement('div'); wr.className = 'photo-img-wrap'; f.appendChild(wr);
                 var fl = document.createElement('div'); fl.className = 'swap-flash'; f.appendChild(fl);
                 var inf = document.createElement('div'); inf.className = 'photo-info-hover';
-                inf.innerHTML = '<p class="info-title"></p><p class="info-ai-line"></p><span class="info-meta">Photography</span>';
+                inf.innerHTML = '<p class="info-title"></p><p class="info-caption"></p><span class="info-meta">Photography</span>';
                 f.appendChild(inf);
                 var rn = document.createElement('div'); rn.className = 'long-press-ring'; rn.innerHTML = '<svg viewBox="0 0 60 60"><circle class="r-bg" cx="30" cy="30" r="26"/><circle class="r-fg" cx="30" cy="30" r="26" stroke-dasharray="' + CIRC + '" stroke-dashoffset="' + CIRC + '"/></svg>'; f.appendChild(rn);
                 wireFrame(f, i, rn); gallery.appendChild(f); frames.push(f);
@@ -753,99 +1168,100 @@ document.addEventListener('DOMContentLoaded', () => {
         function wireFrame(f, idx, ring) {
             var rfg = ring.querySelector('.r-fg'), lpRAF = 0, lpStart = 0, wasLP = false;
             f.addEventListener('click', function () { if (wasLP) { wasLP = false; return; } if (shown[idx]) openLb(idx); });
-            f.addEventListener('mousemove', function (e) {
-                if (window.innerWidth < 769) return; var r = f.getBoundingClientRect();
-                var rx = ((e.clientY - r.top - r.height / 2) / (r.height / 2)) * 4;
-                var ry = ((r.width / 2 - e.clientX + r.left) / (r.width / 2)) * 4;
-                f.style.transform = 'perspective(800px) rotateX(' + rx + 'deg) rotateY(' + ry + 'deg) translateZ(6px)';
-                f.style.transition = 'border-color .4s ease, box-shadow .5s ease';
-            });
+            f.addEventListener('mousemove', function (e) { if (window.innerWidth < 769) return; var r = f.getBoundingClientRect(); var rx = ((e.clientY - r.top - r.height / 2) / (r.height / 2)) * 4; var ry = ((r.width / 2 - e.clientX + r.left) / (r.width / 2)) * 4; f.style.transform = 'perspective(800px) rotateX(' + rx + 'deg) rotateY(' + ry + 'deg) translateZ(6px)'; f.style.transition = 'border-color .4s ease, box-shadow .5s ease'; });
             f.addEventListener('mouseleave', function () { f.style.transform = ''; f.style.transition = ''; });
-            f.addEventListener('touchstart', function () {
-                if (window.innerWidth >= 769) return; wasLP = false; lpStart = Date.now(); ring.classList.add('ring-show'); rfg.style.strokeDashoffset = CIRC;
-                function tick() { var p = Math.min((Date.now() - lpStart) / LP_MS, 1); rfg.style.strokeDashoffset = CIRC * (1 - p); if (p < 1) { lpRAF = requestAnimationFrame(tick); } else { wasLP = true; ring.classList.remove('ring-show'); rfg.style.strokeDashoffset = CIRC; if (shown[idx]) openLb(idx); } }
-                lpRAF = requestAnimationFrame(tick);
-            }, { passive: true });
+            f.addEventListener('mouseenter', function () { if (shown[idx]) { var capEl = f.querySelector('.info-caption'); if (capEl && !capEl.textContent) { var cap = generateCaption(shown[idx]); capEl.textContent = cap; } } });
+            f.addEventListener('touchstart', function () { if (window.innerWidth >= 769) return; wasLP = false; lpStart = Date.now(); ring.classList.add('ring-show'); rfg.style.strokeDashoffset = CIRC; function tick() { var p = Math.min((Date.now() - lpStart) / 5000, 1); rfg.style.strokeDashoffset = CIRC * (1 - p); if (p < 1) { lpRAF = requestAnimationFrame(tick); } else { wasLP = true; ring.classList.remove('ring-show'); rfg.style.strokeDashoffset = CIRC; if (shown[idx]) openLb(idx); } } lpRAF = requestAnimationFrame(tick); }, { passive: true });
             function stopLP() { cancelAnimationFrame(lpRAF); ring.classList.remove('ring-show'); rfg.style.strokeDashoffset = CIRC; }
             f.addEventListener('touchend', function () { stopLP(); setTimeout(function () { wasLP = false; }, 60); }, { passive: true });
             f.addEventListener('touchcancel', stopLP, { passive: true }); f.addEventListener('touchmove', stopLP, { passive: true });
         }
 
         // ============================================================
-        //  LOAD IMAGE — Ratio Detection এবং Dynamic Class
+        //  LOAD IMAGE INTO FRAME
         // ============================================================
-        function loadInto(idx, photo) {
+        function loadInto(idx, photo, frameType) {
             var f = frames[idx]; if (!f || !photo) return;
             shown[idx] = photo;
             var wr = f.querySelector('.photo-img-wrap'), sk = f.querySelector('.photo-skeleton'), fl = f.querySelector('.swap-flash');
 
+            f.classList.remove('frame-large', 'frame-wide', 'frame-tall', 'frame-square');
+            f.classList.add('frame-visible', 'frame-' + frameType);
+
             f.querySelector('.info-title').textContent = photo.cat || '';
-            f.querySelector('.info-ai-line').textContent = generateSmartCaption(photo);
+            f.querySelector('.info-caption').textContent = '';
 
-            var ni = document.createElement('img');
-            ni.src = photo.src; ni.alt = photo.cat || '';
-            ni.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;opacity:0;z-index:1;filter:brightness(0.82) saturate(0.8) contrast(1.05);transition:opacity ' + FADE_MS + 'ms ease, transform ' + FADE_MS + 'ms ease;transform:scale(1.03);';
+            var ni = document.createElement('img'); ni.src = photo.src; ni.alt = photo.cat || '';
+            ni.style.cssText = 'position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;display:block;opacity:0;z-index:1;transition:opacity ' + FADE_MS + 'ms ease;filter:brightness(.82) saturate(.8) contrast(1.05);';
 
-            var old = wr.querySelector('img');
-            var leaving = wr.querySelector('img[data-lv]');
-            if (leaving) leaving.remove();
+            var old = wr.querySelector('img:not([data-lv])'); var leaving = wr.querySelector('img[data-lv]'); if (leaving) leaving.remove();
             wr.appendChild(ni);
 
             ni.onload = function () {
                 if (sk) sk.style.display = 'none';
-
-                // ছবির রেশিও বুঝে ফ্রেমের ক্লাস চেঞ্জ করা (ফাঁকা জায়গা দূর করার ম্যাজিক)
-                var ratio = ni.naturalWidth / ni.naturalHeight;
-                f.classList.remove('frame-wide', 'frame-tall', 'frame-square');
-                if (ratio > RATIO_WIDE) f.classList.add('frame-wide');
-                else if (ratio < RATIO_TALL) f.classList.add('frame-tall');
-                else f.classList.add('frame-square');
-
-                requestAnimationFrame(function () { ni.style.opacity = '1'; ni.style.transform = 'scale(1)'; });
-
-                if (old && old !== ni) {
-                    old.setAttribute('data-lv', '1');
-                    old.style.transition = 'opacity ' + FADE_MS + 'ms ease, transform ' + FADE_MS + 'ms ease';
-                    old.style.opacity = '0'; old.style.transform = 'scale(0.95)';
-                    setTimeout(function () { if (old.parentNode) old.remove(); }, FADE_MS + 50);
-                } else {
-                    setTimeout(function () { ni.removeAttribute('style'); }, FADE_MS + 50);
-                }
+                requestAnimationFrame(function () { ni.style.opacity = '1'; });
+                if (old) { old.setAttribute('data-lv', '1'); old.style.transition = 'opacity ' + FADE_MS + 'ms ease'; old.style.opacity = '0'; setTimeout(function () { if (old.parentNode) old.remove(); ni.removeAttribute('style'); }, FADE_MS + 50); }
+                else { setTimeout(function () { ni.removeAttribute('style'); }, FADE_MS + 50); }
                 fl.classList.remove('flash-on'); void fl.offsetWidth; fl.classList.add('flash-on');
             };
             ni.onerror = function () { if (ni.parentNode) ni.remove(); };
         }
 
         // ============================================================
-        //  SHUFFLE + SWAP (ফ্রেম সরায় না, শুধু ছবি বদলায়)
+        //  SWAP IMAGES (10 sec)
         // ============================================================
-        function shuffleAndSwap() {
-            if (busy || allPhotos.length < COUNT) return;
+        function swapImages() {
+            if (busy) return;
             busy = true;
-            frames.forEach(function (f) { f.classList.add('shuffling'); });
-
-            setTimeout(function () {
-                var candidates = pickRandom(allPhotos, COUNT, shown);
-                for (var i = 0; i < COUNT; i++) {
-                    if (candidates[i]) loadInto(i, candidates[i]);
-                }
-                var delay = 0;
-                for (var i = 0; i < COUNT; i++) {
-                    (function (fi, d) {
-                        setTimeout(function () { frames[fi].classList.remove('shuffling'); }, d);
-                    })(i, delay);
-                    delay += 60;
-                }
-                setTimeout(function () { busy = false; }, delay + FADE_MS + 100);
-            }, 400);
+            var assigned = smartAssign(currentLayout);
+            for (var i = 0; i < COUNT; i++) { if (assigned[i]) { (function (fi, d) { setTimeout(function () { loadInto(fi, assigned[fi].photo, assigned[fi].type); }, d); })(i, i * 80); } }
+            setTimeout(function () { busy = false; }, COUNT * 80 + FADE_MS + 100);
         }
 
         // ============================================================
-        //  SCROLL REVEAL + INIT
+        //  SHUFFLE LAYOUT (60 sec) — SMART RETRY BUG FIX
         // ============================================================
-        var fObs = new IntersectionObserver(function (entries) {
-            entries.forEach(function (e) { if (e.isIntersecting) { var i = Array.prototype.indexOf.call(frames, e.target); setTimeout(function () { e.target.classList.add('frame-visible'); }, i * 60); fObs.unobserve(e.target); } });
-        }, { threshold: 0.05, rootMargin: '0px 0px -30px 0px' });
+        function shuffleLayout() {
+            // SMART RETRY: If busy with 10s swap, wait 1 sec and try again. Never miss 1 min shuffle!
+            if (busy) {
+                setTimeout(shuffleLayout, 1000);
+                return;
+            }
+            busy = true;
+
+            // 1. Fade out all frames instantly
+            for (var i = 0; i < COUNT; i++) { frames[i].classList.add('shuffling'); }
+
+            // 2. Wait for fade out, then change layout
+            setTimeout(function () {
+                currentLayout = generateRandomLayout();
+                var assigned = smartAssign(currentLayout);
+
+                for (var i = 0; i < COUNT; i++) {
+                    if (assigned[i]) {
+                        loadInto(i, assigned[i].photo, assigned[i].type);
+                    }
+                }
+
+                // Force DOM Reflow
+                void gallery.offsetHeight;
+
+                // 3. Fade in with stagger
+                for (var i = 0; i < COUNT; i++) {
+                    (function (fi) {
+                        setTimeout(function () { frames[fi].classList.remove('shuffling'); }, fi * 50);
+                    })(i);
+                }
+
+                setTimeout(function () { busy = false; }, COUNT * 50 + 600);
+
+            }, 450); // Wait for CSS fade out
+        }
+
+        // ============================================================
+        //  INIT
+        // ============================================================
+        var fObs = new IntersectionObserver(function (entries) { entries.forEach(function (e) { if (e.isIntersecting) { var i = Array.prototype.indexOf.call(frames, e.target); if (i < 0) i = 0; setTimeout(function () { e.target.classList.add('frame-visible'); }, i * 50); fObs.unobserve(e.target); } }); }, { threshold: 0.05, rootMargin: '0px 0px -30px 0px' });
 
         (async function () {
             buildGrid(); frames.forEach(function (f) { fObs.observe(f); });
@@ -857,14 +1273,25 @@ document.addEventListener('DOMContentLoaded', () => {
             else { for (var key in scan.results) { allPhotos = allPhotos.concat(scan.results[key]); } gsT.textContent = parts.join(' · '); gsC.textContent = scan.total + ' photos'; }
             while (allPhotos.length < COUNT) { allPhotos.push(allPhotos[Math.floor(Math.random() * allPhotos.length)]); }
 
-            var initPhotos = shuffle(allPhotos).slice(0, COUNT);
-            for (var i = 0; i < COUNT; i++) { (function (fi) { setTimeout(function () { loadInto(fi, initPhotos[fi]); }, fi * 80); })(i); }
+            categorizePhotos();
 
-            if (allPhotos.length >= COUNT) { setInterval(shuffleAndSwap, SWAP_INTERVAL_SEC * 1000); }
+            currentLayout = generateRandomLayout();
+            var initAssigned = smartAssign(currentLayout);
+            for (var i = 0; i < COUNT; i++) { (function (fi) { setTimeout(function () { loadInto(fi, initAssigned[fi].photo, initAssigned[fi].type); }, fi * 70); })(i); }
+
+            setInterval(swapImages, SWAP_MS);
+            setInterval(shuffleLayout, SHUFFLE_MS);
+
+            // Handle Screen Resize dynamically
+            var resizeTimer;
+            window.addEventListener('resize', function () {
+                clearTimeout(resizeTimer);
+                resizeTimer = setTimeout(function () {
+                    shuffleLayout();
+                }, 300);
+            });
         })();
     })();
-
-    // == SCROLL EFFECT: CONTACT BUTTON STICK TO RIGHT --//
     // === CONTACT FORM ===
     (function initContactForm() {
         const contactForm = document.getElementById('contact-form');
