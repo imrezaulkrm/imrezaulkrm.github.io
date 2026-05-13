@@ -965,7 +965,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         var MAX_IDX = 50;
         var EXTS = ['jpg', 'jpeg', 'png', 'webp'];
-        var SWAP_MS = 10000;  // 10 সেকেন্ডে ছবি চেঞ্জ
+        var SWAP_MS = 15000;  // 10 সেকেন্ডে ছবি চেঞ্জ
         var SHUFFLE_MS = 60000; // 1 মিনিটে ফ্রেম লেআউট চেঞ্জ
         var FADE_MS = 550;
         var COUNT = 12;
@@ -1197,6 +1197,14 @@ document.addEventListener('DOMContentLoaded', () => {
             f.querySelector('.info-caption').textContent = '';
 
             var ni = document.createElement('img'); ni.src = photo.src; ni.alt = photo.cat || '';
+            if (idx < 2) {
+                ni.loading = "eager";
+                ni.fetchPriority = "high";
+            } else {
+                ni.loading = "lazy";
+                ni.fetchPriority = "low";
+            }
+            ni.decoding = "async";
             ni.style.cssText = 'position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;display:block;opacity:0;z-index:1;transition:opacity ' + FADE_MS + 'ms ease;filter:brightness(.82) saturate(.8) contrast(1.05);';
 
             var old = wr.querySelector('img:not([data-lv])'); var leaving = wr.querySelector('img[data-lv]'); if (leaving) leaving.remove();
