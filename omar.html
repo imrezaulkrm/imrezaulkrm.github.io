@@ -1181,7 +1181,7 @@
         }
 
         /* ===== Responsive Design ===== */
-        @media (min-width: 768px) {
+        @media (max-width: 768px) {
             .section {
                 padding: 80px 0;
             }
@@ -1211,12 +1211,18 @@
                 font-size: 0.95rem;
             }
 
+            /* About Section - Image Up, Text Down (Desktop) */
             .about-container {
+                flex-direction: column;
                 gap: 40px;
             }
 
-            .about-img img {
+            .about-img {
                 max-width: 350px;
+            }
+
+            .about-text {
+                max-width: 800px;
             }
 
             .about-text h3 {
@@ -1226,6 +1232,11 @@
             .about-text p,
             .about-text blockquote {
                 font-size: 1rem;
+                text-align: left;
+            }
+
+            .skills-list {
+                justify-content: flex-start;
             }
 
             .section-title {
@@ -1349,7 +1360,7 @@
                 max-width: 250px;
             }
 
-            .about-img img {
+            .about-img {
                 max-width: 400px;
             }
 
@@ -1489,6 +1500,16 @@
                 width: 100%;
                 max-width: 250px;
             }
+
+            /* About Section - Mobile */
+            .about-text p,
+            .about-text blockquote {
+                text-align: left;
+            }
+
+            .skills-list {
+                justify-content: center;
+            }
         }
     </style>
 </head>
@@ -1599,153 +1620,6 @@
         </div>
     </section>
 
-    <!-- Journey Section -->
-    <!-- <section id="journey" class="section">
-        <div class="container">
-            <h2 class="section-title">My Game Dev Journey</h2>
-            <div class="timeline">
-                <div class="timeline-item left">
-                    <div class="timeline-content">
-                        <h3>Early Passion for Games</h3>
-                        <p class="year">2002 - 2015</p>
-                        <p>From a young age, I was fascinated by video games. While others played for fun, I was always
-                            curious about <strong>how games worked under the hood</strong>.</p>
-                    </div>
-                </div>
-                <div class="timeline-item right">
-                    <div class="timeline-content">
-                        <h3>Academic Excellence</h3>
-                        <p class="year">2017 - 2019</p>
-                        <p>Completed my <strong>SSC with a perfect GPA of 5.00</strong> and <strong>HSC with a GPA of
-                                3.83</strong>.</p>
-                    </div>
-                </div>
-                <div class="timeline-item left">
-                    <div class="timeline-content">
-                        <h3>Discovery of Game Development</h3>
-                        <p class="year">2020 - 2022</p>
-                        <p>Began exploring <strong>game development as a career</strong>. Learned about Unity and Unreal
-                            Engine.</p>
-                    </div>
-                </div>
-                <div class="timeline-item right">
-                    <div class="timeline-content">
-                        <h3>Formal Education in Game Dev</h3>
-                        <p class="year">2026 - Present</p>
-                        <p>Enrolled in the <strong>Bachelor of Game Development (Game Technology) with Honours</strong>
-                            program.</p>
-                    </div>
-                </div>
-                <div class="timeline-item left">
-                    <div class="timeline-content">
-                        <h3>Future Aspirations</h3>
-                        <p class="year">2026 - Beyond</p>
-                        <p>Aiming to become a <strong>professional game developer</strong> and create my own games.</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section> -->
-
-    <!-- Technical Skills Section -->
-    <!-- <section id="skills" class="section">
-        <div class="container">
-            <h2 class="section-title">Technical Skills</h2>
-            <div class="skills-container">
-                <div class="skill-category">
-                    <h3><i class="fas fa-code"></i> Programming</h3>
-                    <div class="skill-item">
-                        <div class="skill-name">
-                            <span>C#</span>
-                            <span>70%</span>
-                        </div>
-                        <div class="progress-bar">
-                            <div class="progress-fill" style="width: 70%;"></div>
-                        </div>
-                    </div>
-                    <div class="skill-item">
-                        <div class="skill-name">
-                            <span>Python</span>
-                            <span>60%</span>
-                        </div>
-                        <div class="progress-bar">
-                            <div class="progress-fill" style="width: 60%;"></div>
-                        </div>
-                    </div>
-                    <div class="skill-item">
-                        <div class="skill-name">
-                            <span>JavaScript</span>
-                            <span>50%</span>
-                        </div>
-                        <div class="progress-bar">
-                            <div class="progress-fill" style="width: 50%;"></div>
-                        </div>
-                    </div>
-                </div>
-                <div class="skill-category">
-                    <h3><i class="fas fa-gamepad"></i> Game Development</h3>
-                    <div class="skill-item">
-                        <div class="skill-name">
-                            <span>Unity</span>
-                            <span>65%</span>
-                        </div>
-                        <div class="progress-bar">
-                            <div class="progress-fill" style="width: 65%;"></div>
-                        </div>
-                    </div>
-                    <div class="skill-item">
-                        <div class="skill-name">
-                            <span>Unreal Engine</span>
-                            <span>30%</span>
-                        </div>
-                        <div class="progress-bar">
-                            <div class="progress-fill" style="width: 30%;"></div>
-                        </div>
-                    </div>
-                    <div class="skill-item">
-                        <div class="skill-name">
-                            <span>Game Mechanics</span>
-                            <span>75%</span>
-                        </div>
-                        <div class="progress-bar">
-                            <div class="progress-fill" style="width: 75%;"></div>
-                        </div>
-                    </div>
-                </div>
-                <div class="skill-category">
-                    <h3><i class="fas fa-paint-brush"></i> Design & Tools</h3>
-                    <div class="skill-item">
-                        <div class="skill-name">
-                            <span>Blender</span>
-                            <span>50%</span>
-                        </div>
-                        <div class="progress-bar">
-                            <div class="progress-fill" style="width: 50%;"></div>
-                        </div>
-                    </div>
-                    <div class="skill-item">
-                        <div class="skill-name">
-                            <span>Photoshop</span>
-                            <span>45%</span>
-                        </div>
-                        <div class="progress-bar">
-                            <div class="progress-fill" style="width: 45%;"></div>
-                        </div>
-                    </div>
-                    <div class="skill-item">
-                        <div class="skill-name">
-                            <span>Git & GitHub</span>
-                            <span>70%</span>
-                        </div>
-                        <div class="progress-bar">
-                            <div class="progress-fill" style="width: 70%;"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section> -->
-
     <!-- Education Section -->
     <section id="education" class="section">
         <div class="container">
@@ -1772,91 +1646,6 @@
             </div>
         </div>
     </section>
-
-    <!-- Projects Section -->
-    <!-- <section id="projects" class="section">
-        <div class="container">
-            <div class="projects-header">
-                <h2 class="section-title">Creative Projects</h2>
-                <a href="#" class="btn btn-sm">View All Projects</a>
-            </div>
-            <div class="projects-container">
-                <div class="project-card">
-                    <div class="project-img">
-                        <i class="fas fa-laptop-code"></i>
-                    </div>
-                    <div class="project-info">
-                        <h3>First Game Project (In Progress)</h3>
-                        <p>Currently learning the basics of game development using <strong>Unity</strong>. My first
-                            project focuses on creating a simple 2D platformer game.</p>
-                        <div class="project-tags">
-                            <span class="project-tag">Unity</span>
-                            <span class="project-tag">C#</span>
-                            <span class="project-tag">2D Game</span>
-                        </div>
-                        <a href="#" class="btn btn-outline view-project-btn">View Details</a>
-                    </div>
-                </div>
-                <div class="project-card">
-                    <div class="project-img">
-                        <i class="fas fa-code"></i>
-                    </div>
-                    <div class="project-info">
-                        <h3>Learning C# for Game Development</h3>
-                        <p>Building a strong foundation in <strong>C# programming</strong> to understand game logic and
-                            scripting.</p>
-                        <div class="project-tags">
-                            <span class="project-tag">C#</span>
-                            <span class="project-tag">Programming</span>
-                        </div>
-                        <a href="#" class="btn btn-outline view-project-btn">View Details</a>
-                    </div>
-                </div>
-                <div class="project-card">
-                    <div class="project-img">
-                        <i class="fas fa-book"></i>
-                    </div>
-                    <div class="project-info">
-                        <h3>Game Mechanics Study</h3>
-                        <p>Exploring how game mechanics like <strong>physics engines and AI behavior</strong> work in
-                            popular games.</p>
-                        <div class="project-tags">
-                            <span class="project-tag">Research</span>
-                            <span class="project-tag">Game Design</span>
-                        </div>
-                        <a href="#" class="btn btn-outline view-project-btn">View Details</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section> -->
-
-    <!-- Certifications Section -->
-    <!-- <section id="certifications" class="section">
-        <div class="container">
-            <h2 class="section-title">Certifications & Courses</h2>
-            <div class="certifications-container">
-                <div class="certification-card">
-                    <i class="fas fa-certificate"></i>
-                    <h3>Introduction to Game Development</h3>
-                    <p class="issuer">Coursera (University of Colorado)</p>
-                    <p class="date">Expected: 2026</p>
-                </div>
-                <div class="certification-card">
-                    <i class="fas fa-certificate"></i>
-                    <h3>Unity Learn - Junior Programmer</h3>
-                    <p class="issuer">Unity Technologies</p>
-                    <p class="date">In Progress</p>
-                </div>
-                <div class="certification-card">
-                    <i class="fas fa-certificate"></i>
-                    <h3>C# Programming for Beginners</h3>
-                    <p class="issuer">Udemy</p>
-                    <p class="date">Expected: 2026</p>
-                </div>
-            </div>
-        </div>
-    </section> -->
 
     <!-- Career Goals Section -->
     <section id="goals" class="section">
@@ -1895,94 +1684,6 @@
             </div>
         </div>
     </section>
-
-    <!-- Testimonials Section -->
-    <!-- <section id="testimonials" class="section">
-        <div class="container">
-            <h2 class="section-title">Testimonials</h2>
-            <div class="testimonials-container">
-                <div class="testimonial-card">
-                    <div class="testimonial-header">
-                        <div class="testimonial-img">JD</div>
-                        <div class="testimonial-info">
-                            <h4>John Doe</h4>
-                            <p>Game Development Professor</p>
-                        </div>
-                    </div>
-                    <p class="testimonial-text">Omar is one of the most dedicated and passionate students I've had the
-                        pleasure to teach. His curiosity and problem-solving skills make him a natural fit for game
-                        development.</p>
-                    <div class="rating">
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                    </div>
-                </div>
-                <div class="testimonial-card">
-                    <div class="testimonial-header">
-                        <div class="testimonial-img">AS</div>
-                        <div class="testimonial-info">
-                            <h4>Ahmed Siddique</h4>
-                            <p>Senior Game Developer</p>
-                        </div>
-                    </div>
-                    <p class="testimonial-text">I've seen Omar's growth firsthand. His ability to quickly grasp complex
-                        concepts and apply them creatively is impressive.</p>
-                    <div class="rating">
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star-half-alt"></i>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section> -->
-
-    <!-- Blog Section -->
-    <!-- <section id="blog" class="section">
-        <div class="container">
-            <div class="projects-header">
-                <h2 class="section-title">Latest Blog Posts</h2>
-                <a href="#" class="btn btn-sm">View All Posts</a>
-            </div>
-            <div class="blog-container">
-                <div class="blog-card">
-                    <div class="blog-img">
-                        <i class="fas fa-blog"></i>
-                    </div>
-                    <div class="blog-content">
-                        <h3>Getting Started with Unity</h3>
-                        <div class="blog-meta">
-                            <span><i class="fas fa-calendar"></i> May 10, 2026</span>
-                            <span><i class="fas fa-user"></i> Omar Faruk</span>
-                        </div>
-                        <p>In this post, I share my journey of learning Unity from scratch, including the challenges I
-                            faced and how I overcame them.</p>
-                        <a href="#" class="btn btn-outline read-more-btn">Read More</a>
-                    </div>
-                </div>
-                <div class="blog-card">
-                    <div class="blog-img">
-                        <i class="fas fa-code"></i>
-                    </div>
-                    <div class="blog-content">
-                        <h3>The Importance of C# in Game Development</h3>
-                        <div class="blog-meta">
-                            <span><i class="fas fa-calendar"></i> May 5, 2026</span>
-                            <span><i class="fas fa-user"></i> Omar Faruk</span>
-                        </div>
-                        <p>Why C# is the go-to language for game development, and how mastering it can open doors to
-                            endless possibilities.</p>
-                        <a href="#" class="btn btn-outline read-more-btn">Read More</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section> -->
 
     <!-- Contact Section -->
     <section id="contact" class="section">
