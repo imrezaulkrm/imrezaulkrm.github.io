@@ -1,0 +1,811 @@
+<!DOCTYPE html>
+<html lang="bn">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>হৃদয়ের মরীচিকা | রেজাউলের গল্প</title>
+  <script>try { if (window.trustedTypes && !window.trustedTypes.defaultPolicy) window.trustedTypes.createPolicy('default', { createHTML: s => s, createScript: s => s, createScriptURL: s => s }); } catch (e) { }</script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Noto+Serif+Bengali:wght@400;500;700&family=Hind+Siliguri:wght@400;600&family=Outfit:wght@300;400;600&display=swap"
+    rel="stylesheet">
+  <style>
+    :root {
+      --gold: #D4AF37;
+      --gold-l: #F4D068;
+      --gold-d: #AA881C;
+      --maroon: #800000;
+      --maroon-l: #A31D1D;
+      --maroon-d: #4A0000;
+      --ch: #0a0a0a;
+      --ch-l: #141414;
+      --ch-d: #030303;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background: var(--ch);
+      color: #f3f4f6;
+      font-family: "Hind Siliguri", sans-serif;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+      line-height: 1.85;
+    }
+
+    .sec {
+      min-height: 100dvh;
+      width: 100%;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .bn {
+      font-family: "Noto Serif Bengali", serif;
+    }
+
+    .serif {
+      font-family: "Playfair Display", serif;
+    }
+
+    .sans {
+      font-family: "Outfit", sans-serif;
+    }
+
+    /* loader */
+    #loader {
+      position: fixed;
+      inset: 0;
+      background: var(--ch);
+      z-index: 9999;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 2rem;
+      transition: opacity 0.8s, visibility 0.8s;
+    }
+
+    #loader.hide {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+
+    #start-btn {
+      margin-top: 1.5rem;
+      padding: 1rem 2rem;
+      background: linear-gradient(135deg, var(--maroon), var(--gold));
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-size: 1.1rem;
+      font-family: "Noto Serif Bengali", serif;
+      cursor: pointer;
+      box-shadow: 0 0 24px rgba(128, 0, 0, 0.4);
+      transition: transform 0.2s;
+    }
+
+    #start-btn:active {
+      transform: scale(0.95);
+    }
+
+    /* clock */
+    .clock {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      border: 2px solid rgba(212, 175, 55, 0.3);
+      position: relative;
+      margin: 0 auto 1.5rem;
+    }
+
+    .clock-inner {
+      position: absolute;
+      inset: 6px;
+      border-radius: 50%;
+      border: 2px solid rgba(212, 175, 55, 0.5);
+      border-top-color: var(--gold);
+      animation: spin 3s linear infinite;
+    }
+
+    .clock-hand {
+      position: absolute;
+      width: 2px;
+      height: 28px;
+      background: var(--gold);
+      left: 50%;
+      top: 50%;
+      transform-origin: bottom center;
+      transform: translateX(-50%) rotate(45deg);
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    /* header */
+    #topbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      z-index: 100;
+      background: rgba(10, 10, 10, 0.7);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      padding: 0.875rem 1.25rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    #progress-bar {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--maroon), var(--gold));
+      width: 0;
+    }
+
+    #audio-btn {
+      background: rgba(20, 20, 20, 0.9);
+      border: 1px solid rgba(212, 175, 55, 0.4);
+      color: var(--gold);
+      padding: 0.4rem 0.875rem;
+      border-radius: 999px;
+      font-size: 0.7rem;
+      font-family: "Outfit", sans-serif;
+      cursor: pointer;
+      transition: all 0.3s;
+      letter-spacing: 0.05em;
+    }
+
+    /* toast */
+    #toast {
+      position: fixed;
+      bottom: 1.5rem;
+      right: 1.5rem;
+      z-index: 200;
+      background: var(--ch-l);
+      border: 1px solid rgba(212, 175, 55, 0.3);
+      border-radius: 10px;
+      padding: 0.75rem 1rem;
+      max-width: 280px;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      transform: translateY(80px);
+      opacity: 0;
+      transition: all 0.5s;
+      pointer-events: none;
+      font-size: 0.75rem;
+    }
+
+    #toast.show {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    .ping {
+      width: 8px;
+      height: 8px;
+      background: var(--gold);
+      border-radius: 50%;
+      animation: ping 1s infinite;
+    }
+
+    @keyframes ping {
+
+      0%,
+      100% {
+        transform: scale(1);
+        opacity: 1;
+      }
+
+      50% {
+        transform: scale(1.6);
+        opacity: 0.4;
+      }
+    }
+
+    /* scrollbar */
+    ::-webkit-scrollbar {
+      width: 3px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: var(--ch);
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: var(--gold);
+      border-radius: 4px;
+    }
+
+    /* gold glow border */
+    .gg {
+      border: 1px solid rgba(212, 175, 55, 0.5);
+      box-shadow: 0 0 16px rgba(212, 175, 55, 0.35), inset 0 0 10px rgba(212, 175, 55, 0.15);
+    }
+
+    /* text shadows */
+    .ts-gold {
+      text-shadow: 0 0 10px rgba(212, 175, 55, 0.7), 0 0 22px rgba(212, 175, 55, 0.4);
+    }
+
+    .ts-maroon {
+      text-shadow: 0 0 16px rgba(128, 0, 0, 0.9), 0 0 32px rgba(128, 0, 0, 0.5);
+    }
+
+    /* sec labels */
+    .sec-label {
+      font-family: "Outfit", sans-serif;
+      font-size: 0.65rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 0.5rem;
+      opacity: 0.8;
+    }
+
+    /* heartbeat */
+    @keyframes hb {
+
+      0%,
+      100% {
+        transform: scale(1);
+      }
+
+      14% {
+        transform: scale(1.06) rotate(-0.4deg);
+      }
+
+      28% {
+        transform: scale(0.97);
+      }
+
+      42% {
+        transform: scale(1.04) rotate(0.4deg);
+      }
+
+      56% {
+        transform: scale(0.99);
+      }
+    }
+
+    .hb {
+      animation: hb 1.6s ease-in-out infinite;
+    }
+
+    /* glitch */
+    @keyframes glitch {
+
+      0%,
+      100% {
+        text-shadow: .04em 0 0 rgba(255, 0, 0, .7), -.04em 0 0 rgba(0, 255, 0, .7);
+      }
+
+      25% {
+        text-shadow: -.04em -.02em 0 rgba(255, 0, 0, .7), .04em .02em 0 rgba(0, 0, 255, .7);
+      }
+
+      50% {
+        text-shadow: .02em .04em 0 rgba(255, 0, 0, .7), -.02em 0 0 rgba(0, 255, 0, .7);
+      }
+
+      75% {
+        text-shadow: -.04em 0 0 rgba(0, 0, 255, .7), .04em -.02em 0 rgba(255, 0, 0, .7);
+      }
+    }
+
+    .glitch {
+      animation: glitch 0.9s infinite;
+      color: #fff;
+    }
+
+    /* warm gradient */
+    .warm-bg {
+      background: radial-gradient(circle at 50% 60%, rgba(212, 175, 55, 0.18) 0%, rgba(10, 10, 10, 0) 70%);
+    }
+
+    /* perspective gate */
+    .gate-wrap {
+      perspective: 900px;
+      width: 280px;
+      height: 120px;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 1rem auto;
+    }
+
+    .gate-panel {
+      position: absolute;
+      width: 90px;
+      height: 90px;
+      background: linear-gradient(135deg, rgba(20, 20, 20, 1), rgba(212, 175, 55, 0.08));
+      border: 1px solid rgba(212, 175, 55, 0.45);
+      box-shadow: 0 0 14px rgba(212, 175, 55, 0.3);
+      border-radius: 6px;
+      transform-style: preserve-3d;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .gate-l {
+      left: 0;
+      transform-origin: left center;
+    }
+
+    .gate-r {
+      right: 0;
+      transform-origin: right center;
+    }
+
+    .gate-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--gold);
+      box-shadow: 0 0 8px var(--gold);
+    }
+
+    .gate-light {
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background: #fff;
+      box-shadow: 0 0 40px #fff, 0 0 80px #fff, 0 0 120px rgba(255, 255, 255, 0.5);
+      z-index: 2;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* chat bubble */
+    .bubble-r {
+      align-self: flex-end;
+      max-width: 88%;
+      background: rgba(170, 136, 28, 0.35);
+      border: 1px solid rgba(212, 175, 55, 0.4);
+      border-radius: 18px 18px 4px 18px;
+      padding: 1rem 1.1rem;
+    }
+
+    .bubble-l {
+      align-self: flex-start;
+      max-width: 88%;
+      background: rgba(74, 0, 0, 0.35);
+      border: 1px solid rgba(128, 0, 0, 0.45);
+      border-radius: 18px 18px 18px 4px;
+      padding: 1rem 1.1rem;
+    }
+
+    /* section bg images */
+    .bg-img {
+      position: absolute;
+      inset: 0;
+      background-size: cover;
+      background-position: center;
+      transition: all 1s;
+    }
+  </style>
+</head>
+
+<body class="bg-ch text-gray-200">
+
+  <!-- LOADER -->
+  <div id="loader">
+    <div class="clock">
+      <div class="clock-inner"></div>
+      <div class="clock-hand"></div>
+    </div>
+    <h2 class="serif" style="font-size:1.8rem;color:var(--gold);font-weight:700;">হৃদয়ের মরীচিকা</h2>
+    <p class="sans"
+      style="font-size:0.65rem;letter-spacing:.2em;color:#6b7280;text-transform:uppercase;margin-top:.25rem;">একটি
+      মোবাইল-ফার্স্ট সিনেমাটিক অভিজ্ঞতা</p>
+    <p class="bn" style="font-size:.9rem;color:#9ca3af;margin-top:1.25rem;max-width:320px;line-height:1.8;">গল্পের গভীরে
+      প্রবেশ করতে এবং সিনেমাটিক সাউন্ডট্র্যাক সক্রিয় করতে নিচের বাটনে চাপ দিন।</p>
+    <button id="start-btn" class="bn">অভিজ্ঞতা শুরু করুন</button>
+    <p class="sans" style="font-size:.65rem;color:#4b5563;margin-top:.75rem;">সেরা অভিজ্ঞতার জন্য হেডফোন ব্যবহার করুন
+    </p>
+  </div>
+
+  <!-- TOPBAR -->
+  <div id="topbar">
+    <div>
+      <div class="serif" style="font-size:.8rem;letter-spacing:.12em;color:var(--gold);font-weight:700;">হৃদয়ের মরীচিকা
+      </div>
+      <div class="sans" style="font-size:.6rem;letter-spacing:.15em;color:#6b7280;text-transform:uppercase;">Rezaul's
+        Story</div>
+    </div>
+    <button id="audio-btn">🔊 শব্দ শুনুন</button>
+    <div id="progress-bar"></div>
+  </div>
+
+  <!-- TOAST -->
+  <div id="toast">
+    <div class="ping"></div><span class="bn" style="color:var(--gold-l);">সিনেমাটিক সাউন্ড সক্রিয় — হেডফোন পরুন</span>
+  </div>
+
+  <!-- SEC 1: ARRIVAL -->
+  <section id="s1" class="sec">
+    <div id="s1-bg" class="bg-img"
+      style="background-image:url('https://images.unsplash.com/photo-1509059852496-f3822ae057bf?w=1200');filter:blur(8px) brightness(0.4);opacity:0;transform:scale(1.1);">
+    </div>
+    <div
+      style="position:absolute;inset:0;background:linear-gradient(to top,#0a0a0a 0%,rgba(10,10,10,.65) 50%,#0a0a0a 100%);">
+    </div>
+    <div id="s1-content" class="relative" style="z-index:2;max-width:480px;width:100%;padding:5.5rem 1.5rem 2rem;">
+      <div class="sec-label">Section I &nbsp;·&nbsp; The Arrival</div>
+      <h2 class="serif"
+        style="font-size:clamp(1.6rem,6vw,2.4rem);color:#fff;font-weight:700;margin-bottom:1.25rem;line-height:1.3;">
+        স্টেশনে আগমন</h2>
+      <div id="s1-lines" class="bn" style="font-size:clamp(1rem,4vw,1.1rem);color:#d1d5db;line-height:1.9;">
+        <p class="s1-line" style="opacity:0;transform:translateY(28px);transition:all .7s;">শহরের কোলাহল, মেট্রোর
+          যান্ত্রিক ঘোরশব্দ আর মানুষের ছুটে চলার চিরচেনা ব্যস্ততায় মুহূর্তেই যেন এক অদ্ভুত নিস্তব্ধতা নেমে এল।</p>
+        <p class="s1-line" style="opacity:0;transform:translateY(28px);transition:all .7s;margin-top:.9rem;">এসকালেটর
+          থেকে প্ল্যাটফর্মে যখন আমার পা পড়ল, তখন চারপাশের ভাসা ভাসা কোলাহল যেন নিজে থেকেই আমাকে কেন্দ্র করে ঘুরতে শুরু
+          করল।</p>
+        <p class="s1-line" style="opacity:0;transform:translateY(28px);transition:all .7s;margin-top:.9rem;">আমার
+          পোশাকের সূতোর অভিজাত বুনন, কাঁধের স্বাভাবিক অথচ <span
+            style="color:var(--gold);font-weight:700;text-shadow:0 0 10px rgba(212,175,55,.7);">অহংকারী ভঙ্গি</span>,
+          কবজিতে জ্বলজ্বল করা সেই <span
+            style="color:var(--gold);font-weight:700;text-shadow:0 0 10px rgba(212,175,55,.7);">ঘড়ি</span>, আর সবচেয়ে
+          বড়—আমার চোখের সেই শান্ত, স্থির আত্মবিশ্বাস; সবকিছু মিলেমিশে এক অলিখিত ঘোষণা করে দিচ্ছিল—আমি জীবনের ঠিক কোথায়
+          পৌঁছেছি।</p>
+        <p class="s1-line" style="opacity:0;transform:translateY(28px);transition:all .7s;margin-top:.9rem;">সেই দিন আর
+          নেই যখন আমাকে দেখে মানুষ ফিরে তাকাত না; আজ আমার অবস্থান নিজেই বলে দিচ্ছে, আমি আসলে কোন শিখরে দাঁড়িয়ে আছি।
+        </p>
+      </div>
+      <div style="position:absolute;bottom:1.5rem;left:50%;transform:translateX(-50%);text-align:center;">
+        <span class="sans"
+          style="font-size:.6rem;letter-spacing:.2em;color:rgba(212,175,55,.6);text-transform:uppercase;">নিচে স্ক্রোল
+          করুন</span>
+        <div
+          style="width:2px;height:24px;background:linear-gradient(to bottom,var(--gold),transparent);margin:.4rem auto 0;animation:bounce 2s infinite;">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SEC 2: LUXURY -->
+  <section id="s2" class="sec"
+    style="background:linear-gradient(180deg,var(--ch) 0%,var(--ch-l) 50%,var(--ch) 100%);padding:5rem 1.5rem 2rem;">
+    <div style="max-width:480px;width:100%;">
+      <div class="sec-label">Section II &nbsp;·&nbsp; The Luxury</div>
+      <h2 class="serif" style="font-size:clamp(1.6rem,6vw,2.4rem);color:#fff;font-weight:700;margin-bottom:1.25rem;">
+        আভিজাত্যের উপহার</h2>
+      <div id="s2-text" class="bn"
+        style="font-size:clamp(.95rem,3.8vw,1.05rem);color:#d1d5db;line-height:1.9;margin-bottom:1.75rem;">
+        <p style="opacity:0;transform:translateY(16px);">আমার এক হাতে ধরা লেবানিজ লাক্সারি ব্র্যান্ড 'প্যাচি'-র সেই
+          আইকনিক সোনালি-বাদামি বাক্স, যার ভেতরে আছে বিশ্বের অন্যতম সেরা কোকো বিন থেকে তৈরি হাতে তৈরি ট্রাফল চকলেট—কারণ
+          আমার প্রিয় মানুষটি চকলেটকে ভালোবাসে নিজের প্রাণের চেয়েও বেশি।</p>
+        <p style="opacity:0;transform:translateY(16px);margin-top:.9rem;">আর অন্য হাতে এক মায়াবী সুবাসে চারপাশকে মুগ্ধ
+          করা বুকেহ—গভীর মেরুন রঙের দুর্লভ 'জুলিয়েট রোজ' আর রাজকীয় সাদা 'ক্যাসা ব্লাঙ্কা লিলি'-র এক অপূর্ব সমাহার, যার
+          প্রতিটি পাপড়িতে যেন রাজকীয়তার ছোঁয়া। আমার মুখে এক চিলতে হাসি, যা কেবল তার জন্যই রিজার্ভ।</p>
+      </div>
+      <div id="s2-choc" style="opacity:0;transform:translateX(-48px);margin-bottom:1.25rem;">
+        <div class="gg" style="border-radius:12px;overflow:hidden;max-width:300px;aspect-ratio:4/3;">
+          <img src="https://moodiedavittreport.com/wp-content/uploads/2023/07/done-DSC_0557.png?w=800"
+            alt="Patchi Chocolates" style="width:100%;height:100%;object-fit:cover;filter:brightness(.88);">
+        </div>
+        <p class="sans"
+          style="font-size:.65rem;letter-spacing:.15em;color:var(--gold);text-transform:uppercase;margin-top:.5rem;">
+          Patchi Lebanese Chocolates</p>
+      </div>
+      <div id="s2-flow" style="opacity:0;transform:translateX(48px);">
+        <div class="gg" style="border-radius:12px;overflow:hidden;max-width:300px;aspect-ratio:4/3;">
+          <img
+            src="https://static.wixstatic.com/media/9533e0_1d53d53cc5aa43ea93abe2be7982cc06~mv2.jpg/v1/fill/w_600,h_902,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/9533e0_1d53d53cc5aa43ea93abe2be7982cc06~mv2.jpg?w=800"
+            alt="Juliet Rose Bouquet" style="width:100%;height:100%;object-fit:cover;filter:brightness(.88);">
+        </div>
+        <p class="sans"
+          style="font-size:.65rem;letter-spacing:.15em;color:var(--gold);text-transform:uppercase;margin-top:.5rem;">
+          Juliet Rose &amp; Casa Blanca Lily</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- SEC 3: SHADOW -->
+  <section id="s3" class="sec">
+    <div id="s3-bg" class="bg-img"
+      style="background-image:url('https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=1200');filter:blur(16px) brightness(.18);">
+    </div>
+    <div style="position:absolute;inset:0;background:rgba(0,0,0,.8);"></div>
+    <div style="z-index:2;max-width:480px;width:100%;padding:5.5rem 1.5rem 2rem;">
+      <div class="sec-label" style="color:var(--maroon-l);">Section III &nbsp;·&nbsp; Shadow of the Past</div>
+      <h2 class="serif"
+        style="font-size:clamp(1.6rem,6vw,2.4rem);color:var(--maroon-l);font-weight:700;margin-bottom:1.25rem;">অতীতের
+        ছায়া</h2>
+      <div id="s3-card"
+        style="background:rgba(74,0,0,.12);backdrop-filter:blur(8px);border:1px solid rgba(128,0,0,.25);border-radius:16px;padding:1.5rem;">
+        <div id="s3-lines" class="bn" style="font-size:clamp(.95rem,3.8vw,1.05rem);color:#d1d5db;line-height:1.9;">
+          <p class="s3-line" style="opacity:0;">আর ঠিক সেই মুহূর্তেই ভিড়ের ভেতর দাঁড়িয়ে ছিল অতীতের সেই পরিচিত মুখ।
+            আমার একদিনের সেই মেয়ে।</p>
+          <p class="s3-line" style="opacity:0;margin-top:.9rem;">তার পাশে তার সেই সঙ্গিনীরা, যারা একসময় আমার কঠিন
+            দিনগুলোতে, আমার সংগ্রামের সময়ে আমাকে উপেক্ষার চোখে দেখত, আমার অস্তিত্বকে তুচ্ছ করত।</p>
+          <p class="s3-line" style="opacity:0;margin-top:.9rem;color:#fff;font-weight:600;">কিন্তু আজ? আজ তারা আমাকে
+            চিনতে পারছেই না। আমার এই অভাবনীয় রূপান্তর, এই সফলতার আভা তাদের চোখে ধাঁধা লাগিয়ে দিয়েছে।</p>
+          <p class="s3-line" style="opacity:0;margin-top:.9rem;">তাদের চোখ কেবল এক অসাধারণ, কেতাদুরস্ত তরুণের দিকে আটকে
+            আছে, যার হাঁটা বলে দিচ্ছে সে জীবনে জিতে গেছে।</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SEC 4: REGRET -->
+  <section id="s4" class="sec" style="background:var(--ch-d);">
+    <div style="z-index:2;max-width:480px;width:100%;padding:5.5rem 1.5rem 2rem;">
+      <div class="sec-label" style="color:var(--maroon);">Section IV &nbsp;·&nbsp; The Walk of Regret</div>
+      <div id="s4-tw" class="bn"
+        style="font-size:clamp(.95rem,3.8vw,1.05rem);color:#d1d5db;line-height:1.9;min-height:160px;"></div>
+      <div id="s4-hb" style="opacity:0;transform:scale(.88);padding:2rem 0;text-align:center;">
+        <div class="hb ts-maroon bn"
+          style="font-size:clamp(1.8rem,7vw,3.2rem);font-weight:800;color:var(--maroon);line-height:1.3;">তুই
+          আমাকে<br>হারিয়েছিস।</div>
+      </div>
+      <div id="s4-tw2" class="bn"
+        style="font-size:clamp(.95rem,3.8vw,1.05rem);color:#d1d5db;line-height:1.9;min-height:80px;"></div>
+    </div>
+  </section>
+
+  <!-- SEC 5: GIFT -->
+  <section id="s5" class="sec">
+    <div id="s5-warm"
+      style="position:absolute;inset:0;background:radial-gradient(circle at 50% 55%,rgba(212,175,55,.2) 0%,rgba(10,10,10,0) 70%);opacity:0;">
+    </div>
+    <div id="s5-couple" class="bg-img"
+      style="background-image:url('https://images.unsplash.com/photo-1518199266791-5375a83190b7?w=1200');filter:brightness(.12) contrast(1.2);opacity:0;">
+    </div>
+    <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(10,10,10,.9),rgba(10,10,10,.3));">
+    </div>
+    <div style="z-index:2;max-width:480px;width:100%;padding:5.5rem 1.5rem 2rem;text-align:center;">
+      <div class="sec-label">Section V &nbsp;·&nbsp; The Gift</div>
+      <h2 class="serif ts-gold"
+        style="font-size:clamp(1.6rem,6vw,2.4rem);color:var(--gold);font-weight:700;margin-bottom:1.25rem;">স্নিগ্ধ
+        সমর্পণ</h2>
+      <div id="s5-lines" class="bn" style="font-size:clamp(.95rem,3.8vw,1.05rem);color:#e5e7eb;line-height:1.9;">
+        <p class="s5-line" style="opacity:0;transform:translateY(20px);">এরপর আমি থামলাম। আমার প্রিয় মানুষটি দাঁড়িয়ে
+          আছে একটু দূরে। আমি তার দিকে এগিয়ে গেলাম।</p>
+        <p class="s5-line" style="opacity:0;transform:translateY(20px);margin-top:.9rem;">আমার হাতের জুলিয়েট রোজের সেই
+          বুকেহ আর প্যাচির চকলেট বক্সটা আমি অত্যন্ত মায়া আর যত্ন নিয়ে তার হাতে তুলে দিলাম।</p>
+        <p class="s5-line ts-gold"
+          style="opacity:0;transform:translateY(20px);margin-top:.9rem;color:var(--gold-l);font-weight:500;">আমার প্রিয়
+          মানুষের চোখে বিস্ময় আর আনন্দের যে দ্যুতি জ্বলে উঠল, তা যেন পুরো স্টেশনের শ্যানতময় পরিবেশকেও আলো করে দিল।</p>
+        <p class="s5-line" style="opacity:0;transform:translateY(20px);margin-top:.9rem;">আমি তার কপালে এক স্নিগ্ধ চুমু
+          খেলাম, আর সে লজ্জা পেয়ে হেসে চকলেট বক্সটি বুকে জড়িয়ে ধরল।</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- SEC 6: HEARTBREAK -->
+  <section id="s6" class="sec"
+    style="background:linear-gradient(180deg,var(--ch) 0%,var(--ch-l) 100%);padding:5rem 1.5rem 2rem;">
+    <div style="max-width:480px;width:100%;display:flex;flex-direction:column;gap:1.25rem;">
+      <div class="sec-label" style="color:var(--maroon);">Section VI &nbsp;·&nbsp; The Heartbreak</div>
+      <h2 class="serif" style="font-size:clamp(1.6rem,6vw,2.4rem);color:var(--maroon);font-weight:700;">হৃদয় ভাঙার
+        গুঞ্জন</h2>
+      <p id="s6-intro" class="bn"
+        style="opacity:0;font-size:clamp(.85rem,3.5vw,.95rem);color:#9ca3af;line-height:1.85;">দূর থেকে এই দৃশ্য দেখছিল
+        অতীতের সেই মেয়ে আর তার বান্ধবীরা। তার এক সঙ্গিনী, যে একসময় আমার দিকে তাচ্ছিল্য নিয়ে তাকাত, সে আজ মুগ্ধ চোখে
+        ফিসফিস করে বলে উঠল—</p>
+      <div id="s6-friend" class="bubble-r bn"
+        style="opacity:0;transform:translateX(40px);font-size:clamp(.9rem,3.6vw,1rem);color:#e5e7eb;line-height:1.85;font-style:italic;">
+        <span
+          style="display:block;font-size:.6rem;letter-spacing:.15em;color:var(--gold);text-transform:uppercase;font-style:normal;margin-bottom:.5rem;font-family:Outfit,sans-serif;">বান্ধবীর
+          কণ্ঠ</span>
+        "ঈশ্বর! কত লাকি মেয়েটা! এত সুন্দর, এত অ্যারিস্টোক্রেট একটা ছেলে পেয়েছে, আর দেখো না ওর লাইফ কত সুন্দর! ওই
+        জুলিয়েট রোজ, ওই প্যাচির চকলেট... মেয়েটা যেন রানির মতো রাজত্ব করছে!"
+      </div>
+      <p id="s6-narr" class="bn"
+        style="opacity:0;font-size:clamp(.85rem,3.5vw,.95rem);color:#9ca3af;text-align:center;line-height:1.85;">কথাগুলো
+        বিষের মতো ঢুকে গেল অতীতের সেই মেয়েটির কানে। সে তার বান্ধবীর দিকে তাকাতে পারল না। সে খুব ভালো করেই জানে, ওই
+        রাজকীয় মানুষটি সেই রেজাউল, যাকে সে একদিন অবহেলা করে ছেড়েছিল। তার বুক ফেটে যাচ্ছে, গলা আটকে আছে।</p>
+      <div id="s6-ex" class="bubble-l bn"
+        style="opacity:0;transform:translateX(-40px);font-size:clamp(.95rem,3.8vw,1.1rem);color:#fff;line-height:1.85;">
+        <span
+          style="display:block;font-size:.6rem;letter-spacing:.15em;color:var(--maroon-l);text-transform:uppercase;margin-bottom:.5rem;font-family:Outfit,sans-serif;">অব্যক্ত
+          আর্তনাদ</span>
+        <span class="glitch">"আমি সেই রেজাউলকে চিনি! আমিই তাকে ছেড়েছিলাম!"</span>
+      </div>
+      <div id="s6-real" class="bn"
+        style="opacity:0;font-size:clamp(.85rem,3.5vw,.95rem);color:#9ca3af;background:rgba(0,0,0,.3);border:1px solid rgba(255,255,255,.05);border-radius:12px;padding:1rem;line-height:1.85;">
+        কিন্তু পারল না। কথাগুলো তার স্বর আর অহংকার শুকিয়ে দিল। সে বুঝতে পারল, আজ সে যদি এই কথা বলেও ফেলে, তবু সে বড়
+        কিছু নয়, বরং একজন চরম বোকা, যে হিরে ফেলে নুড়ি কুড়িয়েছে। তার সেই নীরবতা যেন তার জীবনের সবচেয়ে বড় পরাজয়ের
+        স্বীকারোক্তি।
+      </div>
+    </div>
+  </section>
+
+  <!-- SEC 7: EXIT -->
+  <section id="s7" class="sec" style="background:var(--ch-d);">
+    <div style="z-index:2;max-width:480px;width:100%;padding:5.5rem 1.5rem 2rem;text-align:center;">
+      <div class="sec-label">Section VII &nbsp;·&nbsp; The Exit</div>
+      <h2 class="serif ts-gold"
+        style="font-size:clamp(1.6rem,6vw,2.4rem);color:var(--gold);font-weight:700;margin-bottom:1.5rem;">মহাপ্রস্থান
+      </h2>
+      <div id="s7-lines" class="bn"
+        style="font-size:clamp(.9rem,3.6vw,1rem);color:#d1d5db;line-height:1.9;text-align:left;margin-bottom:1.5rem;">
+        <p class="s7-line" style="opacity:0;">আর আমি? আমি কি তাদের দেখেছি? আমি কি ঘুরে তাকাব? কক্ষণই না। আমি আমার
+          পৃথিবীতেই এতই ব্যস্ত ছিলাম। আমার প্রিয় মানুষের হাত ধরে, তার সুখের হাসিতে আমি এতই মগ্ন ছিলাম যে, আমার অতীতের
+          সেই মেয়ে আর তার সঙ্গিনীদের অস্তিত্ব আমার চোখের পলকেও ধরা পড়েনি।</p>
+        <p class="s7-line" style="opacity:0;margin-top:.9rem;">তারা আমার পাশ দিয়ে বাতাসের মতো বয়ে গেছে, আমি টেরও
+          পাইনি। আমার জগতটা এখন অন্য—যে জগতে শুধু আমার সাফল্য আর আমার ভালোবাসার রাজত্ব।</p>
+        <p class="s7-line" style="opacity:0;margin-top:.9rem;">আমি যখন আমার প্রিয় মানুষটির সাথে হেসে কথা বলতে বলতে
+          স্টেশনের বাইরের দিকে পা বাড়ালাম, তখন পেছনে অতীতের সেই মেয়ের অসহায় দৃষ্টি আর তার বান্ধবীর সেই প্রশংসা কেবলই
+          এক মরীচিকার মতো হয়ে রইল।</p>
+        <p class="s7-line" style="opacity:0;margin-top:.9rem;">আমি কক্ষণই তাকাব না পেছনের দিকে। কারণ, যে পৃথিবী জয়
+          করেছি, সেই পৃথিবীতে অতীতের কোনো জায়গা নেই, আর সেই পৃথিবীতে পেছন ফিরে তাকানোর কোনো রেওয়াজ নেই। আমার চোয়াল
+          শক্ত, দৃষ্টি সামনের দিকে।</p>
+      </div>
+      <div class="gate-wrap" id="gate-wrap">
+        <div class="gate-panel gate-l" id="gate-l">
+          <div class="gate-dot"></div>
+        </div>
+        <div class="gate-light" id="gate-light">
+          <svg width="24" height="24" fill="none" stroke="#0a0a0a" stroke-width="2.5" stroke-linecap="round"
+            stroke-linejoin="round" viewBox="0 0 24 24">
+            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+            <polyline points="16 17 21 12 16 7" />
+            <line x1="21" y1="12" x2="9" y2="12" />
+          </svg>
+        </div>
+        <div class="gate-panel gate-r" id="gate-r">
+          <div class="gate-dot"></div>
+        </div>
+      </div>
+      <div id="s7-final" style="opacity:0;padding:1.5rem 0;" class="ts-gold">
+        <div class="bn" style="font-size:clamp(1.5rem,6vw,2.2rem);font-weight:800;color:var(--gold);line-height:1.4;">
+          আমি কেবল<br>সামনেই হাঁটব।</div>
+      </div>
+    </div>
+    <div id="blackout" style="position:absolute;inset:0;background:#000;opacity:0;pointer-events:none;z-index:50;">
+    </div>
+  </section>
+
+  <script>
+    // ── Audio Engine (HTML5 Audio File Player) ────────────────────────────────
+    // 👇 এখানে তোমার audio file এর path দাও
+    const AUDIO_SRC = 'story.mp3'; // ← এটা change করো (local file বা URL)
+
+    const bgAudio = new Audio();
+    bgAudio.src = AUDIO_SRC;
+    bgAudio.loop = true;       // গান শেষ হলে আবার শুরু হবে
+    bgAudio.volume = 0.6;      // 0.0 (mute) থেকে 1.0 (max) — এটা adjust করো
+    bgAudio.preload = 'auto';
+
+    const snd = {
+      playing: false,
+      start() {
+        bgAudio.play().catch(e => console.warn('Audio play failed:', e));
+        this.playing = true;
+      },
+      stop() {
+        bgAudio.pause();
+        this.playing = false;
+      },
+      // Volume momentarily boost করার জন্য (Section 4 এ)
+      intensity(m) {
+        // 0.6 হলো base volume — m দিয়ে multiply হবে (max 1.0)
+        bgAudio.volume = Math.min(1.0, 0.6 * m);
+      },
+      // Heartbeat sound এখন audio থেকে আসবে না — শুধু stub
+      thump() { }
+    };
+
+
+    // ── Loader ────────────────────────────────────────────────────────────────
+    document.getElementById('start-btn').addEventListener('click', () => {
+      const loader = document.getElementById('loader');
+      loader.classList.add('hide');
+      snd.start();
+      updateAudioBtn(true);
+      const toast = document.getElementById('toast');
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 4500);
+      // Animate section 1 bg & lines
+      gsap.to('#s1-bg', { opacity: .7, scale: 1, duration: 2.5, ease: 'power2.out' });
+      gsap.fromTo('.s1-line', { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 1, stagger: .4, ease: 'power3.out', delay: .4 });
+    });
+
+    // ── Audio Button ──────────────────────────────────────────────────────────
+    const aBtn = document.getElementById('audio-btn');
+    function updateAudioBtn(on) { aBtn.textContent = on ? '🔇 মিউজিক বন্ধ' : '🔊 শব্দ শুনুন'; }
+    aBtn.addEventListener('click', () => {
+      if (snd.playing) { snd.stop(); updateAudioBtn(false); }
+      else { snd.start(); updateAudioBtn(true); }
+    });
+
+    // ── GSAP ──────────────────────────────────────────────────────────────────
+    gsap.registerPlugin(ScrollTrigger);
+    ScrollTrigger.config({ autoRefreshEvents: 'visibilitychange,orientationchange' });
+
+    // Progress bar
+    gsap.to('#progress-bar', { width: '100%', ease: 'none', scrollTrigger: { trigger: 'body', start: 'top top', end: 'bottom bottom', scrub: .2 } });
+
+    // Sec 1 parallax
+    gsap.timeline({ scrollTrigger: { trigger: '#s1', start: 'top top', end: 'bottom top', scrub: true } })
+      .to('#s1-bg', { yPercent: 20, scale: 1.12, ease: 'none' })
+      .to('#s1-content', { yPercent: -12, ease: 'none' }, 0);
+
+    // Sec 2
+    const tl2 = gsap.timeline({ scrollTrigger: { trigger: '#s2', start: 'top 85%', toggleActions: 'play none none reverse' } });
+    tl2.fromTo('#s2-text p', { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: .7, stagger: .25 })
+      .fromTo('#s2-choc', { opacity: 0, x: -48 }, { opacity: 1, x: 0, duration: .65, ease: 'power2.out' }, '-=.3')
+      .fromTo('#s2-flow', { opacity: 0, x: 48 }, { opacity: 1, x: 0, duration: .65, ease: 'power2.out' }, '-=.45');
+
+    // Sec 3 pinned
+    const tl3 = gsap.timeline({ scrollTrigger: { trigger: '#s3', start: 'top top', end: '+=140%', pin: true, scrub: 1, anticipatePin: 1 } });
+    tl3.to('#s3-bg', { opacity: 1, scale: 1.14, duration: .5 })
+      .to('.s3-line', { opacity: 1, duration: .4, stagger: .4 });
+
+    // Sec 4 typewriter pinned
+    const p1 = "আমি হাঁটছিলাম। মেট্রোর মার্বেল মেঝেতে আমার প্রতিটি পায়ের স্টেপ যেন তার অস্তিত্বের ভেতর একেকটা নিঃশব্দ গগনবিদারী শব্দ তুলছিল। আমার প্রতিটি কদম যেন তার চোখের দিকে তাকিয়ে প্রতিধ্বনিত হচ্ছিল—'তুই শুধু একটা সম্পর্ক হারিয়েছিস না, তুই এমন এক মানুষকে হারিয়েছিস যাকে হারিয়ে তুই নিজেরই সবচেয়ে বড় অস্তিত্বটাকে ধ্বংস করেছিস।'";
+    const p2 = "আমার এই অবাধ গতি, এই রাজকীয় পদচারণা অতীতের সেই মেয়েটির বুকের ভেতর একেকটা তীক্ষ্ণ বিষাক্ত কাঁটার মতো বিঁধছিল। সে আমার প্রতিটি পা ফলো করছিল, আর তার চোখের পলক পড়ছিল না। সে বুঝতে পারছিল, সে এমন একজনকে বিদায় জানিয়েছিল যার কাঁধে মাথা রাখলে জীবনের সবচেয়ে বড় ঝড়ও কাটিয়ে ওঠা যায়; যাকে সে একদিন তুচ্ছ ভেবেছিল, আজ সেই মানুষটা তার ধারণারও অনেক ঊর্ধ্বে। প্রতিটি কদমে তার হৃদয়ে জমে উঠছিল এক কঠিন, অসহ্য আফসোস। সে যেন বারবার নিজের অন্ধকার ভুলের জন্য নিজেকেই গালি দিচ্ছিল এই ভেবে যে, আমার মতো একটা জীবন্ত সাম্রাজ্যকে, এমন এক অকল্পনীয় মানুষকে সে কত সস্তায়, কত নির্লজ্জভাবে হারিয়েছিল!";
+    const tw1 = document.getElementById('s4-tw');
+    const tw2 = document.getElementById('s4-tw2');
+    const tl4 = gsap.timeline({
+      scrollTrigger: {
+        trigger: '#s4', start: 'top top', end: '+=220%', pin: true, scrub: 1, anticipatePin: 1,
+        onUpdate: self => snd.intensity(1 + self.progress * .6)
+      }
+    });
+    tl4.to({}, { duration: 1, onUpdate: function () { const c = Math.floor(this.progress() * p1.length); tw1.textContent = p1.slice(0, c); }, onComplete: () => { tw1.textContent = p1; }, onReverseComplete: () => { tw1.textContent = ''; } })
+      .to('#s4-hb', { opacity: 1, scale: 1, duration: .5, ease: 'back.out(1.7)', onStart: () => { if (snd.playing) { snd.thump(); snd.intensity(1.8); } } })
+      .to({}, { duration: 1.2, onUpdate: function () { const c = Math.floor(this.progress() * p2.length); tw2.textContent = p2.slice(0, c); }, onComplete: () => { tw2.textContent = p2; }, onReverseComplete: () => { tw2.textContent = ''; } });
+
+    // Sec 5
+    const tl5 = gsap.timeline({ scrollTrigger: { trigger: '#s5', start: 'top top', end: '+=110%', pin: true, scrub: 1 } });
+    tl5.to('#s5-couple', { opacity: .18, duration: .4 })
+      .to('#s5-warm', { opacity: 1, duration: .4 }, 0)
+      .to('.s5-line', { opacity: 1, y: 0, duration: .35, stagger: .3 });
+
+    // Sec 6 pinned
+    const tl6 = gsap.timeline({ scrollTrigger: { trigger: '#s6', start: 'top top', end: '+=160%', pin: true, scrub: 1 } });
+    tl6.to('#s6-intro', { opacity: 1, duration: .35 })
+      .fromTo('#s6-friend', { opacity: 0, x: 40 }, { opacity: 1, x: 0, duration: .4 })
+      .to('#s6-narr', { opacity: 1, duration: .35 })
+      .fromTo('#s6-ex', { opacity: 0, x: -40 }, { opacity: 1, x: 0, duration: .4 })
+      .to('#s6-ex', { filter: 'blur(14px)', opacity: 0, scale: .82, duration: .6, ease: 'power1.inOut' })
+      .to('#s6-real', { opacity: 1, duration: .4 });
+
+    // Sec 7
+    const tl7 = gsap.timeline({ scrollTrigger: { trigger: '#s7', start: 'top top', end: '+=160%', pin: true, scrub: 1 } });
+    tl7.to('.s7-line', { opacity: 1, duration: .35, stagger: .3 })
+      .to('#gate-l', { transform: 'rotateY(-88deg)', duration: .6 }, ' -=.1')
+      .to('#gate-r', { transform: 'rotateY(88deg)', duration: .6 }, '-=.6')
+      .to('#gate-light', { scale: 1.5, filter: 'drop-shadow(0 0 32px #fff)', duration: .5 }, '-=.4')
+      .to('#s7-final', { opacity: 1, scale: 1.08, duration: .4 })
+      .to('#blackout', { opacity: 1, duration: .8, onComplete: () => { if (snd.playing) { snd.stop(); updateAudioBtn(false); } } });
+
+    window.addEventListener('load', () => ScrollTrigger.refresh());
+  </script>
+</body>
+
+</html>
