@@ -244,6 +244,11 @@
       border-color: var(--g)
     }
 
+    .room-id-input {
+      font-family: 'Space Grotesk', monospace !important;
+      letter-spacing: .5px;
+    }
+
     .btn {
       width: 100%;
       padding: .75rem;
@@ -371,6 +376,24 @@
       border-color: var(--pur)
     }
 
+    .conn-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      display: inline-block;
+      margin-right: 2px;
+    }
+
+    .conn-dot.on {
+      background: var(--g);
+      box-shadow: 0 0 8px var(--g)
+    }
+
+    .conn-dot.off {
+      background: var(--r);
+      box-shadow: 0 0 8px var(--r)
+    }
+
     .badge {
       border-radius: 100px;
       padding: .22rem .7rem;
@@ -433,7 +456,6 @@
       overflow: hidden;
     }
 
-    /* URL BAR */
     .url-bar {
       background: var(--s1);
       border-bottom: 1px solid var(--bd);
@@ -487,7 +509,6 @@
       opacity: .85
     }
 
-    /* VIDEO CONTENT */
     .video-content {
       flex: 1;
       position: relative;
@@ -560,7 +581,6 @@
       color: var(--tx)
     }
 
-    /* LIVE badge */
     .live-badge {
       position: absolute;
       top: .8rem;
@@ -589,7 +609,6 @@
       }
     }
 
-    /* Share indicator for host */
     .share-indicator {
       position: absolute;
       inset: 0;
@@ -643,7 +662,6 @@
       background: rgba(255, 59, 92, .25)
     }
 
-    /* Unmute overlay */
     .unmute-overlay {
       position: absolute;
       inset: 0;
@@ -664,7 +682,6 @@
       font-size: .85rem;
     }
 
-    /* Reactions */
     .reaction-bar {
       position: absolute;
       bottom: .6rem;
@@ -716,7 +733,6 @@
       }
     }
 
-    /* Fullscreen button */
     .fs-btn {
       position: absolute;
       top: .6rem;
@@ -1077,6 +1093,45 @@
       margin: 0
     }
 
+    /* DEBUG PANEL */
+    .debug-panel {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: rgba(6, 9, 16, .95);
+      border-top: 1px solid var(--bd);
+      max-height: 200px;
+      overflow-y: auto;
+      z-index: 9990;
+      font-family: monospace;
+      font-size: .7rem;
+      color: var(--g);
+      padding: .5rem;
+      display: none;
+    }
+
+    .debug-panel.show {
+      display: block
+    }
+
+    .debug-panel .dline {
+      padding: .1rem 0;
+      border-bottom: 1px solid rgba(255, 255, 255, .03)
+    }
+
+    .debug-panel .dline.err {
+      color: var(--r2)
+    }
+
+    .debug-panel .dline.warn {
+      color: var(--y)
+    }
+
+    .debug-panel .dline.info {
+      color: var(--b)
+    }
+
     /* ═══════════ OVERLAY ═══════════ */
     #conn-overlay {
       position: fixed;
@@ -1183,9 +1238,8 @@
         </div>
         <label>Your Name</label>
         <input type="text" id="j-name" placeholder="তোমার নাম লেখো">
-        <label>Room ID</label>
-        <input type="text" id="j-id" placeholder="বন্ধুর Room ID দাও" style="text-transform:uppercase"
-          oninput="this.value=this.value.toUpperCase()">
+        <label>Room ID (exact copy করো)</label>
+        <input type="text" id="j-id" class="room-id-input" placeholder="Host এর Room ID হুবহু পেস্ট করো">
         <label>Password</label>
         <input type="password" id="j-pass" placeholder="Room password">
         <button class="btn btn-grn" onclick="doJoin()">→ Join করো</button>
@@ -1204,20 +1258,24 @@
     <div class="topbar">
       <span class="topbar-brand">SyncWatch</span>
       <div class="pills">
-        <div class="pill click" onclick="copyId()" title="Click to copy">
+        <div class="pill click" onclick="copyId()" title="Click to copy full ID">
           <span class="pk">Room</span>
           <span class="pv" id="disp-id">------</span>
           <span style="font-size:.6rem;color:var(--mu)">📋</span>
         </div>
         <span class="badge" id="role-badge">---</span>
+        <div class="pill" id="conn-status-pill">
+          <span class="conn-dot off" id="conn-dot"></span>
+          <span id="conn-text" style="color:var(--mu)">Offline</span>
+        </div>
         <span class="badge badge-vc" id="vc">1 জন</span>
       </div>
+      <button class="btn-icon" onclick="toggleDebug()" title="Debug">🐛</button>
       <button class="btn-icon" onclick="leaveRoom()" title="Leave Room">✕</button>
     </div>
 
     <div class="room-body">
       <div class="video-col">
-        <!-- URL BAR -->
         <div class="url-bar">
           <span class="ub-icon">🌐</span>
           <input type="text" id="url-input"
@@ -1226,24 +1284,15 @@
           <button class="ub-go" onclick="goToUrl()">Go</button>
         </div>
 
-        <!-- VIDEO CONTENT -->
         <div class="video-content" id="video-content">
-          <!-- YouTube -->
           <div id="yt-container" class="vid-hidden"></div>
-
-          <!-- Iframe (any URL) -->
           <div id="iframe-container" class="vid-hidden">
             <iframe id="site-frame" allowfullscreen allow="autoplay; encrypted-media; fullscreen; picture-in-picture"
               style="width:100%;height:100%;border:none"></iframe>
           </div>
-
-          <!-- Screen share -->
           <video id="screen-video" class="vid-hidden" autoplay playsinline></video>
-
-          <!-- Local video -->
           <video id="local-video" class="vid-hidden" controls autoplay playsinline></video>
 
-          <!-- Placeholder -->
           <div class="vid-placeholder" id="vid-placeholder">
             <span class="vp-icon">🎬</span>
             <p>উপরে URL লিখে Go চাপো অথবা Screen Share শুরু করো</p>
@@ -1254,26 +1303,21 @@
             </div>
           </div>
 
-          <!-- Live badge -->
           <div class="live-badge" id="live-badge">LIVE</div>
 
-          <!-- Share indicator (host only) -->
           <div class="share-indicator" id="share-indicator">
             <span class="si-icon">🖥️</span>
             <p>তোমার স্ক্রিন শেয়ার হচ্ছে<br>দর্শকরা সব দেখতে ও শুনতে পাচ্ছে</p>
             <button class="si-stop" onclick="stopScreenShare()">✕ Screen Share বন্ধ করো</button>
           </div>
 
-          <!-- Unmute overlay -->
           <div class="unmute-overlay" id="unmute-overlay" onclick="unmuteAudio()">
             <span>🔊 Click to Enable Audio</span>
           </div>
 
-          <!-- Fullscreen button -->
           <button class="fs-btn" id="fs-btn" onclick="toggleFullscreen()">⛶</button>
         </div>
 
-        <!-- Reactions -->
         <div class="reaction-bar" id="reaction-bar">
           <span class="rx-btn" onclick="sendReaction('❤️')">❤️</span>
           <span class="rx-btn" onclick="sendReaction('😂')">😂</span>
@@ -1284,7 +1328,6 @@
         </div>
       </div>
 
-      <!-- SIDEBAR -->
       <div class="sidebar">
         <div class="stabs">
           <div class="stab on" onclick="stab('chat',this)">💬 Chat</div>
@@ -1292,7 +1335,6 @@
           <div class="stab" onclick="stab('playlist',this)">📋 Playlist</div>
         </div>
 
-        <!-- CHAT -->
         <div class="spanel on" id="spanel-chat">
           <div id="chat-box"></div>
           <div class="chat-foot">
@@ -1302,37 +1344,28 @@
           </div>
         </div>
 
-        <!-- SOURCES -->
         <div class="spanel" id="spanel-sources">
           <div class="src-panel">
-            <!-- Screen Share -->
             <div class="src-card">
               <span class="tag tag-best">BEST FOR ANY SITE</span>
               <h3>🖥️ Screen Share</h3>
-              <p>Netflix, Prime Video, Crunchyroll, Hulu — যেকোনো সাইট তোমার ব্রাউজারে খুলে স্ক্রিন শেয়ার করো। দর্শকরা
-                সব দেখতে ও শুনতে পাবে!</p>
+              <p>Netflix, Prime Video, Crunchyroll, Hulu — যেকোনো সাইট তোমার ব্রাউজারে খুলে স্ক্রিন শেয়ার করো।</p>
               <button class="src-btn src-btn-share" id="btn-start-share" onclick="startScreenShare()">🖥️ Screen Share
                 শুরু করো</button>
               <button class="src-btn src-btn-stop" id="btn-stop-share" style="display:none"
                 onclick="stopScreenShare()">✕ Screen Share বন্ধ করো</button>
             </div>
-
-            <!-- URL Embed -->
             <div class="src-card">
               <span class="tag tag-url">URL EMBED</span>
               <h3>🔗 যেকোনো URL খুলো</h3>
-              <p>ভিডিও এরিয়ার উপরের URL বারে লিংক লিখে Go চাপো। YouTube হলে auto-sync কাজ করবে। অন্য সাইট iframe-এ
-                খুলবে।</p>
+              <p>URL বারে লিংক লিখে Go চাপো। YouTube হলে auto-sync কাজ করবে।</p>
               <button class="src-btn src-btn-url" onclick="document.getElementById('url-input').focus()">🔗 URL বারে
                 যাও</button>
             </div>
-
-            <!-- Local File -->
             <div class="src-card">
               <span class="tag tag-local">LOCAL FILE</span>
               <h3>📂 Local File Play</h3>
-              <p>ল্যাপটপে থাকা মুভি সরাসরি প্লে করো। নোট: লোকাল ফাইল পার্টনারের কাছে স্ট্রিম হয় না, সেও একই ফাইল দিতে
-                হবে।</p>
+              <p>ল্যাপটপে থাকা মুভি সরাসরি প্লে করো।</p>
               <div class="src-file-wrap">
                 <button class="src-btn src-btn-file">📂 ফাইল সিলেক্ট করো</button>
                 <input type="file" accept="video/*" onchange="playLocalFile(event)">
@@ -1341,7 +1374,6 @@
           </div>
         </div>
 
-        <!-- PLAYLIST -->
         <div class="spanel" id="spanel-playlist">
           <div class="playlist-panel" id="pl-list"></div>
           <div class="add-pl-wrap">
@@ -1354,6 +1386,9 @@
     </div>
   </div>
 
+  <!-- DEBUG PANEL -->
+  <div class="debug-panel" id="debug-panel"></div>
+
   <script>
     /* ═══════════════════════════════════════════
        STATE
@@ -1364,12 +1399,68 @@
     let myName = "User_" + Math.floor(Math.random() * 9000 + 1000);
     let playlist = [], currentPlIndex = -1, currentVideoUrl = "";
     let screenStream = null, currentCalls = [];
-    let currentMode = "none"; // "none" | "youtube" | "iframe" | "screen" | "local"
+    let currentMode = "none";
+    let debugMode = false;
+
+    /* ═══════════════════════════════════════════
+       ICE SERVERS — NAT ট্রাভার্সালের জন্য
+       STUN + TURN সার্ভার ছাড়া মোবাইল ডাটা/
+       আলাদা নেটওয়ার্ক থেকে কানেক্ট হয় না
+    ═══════════════════════════════════════════ */
+    const ICE_SERVERS = {
+      iceServers: [
+        { urls: "stun:stun.l.google.com:19302" },
+        { urls: "stun:stun1.l.google.com:19302" },
+        { urls: "stun:stun2.l.google.com:19302" },
+        { urls: "stun:stun3.l.google.com:19302" },
+        { urls: "stun:stun4.l.google.com:19302" },
+        {
+          urls: "turn:openrelay.metered.ca:80",
+          username: "openrelayproject",
+          credential: "openrelayproject"
+        },
+        {
+          urls: "turn:openrelay.metered.ca:443",
+          username: "openrelayproject",
+          credential: "openrelayproject"
+        },
+        {
+          urls: "turn:openrelay.metered.ca:443?transport=tcp",
+          username: "openrelayproject",
+          credential: "openrelayproject"
+        }
+      ]
+    };
+
+    /* ═══════════════════════════════════════════
+       DEBUG LOGGER
+    ═══════════════════════════════════════════ */
+    function dlog(msg, type = "") {
+      console.log("[SyncWatch]", msg);
+      if (!debugMode) return;
+      const panel = document.getElementById('debug-panel');
+      const line = document.createElement('div');
+      line.className = 'dline ' + type;
+      const time = new Date().toLocaleTimeString();
+      line.textContent = `[${time}] ${msg}`;
+      panel.appendChild(line);
+      panel.scrollTop = panel.scrollHeight;
+    }
+
+    function toggleDebug() {
+      debugMode = !debugMode;
+      const panel = document.getElementById('debug-panel');
+      panel.classList.toggle('show', debugMode);
+      if (debugMode) dlog("Debug mode ON", "info");
+    }
 
     /* ═══════════════════════════════════════════
        YOUTUBE IFRAME API
     ═══════════════════════════════════════════ */
-    window.onYouTubeIframeAPIReady = () => { ytReady = true; };
+    window.onYouTubeIframeAPIReady = () => {
+      ytReady = true;
+      dlog("YouTube IFRAME API ready", "info");
+    };
     (function () {
       const s = document.createElement('script');
       s.src = "https://www.youtube.com/iframe_api";
@@ -1393,6 +1484,20 @@
       const el = document.getElementById('conn-overlay');
       el.style.display = show ? 'flex' : 'none';
       if (msg) document.getElementById('conn-msg').textContent = msg;
+    }
+
+    function setConnStatus(connected) {
+      const dot = document.getElementById('conn-dot');
+      const txt = document.getElementById('conn-text');
+      if (connected) {
+        dot.className = 'conn-dot on';
+        txt.textContent = 'Connected';
+        txt.style.color = 'var(--g)';
+      } else {
+        dot.className = 'conn-dot off';
+        txt.textContent = 'Offline';
+        txt.style.color = 'var(--mu)';
+      }
     }
 
     function waitYT(cb) {
@@ -1437,23 +1542,17 @@
     }
 
     /* ═══════════════════════════════════════════
-       GO TO URL (main entry point from URL bar)
+       GO TO URL
     ═══════════════════════════════════════════ */
     function goToUrl() {
       const rawUrl = document.getElementById('url-input').value.trim();
       if (!rawUrl) return toast("URL লেখো!", "err");
-
       const url = normalizeUrl(rawUrl);
-      stopScreenShare(); // screen share চললে বন্ধ করো
+      stopScreenShare();
       currentVideoUrl = url;
-
-      if (isYTUrl(url)) {
-        loadYouTube(url);
-      } else {
-        loadIframe(url);
-      }
-
-      // পার্টনারদেরও URL পাঠাও
+      dlog("Loading URL: " + url);
+      if (isYTUrl(url)) loadYouTube(url);
+      else loadIframe(url);
       broadcast({ type: "load_url", url: url });
     }
 
@@ -1466,12 +1565,12 @@
 
       hideAllPlayers();
       currentMode = "youtube";
-
       const container = document.getElementById('yt-container');
       container.classList.remove('vid-hidden');
       container.innerHTML = '<div id="yt-player"></div>';
-
       document.getElementById('fs-btn').style.display = 'flex';
+
+      dlog("Loading YouTube video: " + vid);
 
       waitYT(() => {
         ytPlayer = new YT.Player('yt-player', {
@@ -1481,15 +1580,19 @@
             onReady: () => {
               playerReady = true;
               toast("YouTube ভিডিও লোড হয়েছে", "ok");
+              dlog("YT player ready");
             },
             onStateChange: (e) => {
               if (!isHost || isSyncing) return;
-              if (e.data === YT.PlayerState.PLAYING)
+              if (e.data === YT.PlayerState.PLAYING) {
                 broadcast({ type: "play", time: ytPlayer.getCurrentTime() });
-              else if (e.data === YT.PlayerState.PAUSED)
+                dlog("YT playing at " + ytPlayer.getCurrentTime());
+              } else if (e.data === YT.PlayerState.PAUSED) {
                 broadcast({ type: "pause", time: ytPlayer.getCurrentTime() });
-              else if (e.data === YT.PlayerState.ENDED)
+                dlog("YT paused at " + ytPlayer.getCurrentTime());
+              } else if (e.data === YT.PlayerState.ENDED) {
                 playNextInPlaylist();
+              }
             }
           }
         });
@@ -1497,36 +1600,37 @@
     }
 
     /* ═══════════════════════════════════════════
-       IFRAME (any website)
+       IFRAME
     ═══════════════════════════════════════════ */
     function loadIframe(url) {
       hideAllPlayers();
       currentMode = "iframe";
-
       const container = document.getElementById('iframe-container');
       container.classList.remove('vid-hidden');
-
       const frame = document.getElementById('site-frame');
       frame.src = url;
-
       document.getElementById('fs-btn').style.display = 'flex';
-      toast("URL লোড হচ্ছে... যদি দেখাতে না চায়, Screen Share ব্যবহার করো", "ok");
+      dlog("Loading iframe: " + url);
+      toast("URL লোড হচ্ছে... ব্লক করলে Screen Share ব্যবহার করো", "ok");
     }
 
     /* ═══════════════════════════════════════════
-       APPLY SYNC STATE (for YouTube)
+       APPLY SYNC STATE
     ═══════════════════════════════════════════ */
     function applyState(data) {
       if (currentMode !== "youtube" || !playerReady || !ytPlayer) return;
       isSyncing = true;
       try {
         if (ytPlayer.getCurrentTime) {
-          if (Math.abs(ytPlayer.getCurrentTime() - data.time) > 1.5)
+          const diff = Math.abs(ytPlayer.getCurrentTime() - data.time);
+          if (diff > 1.5) {
             ytPlayer.seekTo(data.time, true);
+            dlog("Seek to " + data.time + " (diff: " + diff + "s)");
+          }
           if (data.type === "play") ytPlayer.playVideo();
           else ytPlayer.pauseVideo();
         }
-      } catch (e) { }
+      } catch (e) { dlog("applyState error: " + e.message, "err"); }
       setTimeout(() => { isSyncing = false; }, 600);
     }
 
@@ -1536,7 +1640,6 @@
     async function startScreenShare() {
       if (!isHost) return toast("শুধুমাত্র Host স্ক্রিন শেয়ার করতে পারে", "err");
       try {
-        // Tab শেয়ার করলে অডিও সহ শেয়ার হবে
         screenStream = await navigator.mediaDevices.getDisplayMedia({
           video: { cursor: "always" },
           audio: true
@@ -1544,28 +1647,31 @@
 
         hideAllPlayers();
         currentMode = "screen";
-
-        // Host দেখবে sharing indicator
         document.getElementById('share-indicator').style.display = 'flex';
         document.getElementById('live-badge').style.display = 'block';
-
         document.getElementById('btn-start-share').style.display = 'none';
         document.getElementById('btn-stop-share').style.display = 'flex';
 
-        // সব ভিউয়ারকে কল করো
+        dlog("Screen share started, calling " + connections.length + " viewers");
+
         connections.forEach(conn => {
-          const call = myPeer.call(conn.peer, screenStream);
-          currentCalls.push(call);
+          try {
+            const call = myPeer.call(conn.peer, screenStream);
+            currentCalls.push(call);
+            dlog("Called viewer: " + conn.peer);
+          } catch (e) {
+            dlog("Call failed for " + conn.peer + ": " + e.message, "err");
+          }
         });
 
-        toast("স্ক্রিন শেয়ার শুরু! দর্শকরা দেখতে পাচ্ছে", "ok");
+        toast("স্ক্রিন শেয়ার শুরু!", "ok");
         sysMsg("Host স্ক্রিন শেয়ার শুরু করেছেন 🖥️");
         broadcast({ type: "screen_start" });
 
-        // Browser UI থেকে stop করলে
         screenStream.getVideoTracks()[0].onended = () => stopScreenShare();
 
       } catch (err) {
+        dlog("Screen share error: " + err.message, "err");
         toast("স্ক্রিন শেয়ার বাতিল হয়েছে", "err");
       }
     }
@@ -1583,8 +1689,8 @@
 
       broadcast({ type: "screen_stop" });
       sysMsg("Host স্ক্রিন শেয়ার বন্ধ করেছেন");
+      dlog("Screen share stopped");
 
-      // আগের ভিডিও ফিরিয়ে আনো অথবা placeholder
       if (currentVideoUrl) {
         if (isYTUrl(currentVideoUrl)) loadYouTube(currentVideoUrl);
         else loadIframe(currentVideoUrl);
@@ -1593,41 +1699,42 @@
       }
     }
 
-    // ভিউয়ার কল রিসিভ করবে
     function setupCallListener() {
       myPeer.on('call', call => {
+        dlog("Incoming call from " + call.peer, "info");
         call.answer();
         call.on('stream', remoteStream => {
           hideAllPlayers();
           currentMode = "screen";
-
           const vid = document.getElementById('screen-video');
           vid.classList.remove('vid-hidden');
           vid.srcObject = remoteStream;
-
           document.getElementById('live-badge').style.display = 'block';
           document.getElementById('fs-btn').style.display = 'flex';
 
-          vid.play().catch(() => {
+          vid.play().then(() => {
+            dlog("Remote stream playing");
+          }).catch(() => {
             document.getElementById('unmute-overlay').style.display = 'flex';
+            dlog("Autoplay blocked, showing unmute overlay", "warn");
           });
 
           toast("Host এর স্ক্রিন দেখা যাচ্ছে", "ok");
         });
         call.on('close', () => {
+          dlog("Call closed by host");
           const vid = document.getElementById('screen-video');
           vid.classList.add('vid-hidden');
           vid.srcObject = null;
-
           document.getElementById('live-badge').style.display = 'none';
           document.getElementById('fs-btn').style.display = 'none';
-
           if (currentVideoUrl) {
             if (isYTUrl(currentVideoUrl)) loadYouTube(currentVideoUrl);
             else loadIframe(currentVideoUrl);
-          } else {
-            showPlaceholder();
-          }
+          } else showPlaceholder();
+        });
+        call.on('error', (err) => {
+          dlog("Call error: " + err, "err");
         });
       });
     }
@@ -1637,6 +1744,7 @@
       vid.muted = false;
       vid.play();
       document.getElementById('unmute-overlay').style.display = 'none';
+      dlog("Audio unmuted");
     }
 
     /* ═══════════════════════════════════════════
@@ -1646,15 +1754,12 @@
       const file = event.target.files[0];
       if (!file) return;
       stopScreenShare();
-
       const url = URL.createObjectURL(file);
       hideAllPlayers();
       currentMode = "local";
-
       const vid = document.getElementById('local-video');
       vid.classList.remove('vid-hidden');
       vid.src = url;
-
       document.getElementById('fs-btn').style.display = 'flex';
       toast("লোকাল ফাইল প্লে হচ্ছে", "ok");
       broadcast({ type: "local_file_warning" });
@@ -1730,10 +1835,8 @@
       currentPlIndex = index;
       currentVideoUrl = playlist[index];
       document.getElementById('url-input').value = playlist[index];
-
       if (isYTUrl(playlist[index])) loadYouTube(playlist[index]);
       else loadIframe(playlist[index]);
-
       broadcast({ type: "play_item", index: index });
       renderPlaylist();
     }
@@ -1746,19 +1849,32 @@
        BROADCAST / RECEIVE
     ═══════════════════════════════════════════ */
     function broadcast(data) {
-      connections.forEach(c => { try { c.send(data); } catch (e) { } });
+      let sent = 0;
+      connections.forEach(c => {
+        try {
+          c.send(data);
+          sent++;
+        } catch (e) {
+          dlog("Broadcast send failed: " + e.message, "err");
+        }
+      });
+      dlog("Broadcast [" + data.type + "] to " + sent + "/" + connections.length + " peers");
     }
 
     function handleData(data, fromConn) {
-      // AUTH flow
+      dlog("Received: " + data.type + " from " + (fromConn.peer || "unknown"));
+
       if (data.type === "auth") {
         if (data.pass !== roomPass) {
+          dlog("Auth FAILED from " + fromConn.peer, "err");
           try { fromConn.send({ type: "auth_fail" }); fromConn.close(); } catch (e) { }
           return;
         }
         connections.push(fromConn);
         viewerCount++;
         updateVC();
+        dlog("Auth OK from " + fromConn.peer + ". Viewers: " + viewerCount, "info");
+
         fromConn.send({
           type: "auth_ok",
           videoUrl: currentVideoUrl,
@@ -1767,20 +1883,27 @@
           pl: playlist, plIdx: currentPlIndex,
           mode: currentMode
         });
+
         sysMsg("একজন নতুন দর্শক এলো 👋");
         broadcast({ type: "vc", count: viewerCount });
 
-        // স্ক্রিন শেয়ার চললে নতুন ভিউয়ারকেও কল করো
         if (screenStream) {
-          const call = myPeer.call(fromConn.peer, screenStream);
-          currentCalls.push(call);
+          try {
+            const call = myPeer.call(fromConn.peer, screenStream);
+            currentCalls.push(call);
+            dlog("Called new viewer with screen share: " + fromConn.peer);
+          } catch (e) {
+            dlog("Failed to call new viewer: " + e.message, "err");
+          }
         }
         return;
       }
 
       if (data.type === "auth_ok") {
         connOverlay(false);
+        setConnStatus(true);
         toast("Room এ join হয়েছে!", "ok");
+        dlog("Auth confirmed by host!", "info");
         enterRoomUI();
 
         if (data.videoUrl) {
@@ -1799,60 +1922,80 @@
         return;
       }
 
-      if (data.type === "auth_fail") { connOverlay(false); toast("পাসওয়ার্ড ভুল!", "err"); return; }
+      if (data.type === "auth_fail") {
+        connOverlay(false);
+        setConnStatus(false);
+        toast("পাসওয়ার্ড ভুল!", "err");
+        dlog("Auth rejected by host", "err");
+        return;
+      }
 
-      // SYNC
       if (data.type === "play" || data.type === "pause") { applyState(data); return; }
-
-      // CHAT
       if (data.type === "chat") { addMsg(data.name, data.text, false); return; }
-
-      // VIEWER COUNT
       if (data.type === "vc") { viewerCount = data.count; updateVC(); return; }
 
-      // LOAD URL (host → viewers)
       if (data.type === "load_url") {
         currentVideoUrl = data.url;
         document.getElementById('url-input').value = data.url;
-        if (isYTUrl(data.url)) {
-          waitYT(() => loadYouTube(data.url));
-        } else {
-          loadIframe(data.url);
-        }
+        if (isYTUrl(data.url)) waitYT(() => loadYouTube(data.url));
+        else loadIframe(data.url);
         return;
       }
 
-      // PLAYLIST
       if (data.type === "playlist") { playlist = data.data; currentPlIndex = data.idx ?? -1; renderPlaylist(); return; }
       if (data.type === "play_item") { playPlaylistItem(data.index); return; }
 
-      // SCREEN SHARE SIGNALS
-      if (data.type === "screen_start") {
-        sysMsg("Host স্ক্রিন শেয়ার শুরু করেছেন 🖥️");
-        return;
-      }
+      if (data.type === "screen_start") { sysMsg("Host স্ক্রিন শেয়ার শুরু করেছেন 🖥️"); return; }
+
       if (data.type === "screen_stop") {
         const vid = document.getElementById('screen-video');
         vid.classList.add('vid-hidden');
         vid.srcObject = null;
         document.getElementById('live-badge').style.display = 'none';
         document.getElementById('fs-btn').style.display = 'none';
-
         if (currentVideoUrl) {
           if (isYTUrl(currentVideoUrl)) loadYouTube(currentVideoUrl);
           else loadIframe(currentVideoUrl);
-        } else {
-          showPlaceholder();
-        }
+        } else showPlaceholder();
         toast("Host স্ক্রিন শেয়ার বন্ধ করেছেন", "err");
         return;
       }
 
-      // REACTIONS
       if (data.type === "reaction") { spawnFloatEmoji(data.emoji); return; }
-
-      // LOCAL FILE WARNING
       if (data.type === "local_file_warning") { sysMsg("⚠️ Host লোকাল ফাইল প্লে করছে। সিঙ্ক কাজ নাও করতে পারে।"); return; }
+    }
+
+    /* ═══════════════════════════════════════════
+       PEER CONNECTION HELPERS
+    ═══════════════════════════════════════════ */
+    function createPeer() {
+      const peer = new Peer({
+        debug: 1, // 0=none, 1=errors, 2=warnings, 3=all
+        config: ICE_SERVERS
+      });
+
+      peer.on('open', id => {
+        dlog("Peer OPEN. My ID: " + id, "info");
+      });
+
+      peer.on('disconnected', () => {
+        dlog("Peer disconnected from signaling server", "warn");
+        setConnStatus(false);
+        // রিকানেক্ট চেষ্টা করো
+        setTimeout(() => {
+          if (peer && !peer.destroyed) {
+            dlog("Attempting reconnect...");
+            peer.reconnect();
+          }
+        }, 3000);
+      });
+
+      peer.on('close', () => {
+        dlog("Peer connection closed", "warn");
+        setConnStatus(false);
+      });
+
+      return peer;
     }
 
     /* ═══════════════════════════════════════════
@@ -1867,27 +2010,57 @@
       isHost = true;
       roomPass = pass;
       connOverlay(true, "Room তৈরি হচ্ছে...");
+      dlog("Creating room...");
 
-      myPeer = new Peer({ debug: 0 });
+      myPeer = createPeer();
+
       myPeer.on('open', id => {
         roomId = id;
         connOverlay(false);
+        setConnStatus(true);
         enterRoomUI();
         toast("Room তৈরি হয়েছে! ID কপি করে পাঠাও", "ok");
+        dlog("Room created! ID: " + id, "info");
       });
 
       myPeer.on('connection', conn => {
+        dlog("Incoming data connection from " + conn.peer, "info");
+
+        conn.on('open', () => {
+          dlog("Data connection OPEN with " + conn.peer, "info");
+        });
+
         conn.on('data', d => handleData(d, conn));
+
         conn.on('close', () => {
+          dlog("Data connection CLOSED with " + conn.peer, "warn");
           connections = connections.filter(c => c !== conn);
           viewerCount = Math.max(1, viewerCount - 1);
           updateVC();
           broadcast({ type: "vc", count: viewerCount });
           sysMsg("একজন চলে গেল 👋");
         });
+
+        conn.on('error', (err) => {
+          dlog("Data connection error with " + conn.peer + ": " + err, "err");
+        });
       });
 
-      myPeer.on('error', e => { connOverlay(false); toast("Error: " + e.type, "err"); });
+      myPeer.on('error', e => {
+        connOverlay(false);
+        dlog("Peer error: " + e.type + " - " + e, "err");
+
+        if (e.type === 'unavailable-id') {
+          toast("এই ID আগে থেকেই আছে, আবার চেষ্টা করো", "err");
+        } else if (e.type === 'network') {
+          toast("নেটওয়ার্ক সমস্যা!", "err");
+        } else if (e.type === 'peer-unavailable') {
+          toast("ওই Room ID পাওয়া যায়নি! ID ঠিক কপি করেছ?", "err");
+        } else {
+          toast("Error: " + e.type, "err");
+        }
+      });
+
       setupCallListener();
     }
 
@@ -1898,6 +2071,7 @@
       const name = document.getElementById('j-name').value.trim();
       const id = document.getElementById('j-id').value.trim();
       const pass = document.getElementById('j-pass').value.trim();
+
       if (!id) return toast("Room ID দাও!", "err");
       if (!pass) return toast("Password দাও!", "err");
       if (name) myName = name;
@@ -1905,31 +2079,63 @@
       isHost = false;
       roomPass = pass;
       connOverlay(true, "Host এর সাথে যুক্ত হচ্ছে...");
+      dlog("Joining room: " + id);
 
-      myPeer = new Peer({ debug: 0 });
+      myPeer = createPeer();
+
       myPeer.on('open', () => {
-        const conn = myPeer.connect(id, { reliable: true });
+        dlog("My peer open, connecting to host: " + id);
+        const conn = myPeer.connect(id, {
+          reliable: true,
+          serialization: "json"
+        });
+
         connections = [conn];
+
         conn.on('open', () => {
+          dlog("Data channel OPEN with host", "info");
           conn.send({ type: "auth", pass: roomPass, name: myName });
+          dlog("Auth message sent");
         });
+
         conn.on('data', d => handleData(d, conn));
+
         conn.on('close', () => {
+          dlog("Host disconnected", "err");
+          setConnStatus(false);
           toast("Host সংযোগ বিচ্ছিন্ন হয়েছে", "err");
-          setTimeout(() => leaveRoom(), 2000);
+          setTimeout(() => leaveRoom(), 3000);
         });
-        conn.on('error', () => { connOverlay(false); toast("সংযোগ ব্যর্থ", "err"); });
+
+        conn.on('error', (err) => {
+          dlog("Connection error: " + err, "err");
+          connOverlay(false);
+          toast("সংযোগ ত্রুটি: " + err, "err");
+        });
 
         // Timeout
         setTimeout(() => {
           if (document.getElementById('conn-overlay').style.display === 'flex') {
             connOverlay(false);
-            toast("Timeout — Room ID ঠিক আছে তো?", "err");
+            toast("Timeout — Room ID ঠিক আছে তো? হুবহু কপি করো!", "err");
+            dlog("Connection timeout!", "err");
           }
-        }, 15000);
+        }, 20000);
       });
 
-      myPeer.on('error', e => { connOverlay(false); toast("সংযোগ ত্রুটি", "err"); });
+      myPeer.on('error', e => {
+        connOverlay(false);
+        dlog("Peer error on join: " + e.type + " - " + e, "err");
+
+        if (e.type === 'peer-unavailable') {
+          toast("এই Room ID পাওয়া যায়নি! Host এর ID হুবহু কপি করো", "err");
+        } else if (e.type === 'network') {
+          toast("নেটওয়ার্ক সমস্যা! ইন্টারনেট চেক করো", "err");
+        } else {
+          toast("Error: " + e.type, "err");
+        }
+      });
+
       setupCallListener();
     }
 
@@ -1954,7 +2160,7 @@
     }
 
     function leaveRoom() {
-      if (myPeer) myPeer.destroy();
+      if (myPeer && !myPeer.destroyed) myPeer.destroy();
       location.reload();
     }
 
@@ -2000,15 +2206,24 @@
 
     function copyId() {
       const id = window._fullRoomId || myPeer?.id || "";
-      navigator.clipboard.writeText(id).then(() => toast("Room ID কপি হয়েছে", "ok")).catch(() => {
-        // Fallback
+      if (!id) return toast("ID পাওয়া যায়নি", "err");
+
+      navigator.clipboard.writeText(id).then(() => {
+        toast("Room ID কপি হয়েছে! বন্ধুকে পাঠাও", "ok");
+      }).catch(() => {
         const ta = document.createElement('textarea');
         ta.value = id;
+        ta.style.position = 'fixed';
+        ta.style.left = '-9999px';
         document.body.appendChild(ta);
         ta.select();
-        document.execCommand('copy');
+        try {
+          document.execCommand('copy');
+          toast("Room ID কপি হয়েছে!", "ok");
+        } catch (e) {
+          toast("কপি করতে সমস্যা হয়েছে", "err");
+        }
         ta.remove();
-        toast("Room ID কপি হয়েছে", "ok");
       });
     }
   </script>
