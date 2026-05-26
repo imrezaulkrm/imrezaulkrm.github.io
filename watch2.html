@@ -1,0 +1,2010 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SyncWatch - Watch Any Website Together</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+    <script src="https://unpkg.com/peerjs@1.5.2/dist/peerjs.min.js"></script>
+    <style>
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0
+        }
+
+        :root {
+            --bg: #060910;
+            --s1: #0d1120;
+            --s2: #141930;
+            --s3: #1b2140;
+            --bd: #222845;
+            --bd2: #2f375a;
+            --r: #ff3b5c;
+            --r2: #ff6b81;
+            --g: #00e8a2;
+            --y: #ffd166;
+            --b: #4cc9f0;
+            --pur: #845ef7;
+            --tx: #eef0ff;
+            --mu: #6e76a0;
+            --rad: 12px;
+            --glass: rgba(13, 17, 32, 0.92);
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--tx);
+            min-height: 100vh;
+            overflow-x: hidden
+        }
+
+        body::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            background: radial-gradient(ellipse 60% 50% at 5% 5%, rgba(132, 94, 247, .1) 0, transparent 55%), radial-gradient(ellipse 50% 40% at 95% 90%, rgba(0, 232, 162, .06) 0, transparent 55%), radial-gradient(ellipse 40% 35% at 50% 50%, rgba(255, 59, 92, .04) 0, transparent 55%);
+            pointer-events: none;
+            z-index: 0
+        }
+
+        ::-webkit-scrollbar {
+            width: 5px
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--s1)
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--bd2);
+            border-radius: 10px
+        }
+
+        /* LOBBY */
+        #lobby {
+            position: relative;
+            z-index: 1;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem 1rem
+        }
+
+        .brand {
+            text-align: center;
+            margin-bottom: 2.5rem
+        }
+
+        .brand h1 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: clamp(2.4rem, 6vw, 4rem);
+            font-weight: 700;
+            letter-spacing: -1.5px;
+            background: linear-gradient(135deg, #fff 15%, var(--pur) 55%, var(--r2) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1.1
+        }
+
+        .brand p {
+            color: var(--mu);
+            font-size: .9rem;
+            margin-top: .7rem
+        }
+
+        .brand .p2p-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: .4rem;
+            margin-top: 1rem;
+            background: rgba(0, 232, 162, .08);
+            border: 1px solid rgba(0, 232, 162, .25);
+            border-radius: 100px;
+            padding: .25rem .75rem;
+            font-size: .68rem;
+            font-weight: 600;
+            color: var(--g)
+        }
+
+        .p2p-badge::before {
+            content: "";
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--g);
+            box-shadow: 0 0 8px var(--g);
+            animation: pulse 1.5s infinite
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                opacity: 1
+            }
+
+            50% {
+                opacity: .25
+            }
+        }
+
+        .cards {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            width: 100%;
+            max-width: 740px
+        }
+
+        @media(max-width:680px) {
+            .cards {
+                grid-template-columns: 1fr
+            }
+        }
+
+        .card {
+            background: var(--glass);
+            border: 1px solid var(--bd);
+            border-radius: 20px;
+            padding: 2rem;
+            backdrop-filter: blur(14px);
+            transition: border-color .3s, transform .2s, box-shadow .3s
+        }
+
+        .card:hover {
+            transform: translateY(-3px)
+        }
+
+        .card-c:hover {
+            border-color: rgba(132, 94, 247, .45);
+            box-shadow: 0 10px 35px rgba(132, 94, 247, .08)
+        }
+
+        .card-j:hover {
+            border-color: rgba(0, 232, 162, .45);
+            box-shadow: 0 10px 35px rgba(0, 232, 162, .08)
+        }
+
+        .card-head {
+            display: flex;
+            align-items: center;
+            gap: .75rem;
+            margin-bottom: 1.5rem
+        }
+
+        .card-icon {
+            width: 42px;
+            height: 42px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem
+        }
+
+        .ic-pur {
+            background: rgba(132, 94, 247, .12);
+            border: 1px solid rgba(132, 94, 247, .28)
+        }
+
+        .ic-grn {
+            background: rgba(0, 232, 162, .12);
+            border: 1px solid rgba(0, 232, 162, .28)
+        }
+
+        .card-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 700;
+            font-size: 1.1rem
+        }
+
+        label {
+            display: block;
+            font-size: .68rem;
+            font-weight: 600;
+            color: var(--mu);
+            text-transform: uppercase;
+            letter-spacing: 1.2px;
+            margin-bottom: .35rem
+        }
+
+        input[type=text],
+        input[type=password] {
+            width: 100%;
+            background: var(--s2);
+            border: 1px solid var(--bd);
+            border-radius: 10px;
+            padding: .65rem .9rem;
+            color: var(--tx);
+            font-family: 'Inter', sans-serif;
+            font-size: .85rem;
+            outline: none;
+            margin-bottom: .9rem;
+            transition: border-color .2s
+        }
+
+        input:focus {
+            border-color: var(--pur)
+        }
+
+        .card-j input:focus {
+            border-color: var(--g)
+        }
+
+        .room-id-input {
+            font-family: 'Space Grotesk', monospace !important;
+            letter-spacing: .5px
+        }
+
+        .btn {
+            width: 100%;
+            padding: .75rem;
+            border: none;
+            border-radius: 10px;
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 700;
+            font-size: .88rem;
+            cursor: pointer;
+            transition: all .2s;
+            letter-spacing: .3px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: .45rem
+        }
+
+        .btn:hover {
+            opacity: .88;
+            transform: translateY(-1px)
+        }
+
+        .btn:active {
+            transform: scale(.97)
+        }
+
+        .btn-pur {
+            background: linear-gradient(135deg, #845ef7, #6c44e2);
+            color: #fff;
+            box-shadow: 0 4px 18px rgba(132, 94, 247, .28)
+        }
+
+        .btn-grn {
+            background: linear-gradient(135deg, #00e8a2, #00c48f);
+            color: #072a1e;
+            box-shadow: 0 4px 18px rgba(0, 232, 162, .25)
+        }
+
+        .methods-hint {
+            margin-top: 1.8rem;
+            text-align: center;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: .5rem
+        }
+
+        .mh-chip {
+            background: var(--s2);
+            border: 1px solid var(--bd);
+            border-radius: 100px;
+            padding: .3rem .7rem;
+            font-size: .68rem;
+            color: var(--mu);
+            font-weight: 500
+        }
+
+        /* ROOM */
+        #room {
+            display: none;
+            position: relative;
+            z-index: 1;
+            height: 100vh;
+            flex-direction: column
+        }
+
+        .topbar {
+            background: var(--glass);
+            border-bottom: 1px solid var(--bd);
+            padding: .5rem 1rem;
+            display: flex;
+            align-items: center;
+            gap: .8rem;
+            backdrop-filter: blur(16px);
+            z-index: 10
+        }
+
+        .topbar-brand {
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 700;
+            font-size: 1.05rem;
+            background: linear-gradient(135deg, #fff, var(--pur));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            white-space: nowrap
+        }
+
+        .pills {
+            display: flex;
+            align-items: center;
+            gap: .5rem;
+            flex: 1;
+            flex-wrap: wrap
+        }
+
+        .pill {
+            background: var(--s2);
+            border: 1px solid var(--bd);
+            border-radius: 100px;
+            padding: .22rem .7rem;
+            font-size: .7rem;
+            display: flex;
+            align-items: center;
+            gap: .35rem;
+            white-space: nowrap
+        }
+
+        .pill .pk {
+            color: var(--mu)
+        }
+
+        .pill .pv {
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 700;
+            color: var(--tx)
+        }
+
+        .pill.click {
+            cursor: pointer;
+            transition: border-color .2s
+        }
+
+        .pill.click:hover {
+            border-color: var(--pur)
+        }
+
+        .conn-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 2px
+        }
+
+        .conn-dot.on {
+            background: var(--g);
+            box-shadow: 0 0 8px var(--g)
+        }
+
+        .conn-dot.off {
+            background: var(--r);
+            box-shadow: 0 0 8px var(--r)
+        }
+
+        .badge {
+            border-radius: 100px;
+            padding: .22rem .7rem;
+            font-size: .68rem;
+            font-weight: 600;
+            white-space: nowrap
+        }
+
+        .badge-host {
+            background: rgba(132, 94, 247, .12);
+            border: 1px solid rgba(132, 94, 247, .28);
+            color: var(--pur)
+        }
+
+        .badge-viewer {
+            background: rgba(76, 201, 240, .1);
+            border: 1px solid rgba(76, 201, 240, .25);
+            color: var(--b)
+        }
+
+        .badge-vc {
+            background: rgba(0, 232, 162, .08);
+            border: 1px solid rgba(0, 232, 162, .25);
+            color: var(--g)
+        }
+
+        .btn-icon {
+            background: var(--s2);
+            border: 1px solid var(--bd);
+            color: var(--tx);
+            width: 34px;
+            height: 34px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all .2s;
+            font-size: .95rem
+        }
+
+        .btn-icon:hover {
+            border-color: var(--r);
+            color: var(--r)
+        }
+
+        .room-body {
+            display: flex;
+            flex: 1;
+            overflow: hidden
+        }
+
+        /* VIDEO COL */
+        .video-col {
+            flex: 1;
+            background: #000;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow: hidden
+        }
+
+        .url-bar {
+            background: var(--s1);
+            border-bottom: 1px solid var(--bd);
+            padding: .45rem .6rem;
+            display: flex;
+            align-items: center;
+            gap: .5rem;
+            z-index: 5;
+            flex-shrink: 0
+        }
+
+        .url-bar .ub-icon {
+            font-size: .85rem;
+            opacity: .5;
+            flex-shrink: 0
+        }
+
+        .url-bar input {
+            flex: 1;
+            background: var(--s2);
+            border: 1px solid var(--bd);
+            border-radius: 8px;
+            padding: .45rem .7rem;
+            color: var(--tx);
+            font-family: 'Inter', sans-serif;
+            font-size: .8rem;
+            outline: none;
+            margin: 0;
+            transition: border-color .2s
+        }
+
+        .url-bar input:focus {
+            border-color: var(--pur)
+        }
+
+        .url-bar .ub-go {
+            background: linear-gradient(135deg, #845ef7, #6c44e2);
+            border: none;
+            color: #fff;
+            padding: .45rem .9rem;
+            border-radius: 8px;
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 700;
+            font-size: .78rem;
+            cursor: pointer;
+            transition: opacity .2s;
+            flex-shrink: 0
+        }
+
+        .url-bar .ub-go:hover {
+            opacity: .85
+        }
+
+        .video-content {
+            flex: 1;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center
+        }
+
+        #yt-container,
+        #iframe-container,
+        #screen-video,
+        #local-video {
+            position: absolute;
+            inset: 0
+        }
+
+        #yt-container iframe,
+        #iframe-container iframe {
+            width: 100% !important;
+            height: 100% !important;
+            pointer-events: none
+        }
+
+        #screen-video,
+        #local-video {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            background: #000
+        }
+
+        .vid-hidden {
+            display: none !important
+        }
+
+        .vid-placeholder {
+            text-align: center;
+            color: var(--mu);
+            padding: 2rem;
+            position: absolute;
+            inset: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center
+        }
+
+        .vid-placeholder .vp-icon {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            opacity: .15
+        }
+
+        .vid-placeholder p {
+            font-size: .85rem;
+            line-height: 1.7;
+            max-width: 360px
+        }
+
+        .vid-placeholder .vp-hint {
+            margin-top: 1.2rem;
+            font-size: .72rem;
+            background: var(--s2);
+            border: 1px solid var(--bd);
+            border-radius: 10px;
+            padding: .7rem 1rem;
+            text-align: left
+        }
+
+        .vid-placeholder .vp-hint b {
+            color: var(--tx)
+        }
+
+        .live-badge {
+            position: absolute;
+            top: .8rem;
+            left: .8rem;
+            z-index: 6;
+            background: rgba(255, 59, 92, .9);
+            color: #fff;
+            border-radius: 6px;
+            padding: .2rem .6rem;
+            font-size: .65rem;
+            font-weight: 800;
+            letter-spacing: 1px;
+            display: none;
+            animation: livePulse 1.5s infinite
+        }
+
+        @keyframes livePulse {
+
+            0%,
+            100% {
+                opacity: 1
+            }
+
+            50% {
+                opacity: .6
+            }
+        }
+
+        .share-indicator {
+            position: absolute;
+            inset: 0;
+            z-index: 5;
+            background: rgba(6, 9, 16, .92);
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem
+        }
+
+        .share-indicator .si-icon {
+            font-size: 3rem;
+            animation: siBounce 2s infinite
+        }
+
+        @keyframes siBounce {
+
+            0%,
+            100% {
+                transform: translateY(0)
+            }
+
+            50% {
+                transform: translateY(-8px)
+            }
+        }
+
+        .share-indicator p {
+            color: var(--mu);
+            font-size: .9rem;
+            text-align: center;
+            line-height: 1.6
+        }
+
+        .share-indicator .si-stop {
+            background: rgba(255, 59, 92, .15);
+            border: 1px solid rgba(255, 59, 92, .4);
+            color: var(--r2);
+            padding: .6rem 1.5rem;
+            border-radius: 10px;
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 700;
+            font-size: .85rem;
+            cursor: pointer;
+            transition: all .2s
+        }
+
+        .unmute-overlay {
+            position: absolute;
+            inset: 0;
+            z-index: 6;
+            background: rgba(0, 0, 0, .7);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer
+        }
+
+        .unmute-overlay span {
+            background: var(--pur);
+            color: #fff;
+            padding: .6rem 1.5rem;
+            border-radius: 100px;
+            font-weight: 700;
+            font-size: .85rem
+        }
+
+        .reaction-bar {
+            position: absolute;
+            bottom: .6rem;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 6;
+            display: flex;
+            gap: .3rem;
+            background: rgba(13, 17, 32, .85);
+            border: 1px solid var(--bd);
+            border-radius: 100px;
+            padding: .25rem .5rem;
+            backdrop-filter: blur(8px)
+        }
+
+        .rx-btn {
+            font-size: 1.15rem;
+            cursor: pointer;
+            transition: transform .15s;
+            padding: .15rem;
+            user-select: none
+        }
+
+        .rx-btn:hover {
+            transform: scale(1.35)
+        }
+
+        .rx-btn:active {
+            transform: scale(.9)
+        }
+
+        .float-emoji {
+            position: absolute;
+            font-size: 2rem;
+            pointer-events: none;
+            animation: floatUp 1.8s ease-out forwards;
+            z-index: 7
+        }
+
+        @keyframes floatUp {
+            0% {
+                transform: translateY(0) scale(1);
+                opacity: 1
+            }
+
+            100% {
+                transform: translateY(-220px) scale(1.4);
+                opacity: 0
+            }
+        }
+
+        .fs-btn {
+            position: absolute;
+            top: .6rem;
+            right: .6rem;
+            z-index: 6;
+            background: rgba(13, 17, 32, .8);
+            border: 1px solid var(--bd);
+            color: var(--tx);
+            width: 32px;
+            height: 32px;
+            border-radius: 6px;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: .8rem;
+            transition: all .2s
+        }
+
+        .fs-btn:hover {
+            border-color: var(--pur)
+        }
+
+        /* LOCAL PLAYER CONTROLS */
+        .lp-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            z-index: 6;
+            background: linear-gradient(transparent, rgba(0, 0, 0, .9));
+            padding: .5rem .7rem .4rem;
+            transition: opacity .3s
+        }
+
+        .lp-overlay.lp-hide {
+            opacity: 0;
+            pointer-events: none
+        }
+
+        .lp-bar {
+            width: 100%;
+            height: 5px;
+            background: rgba(255, 255, 255, .15);
+            border-radius: 5px;
+            cursor: pointer;
+            margin-bottom: .4rem;
+            position: relative
+        }
+
+        .lp-bar:hover {
+            height: 8px
+        }
+
+        .lp-buf {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            background: rgba(255, 255, 255, .25);
+            border-radius: 5px
+        }
+
+        .lp-fill {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            background: var(--pur);
+            border-radius: 5px
+        }
+
+        .lp-row {
+            display: flex;
+            align-items: center;
+            gap: .25rem
+        }
+
+        .lp-b {
+            background: none;
+            border: none;
+            color: var(--tx);
+            width: 32px;
+            height: 32px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: .95rem;
+            transition: all .15s;
+            flex-shrink: 0
+        }
+
+        .lp-b:hover {
+            background: rgba(255, 255, 255, .1);
+            color: var(--pur)
+        }
+
+        .lp-b:active {
+            transform: scale(.9)
+        }
+
+        .lp-b.lp-on {
+            color: var(--pur)
+        }
+
+        .lp-tm {
+            font-family: 'Space Grotesk', monospace;
+            font-size: .7rem;
+            color: rgba(255, 255, 255, .7);
+            white-space: nowrap;
+            min-width: 85px;
+            text-align: center
+        }
+
+        .lp-sp {
+            flex: 1
+        }
+
+        .lp-vr {
+            display: flex;
+            align-items: center;
+            gap: .15rem
+        }
+
+        .lp-vs {
+            width: 55px;
+            height: 3px;
+            -webkit-appearance: none;
+            appearance: none;
+            background: rgba(255, 255, 255, .2);
+            border-radius: 3px;
+            outline: none;
+            cursor: pointer
+        }
+
+        .lp-vs::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 10px;
+            height: 10px;
+            background: var(--pur);
+            border-radius: 50%;
+            cursor: pointer
+        }
+
+        .lp-sd {
+            background: var(--s2);
+            border: 1px solid var(--bd);
+            color: var(--tx);
+            border-radius: 5px;
+            padding: .15rem .3rem;
+            font-size: .65rem;
+            font-weight: 700;
+            cursor: pointer;
+            outline: none
+        }
+
+        .lp-sd option {
+            background: var(--s2);
+            color: var(--tx)
+        }
+
+        .lp-toast {
+            position: absolute;
+            top: 18%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, .85);
+            color: #fff;
+            padding: .35rem .7rem;
+            border-radius: 8px;
+            font-size: .82rem;
+            font-weight: 700;
+            pointer-events: none;
+            animation: lpFade .7s forwards;
+            z-index: 8
+        }
+
+        @keyframes lpFade {
+            0% {
+                opacity: 1
+            }
+
+            100% {
+                opacity: 0
+            }
+        }
+
+        /* SIDEBAR */
+        .sidebar {
+            width: 340px;
+            min-width: 300px;
+            background: var(--glass);
+            border-left: 1px solid var(--bd);
+            display: flex;
+            flex-direction: column;
+            backdrop-filter: blur(14px)
+        }
+
+        @media(max-width:800px) {
+            .room-body {
+                flex-direction: column
+            }
+
+            .sidebar {
+                width: 100%;
+                min-width: unset;
+                height: 300px;
+                border-left: none;
+                border-top: 1px solid var(--bd)
+            }
+
+            .video-col {
+                min-height: 200px
+            }
+        }
+
+        .stabs {
+            display: flex;
+            border-bottom: 1px solid var(--bd)
+        }
+
+        .stab {
+            flex: 1;
+            padding: .6rem;
+            text-align: center;
+            font-size: .72rem;
+            font-weight: 600;
+            color: var(--mu);
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            transition: color .2s, border-color .2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: .2rem
+        }
+
+        .stab.on {
+            color: var(--pur);
+            border-bottom-color: var(--pur)
+        }
+
+        .stab:hover {
+            color: var(--tx)
+        }
+
+        .spanel {
+            display: none;
+            flex: 1;
+            flex-direction: column;
+            overflow: hidden
+        }
+
+        .spanel.on {
+            display: flex
+        }
+
+        /* CHAT */
+        #chat-box {
+            flex: 1;
+            overflow-y: auto;
+            padding: .8rem;
+            display: flex;
+            flex-direction: column;
+            gap: .5rem
+        }
+
+        .msg {
+            display: flex;
+            flex-direction: column;
+            gap: .1rem;
+            max-width: 88%;
+            align-self: flex-start
+        }
+
+        .msg.me {
+            align-self: flex-end
+        }
+
+        .msg-who {
+            font-size: .6rem;
+            color: var(--mu);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: .5px;
+            padding: 0 .15rem
+        }
+
+        .msg-bubble {
+            background: var(--s2);
+            border: 1px solid var(--bd);
+            border-radius: 12px;
+            border-bottom-left-radius: 4px;
+            padding: .45rem .75rem;
+            font-size: .82rem;
+            line-height: 1.5;
+            word-break: break-word
+        }
+
+        .msg.me .msg-bubble {
+            background: rgba(132, 94, 247, .12);
+            border-color: rgba(132, 94, 247, .28);
+            border-bottom-left-radius: 12px;
+            border-bottom-right-radius: 4px
+        }
+
+        .sys-msg {
+            text-align: center;
+            font-size: .68rem;
+            color: var(--mu);
+            padding: .25rem 0;
+            font-style: italic
+        }
+
+        .chat-foot {
+            padding: .6rem;
+            border-top: 1px solid var(--bd);
+            display: flex;
+            gap: .4rem
+        }
+
+        .chat-foot input {
+            flex: 1;
+            margin: 0;
+            padding: .5rem .8rem;
+            font-size: .82rem
+        }
+
+        /* USERS PANEL */
+        .users-panel {
+            flex: 1;
+            overflow-y: auto;
+            padding: .8rem;
+            display: flex;
+            flex-direction: column;
+            gap: .4rem
+        }
+
+        .user-item {
+            background: var(--s2);
+            border: 1px solid var(--bd);
+            border-radius: 10px;
+            padding: .55rem .8rem;
+            display: flex;
+            align-items: center;
+            gap: .6rem
+        }
+
+        .user-item.me-item {
+            border-color: rgba(132, 94, 247, .3)
+        }
+
+        .ui-av {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: .75rem;
+            flex-shrink: 0
+        }
+
+        .ui-av.host-av {
+            background: rgba(132, 94, 247, .2);
+            color: var(--pur)
+        }
+
+        .ui-av.viewer-av {
+            background: rgba(76, 201, 240, .15);
+            color: var(--b)
+        }
+
+        .ui-info {
+            flex: 1
+        }
+
+        .ui-name {
+            font-size: .82rem;
+            font-weight: 600
+        }
+
+        .ui-role {
+            font-size: .58rem;
+            color: var(--mu);
+            text-transform: uppercase;
+            letter-spacing: .5px
+        }
+
+        .ui-kick {
+            background: none;
+            border: 1px solid var(--bd);
+            color: var(--mu);
+            width: 26px;
+            height: 26px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: .7rem;
+            transition: all .2s
+        }
+
+        .ui-kick:hover {
+            border-color: var(--r);
+            color: var(--r);
+            background: rgba(255, 59, 92, .1)
+        }
+
+        /* SOURCES PANEL */
+        .src-panel {
+            flex: 1;
+            overflow-y: auto;
+            padding: .8rem;
+            display: flex;
+            flex-direction: column;
+            gap: .6rem
+        }
+
+        .src-card {
+            background: var(--s2);
+            border: 1px solid var(--bd);
+            border-radius: 12px;
+            padding: 1rem;
+            transition: border-color .2s
+        }
+
+        .src-card:hover {
+            border-color: var(--bd2)
+        }
+
+        .src-card h3 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: .88rem;
+            font-weight: 700;
+            margin-bottom: .3rem;
+            display: flex;
+            align-items: center;
+            gap: .4rem
+        }
+
+        .src-card p {
+            font-size: .72rem;
+            color: var(--mu);
+            line-height: 1.6;
+            margin-bottom: .7rem
+        }
+
+        .src-card .tag {
+            display: inline-block;
+            font-size: .6rem;
+            font-weight: 700;
+            padding: .15rem .5rem;
+            border-radius: 100px;
+            margin-bottom: .6rem
+        }
+
+        .tag-best {
+            background: rgba(0, 232, 162, .1);
+            border: 1px solid rgba(0, 232, 162, .3);
+            color: var(--g)
+        }
+
+        .tag-url {
+            background: rgba(76, 201, 240, .1);
+            border: 1px solid rgba(76, 201, 240, .3);
+            color: var(--b)
+        }
+
+        .tag-local {
+            background: rgba(255, 209, 102, .1);
+            border: 1px solid rgba(255, 209, 102, .3);
+            color: var(--y)
+        }
+
+        .src-btn {
+            width: 100%;
+            padding: .6rem;
+            border: none;
+            border-radius: 8px;
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 700;
+            font-size: .8rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: .4rem;
+            transition: all .2s
+        }
+
+        .src-btn:hover {
+            opacity: .85;
+            transform: translateY(-1px)
+        }
+
+        .src-btn:active {
+            transform: scale(.97)
+        }
+
+        .src-btn-share {
+            background: linear-gradient(135deg, #845ef7, #6c44e2);
+            color: #fff;
+            box-shadow: 0 3px 12px rgba(132, 94, 247, .25)
+        }
+
+        .src-btn-stop {
+            background: rgba(255, 59, 92, .12);
+            border: 1px solid rgba(255, 59, 92, .35);
+            color: var(--r2)
+        }
+
+        .src-btn-url {
+            background: linear-gradient(135deg, #4cc9f0, #3aa8d8);
+            color: #072a2e
+        }
+
+        .src-btn-file {
+            background: var(--s3);
+            border: 1px solid var(--bd);
+            color: var(--tx)
+        }
+
+        .src-file-wrap {
+            position: relative;
+            overflow: hidden
+        }
+
+        .src-file-wrap input[type=file] {
+            position: absolute;
+            inset: 0;
+            opacity: 0;
+            cursor: pointer
+        }
+
+        /* PLAYLIST */
+        .playlist-panel {
+            flex: 1;
+            overflow-y: auto;
+            padding: .8rem;
+            display: flex;
+            flex-direction: column;
+            gap: .4rem
+        }
+
+        .pl-item {
+            background: var(--s2);
+            border: 1px solid var(--bd);
+            border-radius: 10px;
+            padding: .6rem .8rem;
+            display: flex;
+            align-items: center;
+            gap: .5rem;
+            transition: all .2s;
+            cursor: pointer
+        }
+
+        .pl-item:hover {
+            border-color: var(--bd2)
+        }
+
+        .pl-item.active {
+            border-color: var(--pur);
+            background: rgba(132, 94, 247, .08)
+        }
+
+        .pl-num {
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 700;
+            color: var(--pur);
+            font-size: .85rem;
+            min-width: 20px
+        }
+
+        .pl-title {
+            font-size: .75rem;
+            flex: 1;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis
+        }
+
+        .pl-remove {
+            color: var(--mu);
+            cursor: pointer;
+            font-size: .9rem;
+            transition: color .2s
+        }
+
+        .pl-remove:hover {
+            color: var(--r)
+        }
+
+        .add-pl-wrap {
+            padding: .6rem;
+            border-top: 1px solid var(--bd);
+            display: flex;
+            gap: .4rem
+        }
+
+        .add-pl-wrap input {
+            flex: 1;
+            margin: 0
+        }
+
+        /* MODAL */
+        .modal-ov {
+            position: fixed;
+            inset: 0;
+            background: rgba(6, 9, 16, .9);
+            z-index: 9997;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(6px)
+        }
+
+        .modal-box {
+            background: var(--s1);
+            border: 1px solid var(--bd2);
+            border-radius: 16px;
+            padding: 2rem;
+            max-width: 420px;
+            width: 90%;
+            text-align: center
+        }
+
+        .modal-box h2 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.2rem;
+            margin-bottom: 1rem
+        }
+
+        .modal-box p {
+            font-size: .82rem;
+            color: var(--mu);
+            line-height: 1.7;
+            margin-bottom: 1.2rem;
+            text-align: left
+        }
+
+        .modal-box b {
+            color: var(--tx)
+        }
+
+        .modal-btns {
+            display: flex;
+            gap: .6rem
+        }
+
+        .modal-btn {
+            flex: 1;
+            padding: .7rem;
+            border: none;
+            border-radius: 8px;
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 700;
+            font-size: .85rem;
+            cursor: pointer;
+            transition: all .2s
+        }
+
+        .modal-btn:hover {
+            opacity: .85
+        }
+
+        .mbtn-c {
+            background: var(--s2);
+            border: 1px solid var(--bd);
+            color: var(--tx)
+        }
+
+        .mbtn-g {
+            background: linear-gradient(135deg, #845ef7, #6c44e2);
+            color: #fff
+        }
+
+        /* OVERLAY */
+        #conn-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(6, 9, 16, .95);
+            z-index: 9998;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            backdrop-filter: blur(10px)
+        }
+
+        .spinner {
+            width: 42px;
+            height: 42px;
+            border: 3px solid var(--bd2);
+            border-top-color: var(--pur);
+            border-radius: 50%;
+            animation: spin .7s linear infinite
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg)
+            }
+        }
+
+        #conn-overlay p {
+            color: var(--mu);
+            font-size: .9rem
+        }
+
+        /* TOAST */
+        #toast {
+            position: fixed;
+            bottom: 1.5rem;
+            left: 50%;
+            transform: translateX(-50%) translateY(4rem);
+            background: var(--s2);
+            border: 1px solid var(--bd2);
+            border-radius: 100px;
+            padding: .5rem 1.3rem;
+            font-size: .82rem;
+            font-weight: 500;
+            z-index: 9999;
+            transition: transform .3s ease, opacity .3s ease;
+            opacity: 0;
+            white-space: nowrap;
+            pointer-events: none;
+            box-shadow: 0 6px 25px rgba(0, 0, 0, .4)
+        }
+
+        #toast.show {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1
+        }
+
+        #toast.err {
+            border-color: var(--r);
+            color: var(--r2)
+        }
+
+        #toast.ok {
+            border-color: var(--g);
+            color: var(--g)
+        }
+    </style>
+</head>
+
+<body>
+    <div id="toast"></div>
+    <div id="conn-overlay">
+        <div class="spinner"></div>
+        <p id="conn-msg">Connecting...</p>
+    </div>
+
+    <!-- AUDIO MODAL -->
+    <div class="modal-ov" id="audio-modal">
+        <div class="modal-box">
+            <h2>🔊 অডিও শেয়ার করার নিয়ম</h2>
+            <p>ব্রাউজারের নিরাপত্তা নিয়মে <b>পুরো স্ক্রিন বা উইন্ডো</b> শেয়ার করলে অডিও ব্লক হয়।<br><br>অডিও শেয়ার
+                করতে হলে ব্রাউজারের পপ-আপে:<br>১. <b>"Chrome Tab"</b> সিলেক্ট করো (পুরো স্ক্রিন নয়)<br>২. নিচে
+                <b>"Share tab audio" ✅</b> টিক দাও<br>৩. তারপর <b>"Share"</b> চাপো</p>
+            <div class="modal-btns">
+                <button class="modal-btn mbtn-c"
+                    onclick="document.getElementById('audio-modal').style.display='none'">বাদ দাও</button>
+                <button class="modal-btn mbtn-g"
+                    onclick="document.getElementById('audio-modal').style.display='none';startScreenShare()">বুঝেছি,
+                    শেয়ার শুরু</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- LOBBY -->
+    <div id="lobby">
+        <div class="brand">
+            <h1>SyncWatch</h1>
+            <p>যেকোনো ওয়েবসাইটের ভিডিও একসাথে দেখো</p>
+            <div class="p2p-badge">Peer-to-Peer · No Server · Privacy First</div>
+        </div>
+        <div class="cards">
+            <div class="card card-c">
+                <div class="card-head">
+                    <div class="card-icon ic-pur">🎬</div>
+                    <div class="card-title">Room বানাও</div>
+                </div><label>Your Name</label><input type="text" id="c-name"
+                    placeholder="তোমার নাম লেখো"><label>Password</label><input type="password" id="c-pass"
+                    placeholder="প্রাইভেট পাসওয়ার্ড দাও"><button class="btn btn-pur" onclick="doCreate()">✦ Room তৈরি
+                    করো</button>
+            </div>
+            <div class="card card-j">
+                <div class="card-head">
+                    <div class="card-icon ic-grn">👥</div>
+                    <div class="card-title">Room এ যোগ দাও</div>
+                </div><label>Your Name</label><input type="text" id="j-name" placeholder="তোমার নাম লেখো"><label>Room
+                    ID</label><input type="text" id="j-id" class="room-id-input"
+                    placeholder="Host এর Room ID হুবহু পেস্ট করো"><label>Password</label><input type="password"
+                    id="j-pass" placeholder="Room password"><button class="btn btn-grn" onclick="doJoin()">→ Join
+                    করো</button>
+            </div>
+        </div>
+        <div class="methods-hint"><span class="mh-chip">🖥️ Screen Share</span><span class="mh-chip">🔗 Any
+                URL</span><span class="mh-chip">▶️ YouTube</span><span class="mh-chip">📂 Local File</span></div>
+    </div>
+
+    <!-- ROOM -->
+    <div id="room">
+        <div class="topbar">
+            <span class="topbar-brand">SyncWatch</span>
+            <div class="pills">
+                <div class="pill click" onclick="copyId()"><span class="pk">Room</span><span class="pv"
+                        id="disp-id">------</span><span style="font-size:.6rem;color:var(--mu)">📋</span></div>
+                <span class="badge" id="role-badge">---</span>
+                <div class="pill"><span class="conn-dot off" id="conn-dot"></span><span id="conn-text"
+                        style="color:var(--mu)">Offline</span></div>
+                <span class="badge badge-vc" id="vc">1 জন</span>
+            </div>
+            <button class="btn-icon" onclick="leaveRoom()" title="Leave">✕</button>
+        </div>
+        <div class="room-body">
+            <div class="video-col">
+                <div class="url-bar" id="url-bar"><span class="ub-icon">🌐</span><input type="text" id="url-input"
+                        placeholder="যেকোনো URL — YouTube, Netflix, Crunchyroll..."
+                        onkeydown="if(event.key==='Enter')goToUrl()"><button class="ub-go"
+                        onclick="goToUrl()">Go</button></div>
+                <div class="video-content" id="video-content">
+                    <div id="yt-container" class="vid-hidden"></div>
+                    <div id="iframe-container" class="vid-hidden"><iframe id="site-frame" allowfullscreen
+                            allow="autoplay; encrypted-media; fullscreen; picture-in-picture"
+                            style="width:100%;height:100%;border:none"></iframe></div>
+                    <video id="screen-video" class="vid-hidden" autoplay playsinline></video>
+                    <video id="local-video" class="vid-hidden" autoplay playsinline></video>
+
+                    <!-- LOCAL PLAYER CONTROLS OVERLAY -->
+                    <div class="lp-overlay lp-hide" id="lp-overlay">
+                        <div class="lp-bar" id="lp-bar" onclick="lpSeek(event)">
+                            <div class="lp-buf" id="lp-buf"></div>
+                            <div class="lp-fill" id="lp-fill"></div>
+                        </div>
+                        <div class="lp-row">
+                            <button class="lp-b" onclick="lpSkip(-30)" title="-30s">⏮</button>
+                            <button class="lp-b" onclick="lpSkip(-10)" title="-10s">⏪</button>
+                            <button class="lp-b" id="lp-play" onclick="lpToggle()" title="Play/Pause">▶</button>
+                            <button class="lp-b" onclick="lpSkip(10)" title="+10s">⏩</button>
+                            <button class="lp-b" onclick="lpSkip(30)" title="+30s">⏭</button>
+                            <span class="lp-tm" id="lp-tm">0:00 / 0:00</span>
+                            <span class="lp-sp"></span>
+                            <div class="lp-vr"><button class="lp-b" id="lp-mute" onclick="lpMute()"
+                                    title="Mute">🔊</button><input type="range" class="lp-vs" id="lp-vol" min="0"
+                                    max="1" step="0.05" value="1" oninput="lpVol(this.value)"></div>
+                            <select class="lp-sd" id="lp-spd" onchange="lpSpeed(this.value)" title="Speed">
+                                <option value="0.25">0.25x</option>
+                                <option value="0.5">0.5x</option>
+                                <option value="0.75">0.75x</option>
+                                <option value="1" selected>1x</option>
+                                <option value="1.25">1.25x</option>
+                                <option value="1.5">1.5x</option>
+                                <option value="2">2x</option>
+                            </select>
+                            <button class="lp-b" id="lp-loop" onclick="lpLoop()" title="Loop">🔁</button>
+                            <button class="lp-b" onclick="lpShot()" title="Screenshot">📸</button>
+                            <button class="lp-b" onclick="lpPip()" title="PiP">📌</button>
+                            <button class="lp-b" onclick="lpFs()" title="Fullscreen">⛶</button>
+                        </div>
+                    </div>
+
+                    <div class="vid-placeholder" id="vid-placeholder"><span class="vp-icon">🎬</span>
+                        <p>উপরে URL লিখে Go চাপো অথবা Screen Share শুরু করো</p>
+                        <div class="vp-hint"><b>🖥️ Screen Share</b> — Netflix, Prime সহ যেকোনো সাইট<br><b>🔗 URL</b> —
+                            YouTube, Vimeo, বা embeddable সাইট<br><b>📂 Local File</b> — অ্যাডভান্সড প্লেয়ারে মুভি প্লে
+                        </div>
+                    </div>
+                    <div class="live-badge" id="live-badge">LIVE</div>
+                    <div class="share-indicator" id="share-indicator"><span class="si-icon">🖥️</span>
+                        <p>তোমার স্ক্রিন শেয়ার হচ্ছে<br>দর্শকরা সব দেখতে ও শুনতে পাচ্ছে</p><button class="si-stop"
+                            onclick="stopScreenShare()">✕ Screen Share বন্ধ করো</button>
+                    </div>
+                    <div class="unmute-overlay" id="unmute-overlay" onclick="unmuteAudio()"><span>🔊 Click to Enable
+                            Audio</span></div>
+                    <button class="fs-btn" id="fs-btn" onclick="toggleFullscreen()">⛶</button>
+                </div>
+                <div class="reaction-bar"><span class="rx-btn" onclick="sendReaction('❤️')">❤️</span><span
+                        class="rx-btn" onclick="sendReaction('😂')">😂</span><span class="rx-btn"
+                        onclick="sendReaction('👏')">👏</span><span class="rx-btn"
+                        onclick="sendReaction('🔥')">🔥</span><span class="rx-btn"
+                        onclick="sendReaction('😢')">😢</span><span class="rx-btn"
+                        onclick="sendReaction('👍')">👍</span></div>
+            </div>
+
+            <div class="sidebar">
+                <div class="stabs">
+                    <div class="stab on" id="tab-chat" onclick="stab('chat',this)">💬 Chat</div>
+                    <div class="stab" id="tab-users" onclick="stab('users',this)">👥 Users</div>
+                    <div class="stab" id="tab-sources" onclick="stab('sources',this)">📡 Sources</div>
+                    <div class="stab" id="tab-playlist" onclick="stab('playlist',this)">📋 List</div>
+                </div>
+                <div class="spanel on" id="spanel-chat">
+                    <div id="chat-box"></div>
+                    <div class="chat-foot"><input type="text" id="ci" placeholder="মেসেজ লেখো..."
+                            onkeydown="if(event.key==='Enter')sendMsg()"><button class="btn btn-pur"
+                            style="width:auto;padding:.5rem .8rem;font-size:.95rem" onclick="sendMsg()">➤</button></div>
+                </div>
+                <div class="spanel" id="spanel-users">
+                    <div class="users-panel" id="users-list"></div>
+                </div>
+                <div class="spanel" id="spanel-sources">
+                    <div class="src-panel">
+                        <div class="src-card"><span class="tag tag-best">BEST FOR ANY SITE</span>
+                            <h3>🖥️ Screen Share</h3>
+                            <p>Netflix, Prime — যেকোনো সাইট শেয়ার করো। অডিও পেতে Chrome Tab সিলেক্ট করো।</p><button
+                                class="src-btn src-btn-share" id="btn-start-share"
+                                onclick="document.getElementById('audio-modal').style.display='flex'">🖥️ Screen Share
+                                শুরু</button><button class="src-btn src-btn-stop" id="btn-stop-share"
+                                style="display:none" onclick="stopScreenShare()">✕ Screen Share বন্ধ</button>
+                        </div>
+                        <div class="src-card"><span class="tag tag-url">URL EMBED</span>
+                            <h3>🔗 যেকোনো URL খুলো</h3>
+                            <p>URL বারে লিংক লিখে Go চাপো। YouTube হলে auto-sync কাজ করবে।</p><button
+                                class="src-btn src-btn-url" onclick="document.getElementById('url-input').focus()">🔗
+                                URL বারে যাও</button>
+                        </div>
+                        <div class="src-card"><span class="tag tag-local">LOCAL FILE</span>
+                            <h3>📂 Local File Play</h3>
+                            <p>অ্যাডভান্সড প্লেয়ারে মুভি প্লে করো। Speed, Loop, Screenshot, PiP সব আছে!</p>
+                            <div class="src-file-wrap"><button class="src-btn src-btn-file">📂 ফাইল সিলেক্ট
+                                    করো</button><input type="file" accept="video/*" onchange="playLocalFile(event)">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="spanel" id="spanel-playlist">
+                    <div class="playlist-panel" id="pl-list"></div>
+                    <div class="add-pl-wrap" id="add-pl-wrap"><input type="text" id="pl-input" placeholder="ভিডিও লিংক যোগ করো"
+                            onkeydown="if(event.key==='Enter')addToPlaylist()"><button class="btn btn-pur"
+                            style="width:auto;padding:.5rem .75rem" onclick="addToPlaylist()">+</button></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        /* ═══════════ STATE ═══════════ */
+        let myPeer = null, isHost = false, roomPass = "", roomId = "";
+        let ytPlayer = null, ytReady = false, playerReady = false, isSyncing = false;
+        let connections = [], viewerCount = 1, users = [];
+        let myName = "User_" + Math.floor(Math.random() * 9000 + 1000);
+        let playlist = [], currentPlIndex = -1, currentVideoUrl = "";
+        let screenStream = null, localStream = null, currentCalls = [];
+        let currentMode = "none", lpHideTimer = null;
+
+        const ICE_SERVERS = {
+            iceServers: [
+                { urls: "stun:stun.l.google.com:19302" }, { urls: "stun:stun1.l.google.com:19302" },
+                { urls: "stun:stun2.l.google.com:19302" }, { urls: "stun:stun3.l.google.com:19302" },
+                { urls: "turn:openrelay.metered.ca:80", username: "openrelayproject", credential: "openrelayproject" },
+                { urls: "turn:openrelay.metered.ca:443", username: "openrelayproject", credential: "openrelayproject" },
+                { urls: "turn:openrelay.metered.ca:443?transport=tcp", username: "openrelayproject", credential: "openrelayproject" }
+            ]
+        };
+
+        /* ═══════════ YT API ═══════════ */
+        window.onYouTubeIframeAPIReady = () => { ytReady = true };
+        (function () { const s = document.createElement('script'); s.src = "https://www.youtube.com/iframe_api"; document.head.appendChild(s) })();
+
+        /* ═══════════ UTILS ═══════════ */
+        function esc(s) { return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;") }
+        function toast(m, t = "") { const e = document.getElementById('toast'); e.textContent = m; e.className = 'show ' + t; clearTimeout(e._to); e._to = setTimeout(() => e.className = '', 3200) }
+        function connOverlay(s, m = "") { const e = document.getElementById('conn-overlay'); e.style.display = s ? 'flex' : 'none'; if (m) document.getElementById('conn-msg').textContent = m }
+        function setConnStatus(c) { document.getElementById('conn-dot').className = 'conn-dot ' + (c ? 'on' : 'off'); document.getElementById('conn-text').textContent = c ? 'Connected' : 'Offline'; document.getElementById('conn-text').style.color = c ? 'var(--g)' : 'var(--mu)' }
+        function waitYT(cb) { if (ytReady) { cb(); return } const t = setInterval(() => { if (ytReady) { clearInterval(t); cb() } }, 150) }
+        function extractYTId(u) { const m = u.match(/(?:v=|youtu\.be\/|embed\/|shorts\/)([a-zA-Z0-9_-]{11})/); return m ? m[1] : null }
+        function isYTUrl(u) { return /youtube\.com|youtu\.be/.test(u) }
+        function normalizeUrl(u) { u = u.trim(); if (!u) return ""; if (!/^https?:\/\//i.test(u)) u = "https://" + u; return u }
+        function fmtTime(s) { if (isNaN(s)) return "0:00"; const m = Math.floor(s / 60), sc = Math.floor(s % 60), h = Math.floor(s / 3600); return h > 0 ? h + ":" + String(m % 60).padStart(2, '0') + ":" + String(sc).padStart(2, '0') : m + ":" + String(sc).padStart(2, '0') }
+
+        /* ═══════════ VIDEO MANAGEMENT ═══════════ */
+        function hideAllPlayers() {
+            document.getElementById('yt-container').classList.add('vid-hidden');
+            document.getElementById('iframe-container').classList.add('vid-hidden');
+            document.getElementById('screen-video').classList.add('vid-hidden');
+            document.getElementById('local-video').classList.add('vid-hidden');
+            document.getElementById('lp-overlay').classList.add('lp-hide');
+            document.getElementById('vid-placeholder').style.display = 'none';
+            document.getElementById('live-badge').style.display = 'none';
+            document.getElementById('share-indicator').style.display = 'none';
+            document.getElementById('unmute-overlay').style.display = 'none';
+            document.getElementById('fs-btn').style.display = 'none';
+            playerReady = false;
+        }
+        function showPlaceholder() { hideAllPlayers(); document.getElementById('vid-placeholder').style.display = 'flex'; currentMode = "none" }
+
+        function goToUrl() { const r = document.getElementById('url-input').value.trim(); if (!r) return toast("URL লেখো!", "err"); const u = normalizeUrl(r); stopScreenShare(); currentVideoUrl = u; if (isYTUrl(u)) loadYouTube(u); else loadIframe(u); broadcast({ type: "load_url", url: u }) }
+
+        function loadYouTube(v) {
+            const id = extractYTId(v); if (!id) { toast("YouTube ID পাওয়া যায়নি", "err"); return }
+            hideAllPlayers(); currentMode = "youtube";
+            const c = document.getElementById('yt-container'); c.classList.remove('vid-hidden'); c.innerHTML = '<div id="yt-player"></div>';
+            document.getElementById('fs-btn').style.display = 'flex';
+            waitYT(() => {
+                ytPlayer = new YT.Player('yt-player', {
+                    videoId: id, playerVars: { autoplay: 1, controls: isHost ? 1 : 0, rel: 0, modestbranding: 1 },
+                    events: {
+                        onReady: () => { playerReady = true; toast("YouTube ভিডিও লোড হয়েছে", "ok") },
+                        onStateChange: e => { if (!isHost || isSyncing) return; if (e.data === YT.PlayerState.PLAYING) broadcast({ type: "play", time: ytPlayer.getCurrentTime() }); else if (e.data === YT.PlayerState.PAUSED) broadcast({ type: "pause", time: ytPlayer.getCurrentTime() }); else if (e.data === YT.PlayerState.ENDED) playNextInPlaylist() }
+                    }
+                });
+            });
+        }
+
+        function loadIframe(u) { hideAllPlayers(); currentMode = "iframe"; document.getElementById('iframe-container').classList.remove('vid-hidden'); document.getElementById('site-frame').src = u; document.getElementById('fs-btn').style.display = 'flex'; toast("Site লোড হচ্ছে। যদি কাজ না করে, Screen Share ব্যবহার করো!", "err"); }
+
+        function applyState(d) {
+            if (currentMode === "youtube" && playerReady && ytPlayer) { isSyncing = true; try { if (ytPlayer.getCurrentTime) { if (Math.abs(ytPlayer.getCurrentTime() - d.time) > 1.5) ytPlayer.seekTo(d.time, true); if (d.type === "play") ytPlayer.playVideo(); else ytPlayer.pauseVideo() } } catch (e) { } setTimeout(() => { isSyncing = false }, 600) }
+            if (currentMode === "local") { const v = document.getElementById('local-video'); if (d.type === "play") v.play(); else v.pause() }
+        }
+
+        /* ═══════════ SCREEN SHARE ═══════════ */
+        async function startScreenShare() {
+            if (!isHost) return toast("শুধুমাত্র Host স্ক্রিন শেয়ার করতে পারে", "err");
+            try {
+                try {
+                    screenStream = await navigator.mediaDevices.getDisplayMedia({ video: true, audio: true });
+                } catch (e) {
+                    screenStream = await navigator.mediaDevices.getDisplayMedia({ video: true });
+                }
+                
+                if (screenStream.getAudioTracks().length === 0) {
+                    toast("⚠️ Audio Share হয়নি! 'Chrome Tab' সিলেক্ট করে 'Share audio' টিক দিন।", "err");
+                }
+
+                hideAllPlayers(); currentMode = "screen";
+                document.getElementById('share-indicator').style.display = 'flex'; document.getElementById('live-badge').style.display = 'block';
+                document.getElementById('btn-start-share').style.display = 'none'; document.getElementById('btn-stop-share').style.display = 'flex';
+                connections.forEach(c => { try { const call = myPeer.call(c.peer, screenStream); currentCalls.push(call) } catch (e) { } });
+                toast("স্ক্রিন শেয়ার শুরু!", "ok"); sysMsg("Host স্ক্রিন শেয়ার শুরু করেছেন 🖥️"); broadcast({ type: "screen_start" });
+                screenStream.getVideoTracks()[0].onended = () => stopScreenShare();
+            } catch (e) { toast("স্ক্রিন শেয়ার বাতিল", "err") }
+        }
+
+        function stopScreenShare() {
+            if (screenStream) { screenStream.getTracks().forEach(t => t.stop()); screenStream = null }
+            currentCalls.forEach(c => { try { c.close() } catch (e) { } }); currentCalls = [];
+            document.getElementById('btn-start-share').style.display = 'flex'; document.getElementById('btn-stop-share').style.display = 'none';
+            broadcast({ type: "screen_stop" }); sysMsg("Host স্ক্রিন শেয়ার বন্ধ করেছেন");
+            if (currentVideoUrl) { if (isYTUrl(currentVideoUrl)) loadYouTube(currentVideoUrl); else loadIframe(currentVideoUrl) } else showPlaceholder();
+        }
+
+        function setupCallListener() {
+            myPeer.on('call', call => {
+                call.answer();
+                call.on('stream', rs => {
+                    hideAllPlayers(); currentMode = "screen";
+                    const v = document.getElementById('screen-video'); v.classList.remove('vid-hidden'); v.srcObject = rs;
+                    document.getElementById('live-badge').style.display = 'block'; document.getElementById('fs-btn').style.display = 'flex';
+                    v.play().catch(() => { document.getElementById('unmute-overlay').style.display = 'flex' });
+                    toast("Host এর স্ক্রিন দেখা যাচ্ছে", "ok");
+                });
+                call.on('close', () => {
+                    const v = document.getElementById('screen-video'); v.classList.add('vid-hidden'); v.srcObject = null;
+                    document.getElementById('live-badge').style.display = 'none'; document.getElementById('fs-btn').style.display = 'none';
+                    if (currentVideoUrl) { if (isYTUrl(currentVideoUrl)) loadYouTube(currentVideoUrl); else loadIframe(currentVideoUrl) } else showPlaceholder();
+                });
+            });
+        }
+        function unmuteAudio() { const v = document.getElementById('screen-video'); v.muted = false; v.play(); document.getElementById('unmute-overlay').style.display = 'none' }
+
+        /* ═══════════ LOCAL FILE + ADVANCED PLAYER ═══════════ */
+        function playLocalFile(ev) {
+            const f = ev.target.files[0]; if (!f) return;
+            stopScreenShare();
+            const u = URL.createObjectURL(f);
+            hideAllPlayers(); currentMode = "local";
+            const v = document.getElementById('local-video'); v.classList.remove('vid-hidden'); v.src = u;
+            document.getElementById('fs-btn').style.display = 'flex';
+            document.getElementById('lp-overlay').classList.remove('lp-hide');
+            v.loop = false; v.playbackRate = 1; v.volume = 1;
+            document.getElementById('lp-loop').classList.remove('lp-on');
+            document.getElementById('lp-spd').value = '1';
+            document.getElementById('lp-vol').value = 1;
+            document.getElementById('lp-mute').textContent = '🔊';
+            toast("লোকাল ফাইল প্লে হচ্ছে", "ok");
+
+            // Host: stream to viewers + sync
+            if (isHost) {
+                v.onplay = () => {
+                    broadcast({ type: "play", time: v.currentTime });
+                    try { if (v.captureStream && !localStream) { localStream = v.captureStream(30); connections.forEach(c => { try { const call = myPeer.call(c.peer, localStream); currentCalls.push(call) } catch (e) { } }) } } catch (e) { }
+                };
+                v.onpause = () => { broadcast({ type: "pause", time: v.currentTime }) };
+                v.onended = () => { playNextInPlaylist() };
+            }
+            v.play().catch(() => { });
+        }
+
+        // Player controls
+        const LV = document.getElementById('local-video');
+        function lpToggle() { if (LV.paused) { LV.play(); document.getElementById('lp-play').textContent = '⏸'; if (isHost) broadcast({ type: "play", time: LV.currentTime }) } else { LV.pause(); document.getElementById('lp-play').textContent = '▶'; if (isHost) broadcast({ type: "pause", time: LV.currentTime }) } }
+        function lpSkip(s) { LV.currentTime = Math.max(0, Math.min(LV.duration || 0, LV.currentTime + s)); lpToast((s > 0 ? "+" : "") + s + "s") }
+        function lpSeek(ev) { const r = document.getElementById('lp-bar').getBoundingClientRect(); LV.currentTime = ((ev.clientX - r.left) / r.width) * (LV.duration || 0) }
+        function lpVol(v) { LV.volume = v; LV.muted = false; document.getElementById('lp-mute').textContent = v == 0 ? '🔇' : v < 0.5 ? '🔉' : '🔊' }
+        function lpMute() { LV.muted = !LV.muted; document.getElementById('lp-mute').textContent = LV.muted ? '🔇' : '🔊'; document.getElementById('lp-vol').value = LV.muted ? 0 : LV.volume }
+        function lpSpeed(s) { LV.playbackRate = parseFloat(s); lpToast(s + "x") }
+        function lpLoop() { LV.loop = !LV.loop; document.getElementById('lp-loop').classList.toggle('lp-on', LV.loop); lpToast(LV.loop ? "Loop ON" : "Loop OFF") }
+        function lpPip() { try { if (document.pictureInPictureElement) document.exitPictureInPicture(); else LV.requestPictureInPicture() } catch (e) { toast("PiP সাপোর্ট নেই", "err") } }
+        function lpFs() { const el = document.querySelector('.video-col'); if (document.fullscreenElement) { document.exitFullscreen(); if (screen.orientation && screen.orientation.unlock) screen.orientation.unlock(); } else { el.requestFullscreen().then(() => { if (screen.orientation && screen.orientation.lock) screen.orientation.lock('landscape').catch(() => {}); }).catch(() => { }) } }
+        function lpShot() { const c = document.createElement('canvas'); c.width = LV.videoWidth; c.height = LV.videoHeight; c.getContext('2d').drawImage(LV, 0, 0); c.toBlob(b => { const u = URL.createObjectURL(b); const a = document.createElement('a'); a.href = u; a.download = 'screenshot_' + Date.now() + '.png'; a.click(); URL.revokeObjectURL(u); toast("Screenshot সেভ হয়েছে!", "ok") }) }
+        function lpToast(t) { const el = document.createElement('div'); el.className = 'lp-toast'; el.textContent = t; document.getElementById('video-content').appendChild(el); setTimeout(() => el.remove(), 700) }
+
+        // Progress update
+        setInterval(() => {
+            if (currentMode !== "local" || !LV.duration) return;
+            const p = LV.currentTime / LV.duration * 100;
+            document.getElementById('lp-fill').style.width = p + '%';
+            document.getElementById('lp-tm').textContent = fmtTime(LV.currentTime) + ' / ' + fmtTime(LV.duration);
+            if (LV.buffered.length > 0) document.getElementById('lp-buf').style.width = (LV.buffered.end(LV.buffered.length - 1) / LV.duration * 100) + '%';
+            document.getElementById('lp-play').textContent = LV.paused ? '▶' : '⏸';
+        }, 250);
+
+        // Auto-hide controls
+        const lpWrap = document.getElementById('video-content');
+        lpWrap.addEventListener('mousemove', () => { if (currentMode !== "local") return; document.getElementById('lp-overlay').classList.remove('lp-hide'); clearTimeout(lpHideTimer); lpHideTimer = setTimeout(() => { if (!LV.paused) document.getElementById('lp-overlay').classList.add('lp-hide') }, 3000) });
+
+        // Click on video to play/pause
+        LV.addEventListener('click', () => { if (isHost) lpToggle() });
+        LV.addEventListener('dblclick', () => { if (isHost) lpFs() });
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', e => {
+            if (currentMode !== "local" || !isHost) return;
+            if (e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT') return;
+            switch (e.key) {
+                case ' ': e.preventDefault(); lpToggle(); break;
+                case 'ArrowLeft': lpSkip(-10); break;
+                case 'ArrowRight': lpSkip(10); break;
+                case 'ArrowUp': e.preventDefault(); LV.volume = Math.min(1, LV.volume + 0.1); document.getElementById('lp-vol').value = LV.volume; break;
+                case 'ArrowDown': e.preventDefault(); LV.volume = Math.max(0, LV.volume - 0.1); document.getElementById('lp-vol').value = LV.volume; break;
+                case 'm': lpMute(); break; case 'f': lpFs(); break; case 'p': lpPip(); break; case 'l': lpLoop(); break;
+            }
+        });
+
+        /* ═══════════ GENERAL ═══════════ */
+        function toggleFullscreen() { const el = document.querySelector('.video-col'); if (document.fullscreenElement) { document.exitFullscreen(); if (screen.orientation && screen.orientation.unlock) screen.orientation.unlock(); } else { el.requestFullscreen().then(() => { if (screen.orientation && screen.orientation.lock) screen.orientation.lock('landscape').catch(() => {}); }).catch(() => { }) } }
+        function sendReaction(e) { spawnFloatEmoji(e); broadcast({ type: "reaction", emoji: e }) }
+        function spawnFloatEmoji(e) { const c = document.getElementById('video-content'); const el = document.createElement('div'); el.className = 'float-emoji'; el.textContent = e; el.style.left = (20 + Math.random() * 60) + '%'; el.style.bottom = '60px'; c.appendChild(el); setTimeout(() => el.remove(), 2000) }
+
+        /* ═══════════ PLAYLIST ═══════════ */
+        function addToPlaylist() { const i = document.getElementById('pl-input'); const u = normalizeUrl(i.value); if (!u) return; playlist.push(u); i.value = ""; renderPlaylist(); broadcast({ type: "playlist", data: playlist, idx: currentPlIndex }); if (playlist.length === 1 && !currentVideoUrl) playPlaylistItem(0) }
+        function renderPlaylist() { const l = document.getElementById('pl-list'); if (!playlist.length) { l.innerHTML = '<div style="text-align:center;color:var(--mu);padding:2rem;font-size:.82rem">Playlist খালি</div>'; return } l.innerHTML = playlist.map((u, i) => `<div class="pl-item ${i === currentPlIndex ? 'active' : ''}" onclick="playPlaylistItem(${i})"><span class="pl-num">${i + 1}</span><span class="pl-title">${esc(u.length > 45 ? u.substring(0, 45) + '...' : u)}</span>${isHost ? `<span class="pl-remove" onclick="event.stopPropagation();removeFromPlaylist(${i})">✕</span>` : ''}</div>`).join('') }
+        function removeFromPlaylist(i) { playlist.splice(i, 1); if (currentPlIndex > i) currentPlIndex--; else if (currentPlIndex === i) currentPlIndex = -1; renderPlaylist(); broadcast({ type: "playlist", data: playlist, idx: currentPlIndex }) }
+        function playPlaylistItem(i) { if (i < 0 || i >= playlist.length) return; currentPlIndex = i; currentVideoUrl = playlist[i]; document.getElementById('url-input').value = playlist[i]; if (isYTUrl(playlist[i])) loadYouTube(playlist[i]); else loadIframe(playlist[i]); broadcast({ type: "play_item", index: i }); renderPlaylist() }
+        function playNextInPlaylist() { if (currentPlIndex < playlist.length - 1) playPlaylistItem(currentPlIndex + 1) }
+
+        /* ═══════════ BROADCAST / RECEIVE ═══════════ */
+        function broadcast(d) { connections.forEach(c => { try { c.send(d) } catch (e) { } }) }
+
+        function handleData(d, fc) {
+            if (d.type === "auth") {
+                if (d.pass !== roomPass) { try { fc.send({ type: "auth_fail" }); fc.close() } catch (e) { } return }
+                connections.push(fc);
+                const newUser = { id: fc.peer, name: d.name || "Viewer", isHost: false };
+                users.push(newUser); viewerCount++; updateVC();
+                fc.send({ type: "auth_ok", videoUrl: currentVideoUrl, time: ytPlayer && ytPlayer.getCurrentTime ? ytPlayer.getCurrentTime() : 0, status: ytPlayer && ytPlayer.getPlayerState ? (ytPlayer.getPlayerState() === 1 ? "playing" : "paused") : "paused", pl: playlist, plIdx: currentPlIndex, mode: currentMode, users: users });
+                sysMsg(newUser.name + " এলো 👋"); broadcast({ type: "user_list", users: users }); renderUsers();
+                if (screenStream) { try { const call = myPeer.call(fc.peer, screenStream); currentCalls.push(call) } catch (e) { } }
+                if (localStream) { try { const call = myPeer.call(fc.peer, localStream); currentCalls.push(call) } catch (e) { } }
+                return;
+            }
+            if (d.type === "auth_ok") {
+                connOverlay(false); setConnStatus(true); toast("Room এ join হয়েছে!", "ok"); enterRoomUI();
+                if (d.videoUrl) { currentVideoUrl = d.videoUrl; document.getElementById('url-input').value = d.videoUrl; if (isYTUrl(d.videoUrl)) { waitYT(() => loadYouTube(d.videoUrl)); setTimeout(() => { applyState({ type: d.status === "playing" ? "play" : "pause", time: d.time }) }, 3000) } else loadIframe(d.videoUrl) }
+                if (d.pl) { playlist = d.pl; currentPlIndex = d.plIdx ?? -1; renderPlaylist() }
+                if (d.users) { users = d.users; renderUsers() }
+                return;
+            }
+            if (d.type === "auth_fail") { connOverlay(false); toast("পাসওয়ার্ড ভুল!", "err"); return }
+            if (d.type === "kicked") { toast("Host তোমাকে রুম থেকে বের করে দিয়েছে!", "err"); setTimeout(leaveRoom, 2000); return }
+            if (d.type === "user_list") { users = d.users; renderUsers(); return }
+            if (d.type === "play" || d.type === "pause") { applyState(d); return }
+            if (d.type === "chat") { addMsg(d.name, d.text, false); return }
+            if (d.type === "vc") { viewerCount = d.count; updateVC(); return }
+            if (d.type === "load_url") { currentVideoUrl = d.url; document.getElementById('url-input').value = d.url; if (isYTUrl(d.url)) waitYT(() => loadYouTube(d.url)); else loadIframe(d.url); return }
+            if (d.type === "playlist") { playlist = d.data; currentPlIndex = d.idx ?? -1; renderPlaylist(); return }
+            if (d.type === "play_item") { playPlaylistItem(d.index); return }
+            if (d.type === "screen_start") { sysMsg("Host স্ক্রিন শেয়ার শুরু করেছেন 🖥️"); return }
+            if (d.type === "screen_stop") { const v = document.getElementById('screen-video'); v.classList.add('vid-hidden'); v.srcObject = null; document.getElementById('live-badge').style.display = 'none'; document.getElementById('fs-btn').style.display = 'none'; if (currentVideoUrl) { if (isYTUrl(currentVideoUrl)) loadYouTube(currentVideoUrl); else loadIframe(currentVideoUrl) } else showPlaceholder(); toast("Host স্ক্রিন শেয়ার বন্ধ করেছেন", "err"); return }
+            if (d.type === "reaction") { spawnFloatEmoji(d.emoji); return }
+            if (d.type === "local_file_warning") { sysMsg("⚠️ Host লোকাল ফাইল প্লে করছে।"); return }
+        }
+
+        /* ═══════════ USERS ═══════════ */
+        function renderUsers() {
+            const l = document.getElementById('users-list');
+            l.innerHTML = users.map(u => `<div class="user-item ${u.id === myPeer?.id ? 'me-item' : ''}"><div class="ui-av ${u.isHost ? 'host-av' : 'viewer-av'}">${u.isHost ? '🎬' : '👤'}</div><div class="ui-info"><div class="ui-name">${esc(u.name)}${u.id === myPeer?.id ? ' (তুমি)' : ''}</div><div class="ui-role">${u.isHost ? 'Host' : 'Viewer'}</div></div>${isHost && !u.isHost ? `<button class="ui-kick" onclick="kickUser('${u.id}')" title="Kick">✕</button>` : ''}</div>`).join('');
+            document.getElementById('vc').textContent = users.length + " জন";
+        }
+        function kickUser(uid) {
+            if (!isHost) return;
+            const conn = connections.find(c => c.peer === uid);
+            const user = users.find(u => u.id === uid);
+            if (conn) { try { conn.send({ type: "kicked" }) } catch (e) { } conn.close(); connections = connections.filter(c => c !== conn) }
+            users = users.filter(u => u.id !== uid);
+            viewerCount = Math.max(1, viewerCount - 1); updateVC();
+            broadcast({ type: "user_list", users: users }); renderUsers();
+            if (user) sysMsg(user.name + " কে কিক করা হয়েছে");
+            toast("ইউজার কিক করা হয়েছে", "ok");
+        }
+
+        /* ═══════════ PEER ═══════════ */
+        function createPeer() {
+            const p = new Peer({ debug: 0, config: ICE_SERVERS });
+            p.on('disconnected', () => { setConnStatus(false); setTimeout(() => { if (p && !p.destroyed) p.reconnect() }, 3000) });
+            p.on('close', () => setConnStatus(false));
+            return p;
+        }
+
+        function doCreate() {
+            const n = document.getElementById('c-name').value.trim(), p = document.getElementById('c-pass').value.trim();
+            if (!p) return toast("Password দাও!", "err"); if (n) myName = n;
+            isHost = true; roomPass = p; connOverlay(true, "Room তৈরি হচ্ছে...");
+            myPeer = createPeer();
+            myPeer.on('open', id => { roomId = id; connOverlay(false); setConnStatus(true); users = [{ id: myPeer.id, name: myName, isHost: true }]; enterRoomUI(); toast("Room তৈরি হয়েছে! ID কপি করে পাঠাও", "ok") });
+            myPeer.on('connection', conn => {
+                conn.on('open', () => { }); conn.on('data', d => handleData(d, conn));
+                conn.on('close', () => { connections = connections.filter(c => c !== conn); const u = users.find(x => x.id === conn.peer); users = users.filter(x => x.id !== conn.peer); viewerCount = Math.max(1, viewerCount - 1); updateVC(); if (u) sysMsg(u.name + " চলে গেল 👋"); broadcast({ type: "user_list", users: users }); renderUsers() });
+                conn.on('error', () => { });
+            });
+            myPeer.on('error', e => { connOverlay(false); if (e.type === 'peer-unavailable') toast("Room ID পাওয়া যায়নি!", "err"); else toast("Error: " + e.type, "err") });
+            setupCallListener();
+        }
+
+        function doJoin() {
+            const n = document.getElementById('j-name').value.trim(), id = document.getElementById('j-id').value.trim(), p = document.getElementById('j-pass').value.trim();
+            if (!id) return toast("Room ID দাও!", "err"); if (!p) return toast("Password দাও!", "err"); if (n) myName = n;
+            isHost = false; roomPass = p; connOverlay(true, "Host এর সাথে যুক্ত হচ্ছে...");
+            myPeer = createPeer();
+            myPeer.on('open', () => {
+                const conn = myPeer.connect(id, { reliable: true, serialization: "json" }); connections = [conn];
+                conn.on('open', () => { conn.send({ type: "auth", pass: roomPass, name: myName }) });
+                conn.on('data', d => handleData(d, conn));
+                conn.on('close', () => { setConnStatus(false); toast("Host সংযোগ বিচ্ছিন্ন", "err"); setTimeout(leaveRoom, 3000) });
+                conn.on('error', () => { connOverlay(false); toast("সংযোগ ত্রুটি", "err") });
+                setTimeout(() => { if (document.getElementById('conn-overlay').style.display === 'flex') { connOverlay(false); toast("Timeout — Room ID ঠিক আছে তো?", "err") } }, 20000);
+            });
+            myPeer.on('error', e => { connOverlay(false); if (e.type === 'peer-unavailable') toast("Room ID পাওয়া যায়নি!", "err"); else toast("Error: " + e.type, "err") });
+            setupCallListener();
+        }
+
+        function enterRoomUI() {
+            document.getElementById('lobby').style.display = 'none'; document.getElementById('room').style.display = 'flex';
+            const d = isHost ? myPeer.id : document.getElementById('j-id').value.trim();
+            document.getElementById('disp-id').textContent = d.substring(0, 8) + "...";
+            document.getElementById('role-badge').textContent = isHost ? "🎬 Host" : "👁 Viewer";
+            document.getElementById('role-badge').className = "badge " + (isHost ? "badge-host" : "badge-viewer");
+            window._fullRoomId = d; updateVC(); renderUsers(); renderPlaylist();
+            
+            if (!isHost) {
+                document.getElementById('tab-users').style.display = 'none';
+                document.getElementById('tab-sources').style.display = 'none';
+                document.getElementById('add-pl-wrap').style.display = 'none';
+                document.getElementById('url-bar').style.display = 'none';
+                stab('chat', document.getElementById('tab-chat'));
+            }
+        }
+        function updateVC() { document.getElementById('vc').textContent = (users.length || viewerCount) + " জন" }
+        function leaveRoom() { if (myPeer && !myPeer.destroyed) myPeer.destroy(); location.reload() }
+
+        /* ═══════════ CHAT ═══════════ */
+        function sendMsg() { const i = document.getElementById('ci'), t = i.value.trim(); if (!t) return; i.value = ""; addMsg(myName, t, true); broadcast({ type: "chat", name: myName, text: t }) }
+        function addMsg(w, t, m) { const b = document.getElementById('chat-box'), d = document.createElement('div'); d.className = 'msg' + (m ? ' me' : ''); d.innerHTML = `<span class="msg-who">${esc(w)}</span><span class="msg-bubble">${esc(t)}</span>`; b.appendChild(d); b.scrollTop = b.scrollHeight }
+        function sysMsg(t) { const b = document.getElementById('chat-box'), d = document.createElement('div'); d.className = 'sys-msg'; d.textContent = t; b.appendChild(d); b.scrollTop = b.scrollHeight }
+
+        /* ═══════════ TABS ═══════════ */
+        function stab(n, el) { document.querySelectorAll('.stab').forEach(t => t.classList.remove('on')); document.querySelectorAll('.spanel').forEach(p => p.classList.remove('on')); el.classList.add('on'); document.getElementById('spanel-' + n).classList.add('on') }
+        function copyId() { const id = window._fullRoomId || myPeer?.id || ""; navigator.clipboard.writeText(id).then(() => toast("Room ID কপি হয়েছে!", "ok")).catch(() => { const t = document.createElement('textarea'); t.value = id; t.style.position = 'fixed'; t.style.left = '-9999px'; document.body.appendChild(t); t.select(); document.execCommand('copy'); t.remove(); toast("Room ID কপি হয়েছে!", "ok") }) }
+    </script>
+</body>
+
+</html>
