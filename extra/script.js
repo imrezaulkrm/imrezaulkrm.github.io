@@ -157,7 +157,7 @@ const projects = [
     tech: 'Angular 16, Spring Boot, MySQL, Jenkins, Docker, Kubernetes, ArgoCD, GitHub',
     git: 'https://github.com/imrezaulkrm/Studentify.git'
   },
-    {
+  {
     name: 'Bartadhara',
     images: [
       "https://github.com/imrezaulkrm/bartadhara-devops/blob/main/image/bartadhara-homepage.png?raw=true",
@@ -321,47 +321,58 @@ changeProject(0);
 
 
 
-  function showPopup(message, isError = false) {
-    const popup = document.getElementById('popup');
-    popup.textContent = message;
+function showPopup(message, isError = false) {
+  const popup = document.getElementById('popup');
+  popup.textContent = message;
 
-    if (isError) {
-      popup.classList.add('error');
-    } else {
-      popup.classList.remove('error');
-    }
-
-    popup.classList.add('show');
-
-    // Hide after 3 seconds
-    setTimeout(() => {
-      popup.classList.remove('show');
-    }, 3000);
+  if (isError) {
+    popup.classList.add('error');
+  } else {
+    popup.classList.remove('error');
   }
 
-  document.querySelector("form").addEventListener("submit", function (e) {
-    e.preventDefault();
-    const form = e.target;
+  popup.classList.add('show');
 
-    fetch(form.action, {
-      method: form.method,
-      body: new FormData(form),
-      headers: {
-        Accept: "application/json",
-      },
+  // Hide after 3 seconds
+  setTimeout(() => {
+    popup.classList.remove('show');
+  }, 3000);
+}
+
+document.querySelector("form").addEventListener("submit", function (e) {
+  e.preventDefault();
+  const form = e.target;
+
+  // Create abort controller with 15 second timeout
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), 15000);
+
+  fetch(form.action, {
+    method: form.method,
+    body: new FormData(form),
+    headers: {
+      Accept: "application/json",
+    },
+    signal: controller.signal,
+  })
+    .then(response => {
+      clearTimeout(timeoutId);
+      if (response.ok) {
+        showPopup("Message sent successfully");
+        form.reset();
+      } else {
+        showPopup("Failed to send message.", true);
+      }
     })
-      .then(response => {
-        if (response.ok) {
-          showPopup("Message sent successfully");
-          form.reset();
-        } else {
-          showPopup("Failed to send message.", true);
-        }
-      })
-      .catch(error => {
+    .catch(error => {
+      clearTimeout(timeoutId);
+      if (error.name === "AbortError") {
+        showPopup("Request timeout. Please try again.", true);
+      } else {
         showPopup("Something went wrong.", true);
-      });
-  });
+      }
+    });
+});
 
 
 

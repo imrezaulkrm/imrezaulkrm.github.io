@@ -2751,18 +2751,24 @@ document.addEventListener('DOMContentLoaded', () => {
         }, { passive: true });
 
         // ============================================================
-        //  SCANNER — BUG FIXED: im.src ঠিক জাযগায়
+        //  SCANNER — BUG FIXED: im.src ঠিক জাযগায় + TIMEOUT
         // ============================================================
         function probe(url) {
             return new Promise(function (res) {
                 var im = new Image();
+                var timeout = setTimeout(function () {
+                    res({ ok: false });
+                    im.src = '';
+                }, 8000); // 8 second timeout per image
                 im.onload = function () {
+                    clearTimeout(timeout);
                     var w = im.naturalWidth;
                     var h = im.naturalHeight;
                     var r = w / h;
                     res({ ok: true, w: w, h: h, ratio: r, type: r > 1.0 ? 'landscape' : 'portrait' });
                 };
                 im.onerror = function () {
+                    clearTimeout(timeout);
                     res({ ok: false });
                 };
                 im.src = url;

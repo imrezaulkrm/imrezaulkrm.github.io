@@ -1808,10 +1808,10 @@ document.addEventListener('DOMContentLoaded', () => {
         lbOverlay.addEventListener('touchend', function (e) { var d = txS - e.changedTouches[0].screenX; if (Math.abs(d) > 60) navLb(d > 0 ? 1 : -1); }, { passive: true });
 
         // ============================================================
-        //  SCANNER (PARALLEL ROCKET SPEED)
+        //  SCANNER (PARALLEL ROCKET SPEED + TIMEOUT)
         // ============================================================
-        function probe(url) { return new Promise(function (res) { var im = new Image(); im.onload = function () { var r = im.naturalWidth / im.naturalHeight; res({ ok: true, ratio: r }); }; im.onerror = function () { res({ ok: false }); }; im.src = url; }); }
-        function scanFolder(fo) { return new Promise(function (resolve) { var found = [], misses = 0, n = 1; function next() { if (n > MAX_IDX || (found.length > 0 && misses >= 5)) { resolve(found); return; } var num = n; n++; var ei = 0; function tryExt() { if (ei >= EXTS.length) { misses++; next(); return; } var url = fo.path + '/' + num + '.' + EXTS[ei]; ei++; probe(url).then(function (info) { if (info.ok) { found.push({ src: url, name: fo.name + ' — ' + num, cat: fo.name, ratio: info.ratio }); misses = 0; next(); } else { tryExt(); } }); } tryExt(); } next(); }); }
+        function probe(url) { return new Promise(function (res) { var im = new Image(); var timeout = setTimeout(function () { res({ ok: false }); im.src = ''; }, 8000); im.onload = function () { clearTimeout(timeout); var r = im.naturalWidth / im.naturalHeight; res({ ok: true, ratio: r }); }; im.onerror = function () { clearTimeout(timeout); res({ ok: false }); }; im.src = url; }); }
+        function scanFolder(fo) { return new Promise(function (resolve) { var found = [], misses = 0, n = 1; function next() { if (n > MAX_IDX || (found.length > 0 && misses >= 3)) { resolve(found); return; } var num = n; n++; var ei = 0; function tryExt() { if (ei >= EXTS.length) { misses++; next(); return; } var url = fo.path + '/' + num + '.' + EXTS[ei]; ei++; probe(url).then(function (info) { if (info.ok) { found.push({ src: url, name: fo.name + ' — ' + num, cat: fo.name, ratio: info.ratio }); misses = 0; next(); } else { tryExt(); } }); } tryExt(); } next(); }); }
 
         async function scanAllFolders() {
             var results = {}, total = 0;
