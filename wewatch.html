@@ -1492,7 +1492,8 @@
             <h2>🔊 অডিও শেয়ার করার নিয়ম</h2>
             <p>ব্রাউজারের নিরাপত্তা নিয়মে <b>পুরো স্ক্রিন বা উইন্ডো</b> শেয়ার করলে অডিও ব্লক হয়।<br><br>অডিও শেয়ার
                 করতে হলে ব্রাউজারের পপ-আপে:<br>১. <b>"Chrome Tab"</b> সিলেক্ট করো (পুরো স্ক্রিন নয়)<br>২. নিচে
-                <b>"Share tab audio" ✅</b> টিক দাও<br>৩. তারপর <b>"Share"</b> চাপো</p>
+                <b>"Share tab audio" ✅</b> টিক দাও<br>৩. তারপর <b>"Share"</b> চাপো
+            </p>
             <div class="modal-btns">
                 <button class="modal-btn mbtn-c"
                     onclick="document.getElementById('audio-modal').style.display='none'">বাদ দাও</button>
@@ -1662,9 +1663,10 @@
                 </div>
                 <div class="spanel" id="spanel-playlist">
                     <div class="playlist-panel" id="pl-list"></div>
-                    <div class="add-pl-wrap" id="add-pl-wrap"><input type="text" id="pl-input" placeholder="ভিডিও লিংক যোগ করো"
-                            onkeydown="if(event.key==='Enter')addToPlaylist()"><button class="btn btn-pur"
-                            style="width:auto;padding:.5rem .75rem" onclick="addToPlaylist()">+</button></div>
+                    <div class="add-pl-wrap" id="add-pl-wrap"><input type="text" id="pl-input"
+                            placeholder="ভিডিও লিংক যোগ করো" onkeydown="if(event.key==='Enter')addToPlaylist()"><button
+                            class="btn btn-pur" style="width:auto;padding:.5rem .75rem"
+                            onclick="addToPlaylist()">+</button></div>
                 </div>
             </div>
         </div>
@@ -1682,11 +1684,24 @@
 
         const ICE_SERVERS = {
             iceServers: [
-                { urls: "stun:stun.l.google.com:19302" }, { urls: "stun:stun1.l.google.com:19302" },
-                { urls: "stun:stun2.l.google.com:19302" }, { urls: "stun:stun3.l.google.com:19302" },
-                { urls: "turn:openrelay.metered.ca:80", username: "openrelayproject", credential: "openrelayproject" },
-                { urls: "turn:openrelay.metered.ca:443", username: "openrelayproject", credential: "openrelayproject" },
-                { urls: "turn:openrelay.metered.ca:443?transport=tcp", username: "openrelayproject", credential: "openrelayproject" }
+                { urls: "stun:stun.l.google.com:19302" },
+                { urls: "stun:stun1.l.google.com:19302" },
+                { urls: "stun:stun2.l.google.com:19302" },
+                {
+                    urls: "turn:openrelay.metered.ca:80",
+                    username: "openrelayproject",
+                    credential: "openrelayproject"
+                },
+                {
+                    urls: "turn:openrelay.metered.ca:443",
+                    username: "openrelayproject",
+                    credential: "openrelayproject"
+                },
+                {
+                    urls: "turn:openrelay.metered.ca:443?transport=tcp",
+                    username: "openrelayproject",
+                    credential: "openrelayproject"
+                }
             ]
         };
 
@@ -1760,7 +1775,7 @@
                 v.onpause = () => { broadcast({ type: "pause", time: v.currentTime }) };
                 v.onended = () => { playNextInPlaylist() };
             }
-            v.play().catch(() => {});
+            v.play().catch(() => { });
         }
 
         function loadAnyUrl(u) {
@@ -1783,7 +1798,7 @@
                 } catch (e) {
                     screenStream = await navigator.mediaDevices.getDisplayMedia({ video: true });
                 }
-                
+
                 if (screenStream.getAudioTracks().length === 0) {
                     toast("⚠️ Audio Share হয়নি! 'Chrome Tab' সিলেক্ট করে 'Share audio' টিক দিন।", "err");
                 }
@@ -1859,7 +1874,7 @@
                 if (ytPlayer.getPlayerState() === YT.PlayerState.PLAYING) ytPlayer.pauseVideo();
                 else ytPlayer.playVideo();
             } else if (currentMode === "local") {
-                if (LV.paused) { LV.play(); document.getElementById('lp-play').textContent = '⏸'; if (isHost) broadcast({ type: "play", time: LV.currentTime }) } 
+                if (LV.paused) { LV.play(); document.getElementById('lp-play').textContent = '⏸'; if (isHost) broadcast({ type: "play", time: LV.currentTime }) }
                 else { LV.pause(); document.getElementById('lp-play').textContent = '▶'; if (isHost) broadcast({ type: "pause", time: LV.currentTime }) }
             }
         }
@@ -1879,7 +1894,7 @@
             }
         }
         function lpVol(v) {
-            if (currentMode === "youtube" && playerReady && ytPlayer) { ytPlayer.setVolume(v * 100); if(v>0) ytPlayer.unMute(); } 
+            if (currentMode === "youtube" && playerReady && ytPlayer) { ytPlayer.setVolume(v * 100); if (v > 0) ytPlayer.unMute(); }
             else if (currentMode === "local") { LV.volume = v; LV.muted = false; }
             document.getElementById('lp-mute').textContent = v == 0 ? '🔇' : v < 0.5 ? '🔉' : '🔊';
         }
@@ -1903,7 +1918,7 @@
             else if (currentMode === "local") { LV.loop = !LV.loop; document.getElementById('lp-loop').classList.toggle('lp-on', LV.loop); lpToast(LV.loop ? "Loop ON" : "Loop OFF"); }
         }
         function lpPip() { if (currentMode === "local") { try { if (document.pictureInPictureElement) document.exitPictureInPicture(); else LV.requestPictureInPicture() } catch (e) { toast("PiP সাপোর্ট নেই", "err") } } else toast("শুধুমাত্র লোকাল ভিডিওতে PiP সম্ভব", "err") }
-        function lpFs() { const el = document.querySelector('.video-col'); if (document.fullscreenElement) { document.exitFullscreen(); if (screen.orientation && screen.orientation.unlock) screen.orientation.unlock(); } else { el.requestFullscreen().then(() => { if (screen.orientation && screen.orientation.lock) screen.orientation.lock('landscape').catch(() => {}); }).catch(() => { }) } }
+        function lpFs() { const el = document.querySelector('.video-col'); if (document.fullscreenElement) { document.exitFullscreen(); if (screen.orientation && screen.orientation.unlock) screen.orientation.unlock(); } else { el.requestFullscreen().then(() => { if (screen.orientation && screen.orientation.lock) screen.orientation.lock('landscape').catch(() => { }); }).catch(() => { }) } }
         function lpShot() { if (currentMode === "local") { const c = document.createElement('canvas'); c.width = LV.videoWidth; c.height = LV.videoHeight; c.getContext('2d').drawImage(LV, 0, 0); c.toBlob(b => { const u = URL.createObjectURL(b); const a = document.createElement('a'); a.href = u; a.download = 'screenshot_' + Date.now() + '.png'; a.click(); URL.revokeObjectURL(u); toast("Screenshot সেভ হয়েছে!", "ok") }) } else toast("শুধুমাত্র লোকাল ভিডিওতে স্ক্রিনশট সম্ভব", "err") }
         function lpToast(t) { const el = document.createElement('div'); el.className = 'lp-toast'; el.textContent = t; document.getElementById('video-content').appendChild(el); setTimeout(() => el.remove(), 700) }
 
@@ -1930,22 +1945,22 @@
 
         // Auto-hide controls
         const lpWrap = document.getElementById('video-content');
-        lpWrap.addEventListener('mousemove', () => { 
-            if (currentMode !== "local" && currentMode !== "youtube") return; 
-            document.getElementById('lp-overlay').classList.remove('lp-hide'); 
-            clearTimeout(lpHideTimer); 
-            lpHideTimer = setTimeout(() => { 
+        lpWrap.addEventListener('mousemove', () => {
+            if (currentMode !== "local" && currentMode !== "youtube") return;
+            document.getElementById('lp-overlay').classList.remove('lp-hide');
+            clearTimeout(lpHideTimer);
+            lpHideTimer = setTimeout(() => {
                 const isPaused = currentMode === "local" ? LV.paused : (playerReady ? ytPlayer.getPlayerState() !== YT.PlayerState.PLAYING : false);
                 if (!isPaused) document.getElementById('lp-overlay').classList.add('lp-hide');
-            }, 3000) 
+            }, 3000)
         });
 
         // Click on video to play/pause
-        lpWrap.addEventListener('click', (e) => { 
+        lpWrap.addEventListener('click', (e) => {
             if (e.target.closest('.lp-overlay') || e.target.closest('.reaction-bar') || e.target.closest('.fs-btn')) return;
             if (isHost && (currentMode === "local" || currentMode === "youtube")) lpToggle();
         });
-        lpWrap.addEventListener('dblclick', (e) => { 
+        lpWrap.addEventListener('dblclick', (e) => {
             if (e.target.closest('.lp-overlay') || e.target.closest('.reaction-bar') || e.target.closest('.fs-btn')) return;
             if (isHost && (currentMode === "local" || currentMode === "youtube")) lpFs();
         });
@@ -1965,7 +1980,7 @@
         });
 
         /* ═══════════ GENERAL ═══════════ */
-        function toggleFullscreen() { const el = document.querySelector('.video-col'); if (document.fullscreenElement) { document.exitFullscreen(); if (screen.orientation && screen.orientation.unlock) screen.orientation.unlock(); } else { el.requestFullscreen().then(() => { if (screen.orientation && screen.orientation.lock) screen.orientation.lock('landscape').catch(() => {}); }).catch(() => { }) } }
+        function toggleFullscreen() { const el = document.querySelector('.video-col'); if (document.fullscreenElement) { document.exitFullscreen(); if (screen.orientation && screen.orientation.unlock) screen.orientation.unlock(); } else { el.requestFullscreen().then(() => { if (screen.orientation && screen.orientation.lock) screen.orientation.lock('landscape').catch(() => { }); }).catch(() => { }) } }
         function sendReaction(e) { spawnFloatEmoji(e); broadcast({ type: "reaction", emoji: e }) }
         function spawnFloatEmoji(e) { const c = document.getElementById('video-content'); const el = document.createElement('div'); el.className = 'float-emoji'; el.textContent = e; el.style.left = (20 + Math.random() * 60) + '%'; el.style.bottom = '60px'; c.appendChild(el); setTimeout(() => el.remove(), 2000) }
 
@@ -2033,7 +2048,7 @@
 
         /* ═══════════ PEER ═══════════ */
         function createPeer() {
-            const p = new Peer({ debug: 0, config: ICE_SERVERS });
+            const p = new Peer({ debug: 2, config: ICE_SERVERS });
             p.on('disconnected', () => { setConnStatus(false); setTimeout(() => { if (p && !p.destroyed) p.reconnect() }, 3000) });
             p.on('close', () => setConnStatus(false));
             return p;
@@ -2078,7 +2093,7 @@
             document.getElementById('role-badge').textContent = isHost ? "🎬 Host" : "👁 Viewer";
             document.getElementById('role-badge').className = "badge " + (isHost ? "badge-host" : "badge-viewer");
             window._fullRoomId = d; updateVC(); renderUsers(); renderPlaylist();
-            
+
             if (!isHost) {
                 document.getElementById('tab-users').style.display = 'none';
                 document.getElementById('tab-sources').style.display = 'none';
