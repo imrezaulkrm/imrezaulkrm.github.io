@@ -1687,6 +1687,8 @@
                 { urls: "stun:stun.l.google.com:19302" },
                 { urls: "stun:stun1.l.google.com:19302" },
                 { urls: "stun:stun2.l.google.com:19302" },
+                { urls: "stun:stun3.l.google.com:19302" },
+                { urls: "stun:stun4.l.google.com:19302" },
                 {
                     urls: "turn:openrelay.metered.ca:80",
                     username: "openrelayproject",
@@ -1702,8 +1704,7 @@
                     username: "openrelayproject",
                     credential: "openrelayproject"
                 }
-            ],
-            iceTransportPolicy: 'relay'
+            ]
         };
 
         /* ═══════════ YT API ═══════════ */
@@ -2049,9 +2050,44 @@
 
         /* ═══════════ PEER ═══════════ */
         function createPeer() {
-            const p = new Peer({ debug: 2, config: ICE_SERVERS });
-            p.on('disconnected', () => { setConnStatus(false); setTimeout(() => { if (p && !p.destroyed) p.reconnect() }, 3000) });
-            p.on('close', () => setConnStatus(false));
+            const p = new Peer({
+                debug: 2,
+                config: ICE_SERVERS,
+                host: '0.peerjs.com',
+                port: 443,
+                secure: true,
+                pingInterval: 5000
+            });
+
+            p.on('disconnected', () => {
+                setConnStatus(false);
+                setTimeout(() => {
+                    if (p && !p.destroyed) {
+                        try {
+                            p.reconnect();
+                        } catch (e) {
+                            console.error("Reconnection failed:", e);
+                        }
+                    }
+                }, 3000);
+            });
+
+            p.on('close', () => {
+                setConnStatus(false);
+                console.log("Peer connection closed");
+            });
+
+            p.on('error', e => {
+                console.error("Peer error:", e.type, e);
+                if (e.type === 'peer-unavailable') {
+                    console.warn("Peer unavailable - may retry");
+                } else if (e.type === 'network') {
+                    console.warn("Network error - check connectivity");
+                } else if (e.type === 'socket-error') {
+                    console.warn("Socket error - signaling server issue");
+                }
+            });
+
             return p;
         }
 
