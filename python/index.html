@@ -1,0 +1,881 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Python Journey - Learn Python the Right Way</title>
+    <link rel="stylesheet" href="css/variables.css">
+    <link rel="stylesheet" href="css/global.css">
+    <link rel="stylesheet" href="css/landing.css">
+    <style>
+        /* Enhanced animations and styles for landing page */
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes slideInLeft {
+            from { opacity: 0; transform: translateX(-50px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+        @keyframes glow {
+            0%, 100% { filter: drop-shadow(0 0 8px rgba(59, 130, 246, 0.3)); }
+            50% { filter: drop-shadow(0 0 20px rgba(59, 130, 246, 0.6)); }
+        }
+        @keyframes shimmer {
+            0% { background-position: -1000px 0; }
+            100% { background-position: 1000px 0; }
+        }
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.05); opacity: 0.9; }
+        }
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(50px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .navbar {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(11, 14, 18, 0.98);
+            backdrop-filter: blur(15px);
+            border-bottom: 1px solid rgba(59, 130, 246, 0.1);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .navbar .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: var(--space-4) 0;
+        }
+
+        .logo {
+            font-size: var(--fs-xl);
+            font-weight: 900;
+            background: linear-gradient(135deg, #3B82F6 0%, #60A5FA 50%, #34D399 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 2px 10px rgba(59, 130, 246, 0.3);
+            letter-spacing: -0.01em;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: var(--space-8);
+            align-items: center;
+        }
+
+        .nav-link {
+            color: var(--text-secondary);
+            transition: all 0.3s ease;
+            position: relative;
+            text-decoration: none;
+        }
+
+        .nav-link:hover {
+            color: var(--accent-primary);
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -5px;
+            left: 0;
+            background: linear-gradient(90deg, var(--accent-primary), transparent);
+            transition: width 0.3s ease;
+        }
+
+        .nav-link:hover::after {
+            width: 100%;
+        }
+
+        /* Enhanced Hero Section */
+        .hero {
+            padding: var(--space-32) var(--space-6);
+            background: linear-gradient(135deg, rgba(11, 14, 18, 1) 0%, rgba(17, 22, 29, 0.8) 50%, rgba(23, 29, 37, 1) 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -10%;
+            width: 800px;
+            height: 800px;
+            background: radial-gradient(circle, rgba(59, 130, 246, 0.2), transparent);
+            border-radius: 50%;
+            animation: float 8s ease-in-out infinite;
+        }
+
+        .hero::after {
+            content: '';
+            position: absolute;
+            bottom: -30%;
+            left: -5%;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(16, 185, 129, 0.15), transparent);
+            border-radius: 50%;
+            animation: float 10s ease-in-out infinite reverse;
+        }
+
+        .hero-content {
+            max-width: 900px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 2;
+            animation: fadeInUp 0.8s ease-out;
+            text-align: center;
+        }
+
+        .hero-title {
+            font-size: clamp(2.5rem, 8vw, 4.5rem);
+            font-weight: 900;
+            margin-bottom: var(--space-6);
+            line-height: var(--lh-tight);
+            background: linear-gradient(135deg, #60A5FA 0%, #34D399 50%, #FBBF24 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: slideInLeft 0.8s ease-out, glow 3s ease-in-out infinite;
+            letter-spacing: -0.02em;
+        }
+
+        .hero-subtitle {
+            font-size: clamp(1rem, 3vw, 1.5rem);
+            color: var(--text-secondary);
+            margin-bottom: var(--space-8);
+            line-height: var(--lh-relaxed);
+            animation: fadeInUp 0.8s ease-out 0.2s both;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            font-weight: 500;
+            letter-spacing: 0.3px;
+        }
+
+        .hero-cta-group {
+            display: flex;
+            gap: var(--space-4);
+            flex-wrap: wrap;
+            justify-content: center;
+            animation: fadeInUp 0.8s ease-out 0.4s both;
+        }
+
+        .btn {
+            transition: all 0.3s ease;
+            border: none;
+            border-radius: var(--radius-lg);
+            cursor: pointer;
+            font-weight: var(--fw-semibold);
+            text-decoration: none;
+        }
+
+        .btn-large {
+            padding: var(--space-4) var(--space-10);
+            font-size: var(--fs-lg);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #3B82F6 0%, #60A5FA 100%);
+            color: white;
+            box-shadow: 0 8px 25px rgba(59, 130, 246, 0.4), inset 0 1px 0 rgba(255,255,255,0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-primary::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .btn-primary:hover::before {
+            left: 100%;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-4px) scale(1.02);
+            box-shadow: 0 15px 40px rgba(59, 130, 246, 0.5), inset 0 1px 0 rgba(255,255,255,0.3);
+        }
+
+        .btn-primary:active {
+            transform: translateY(-2px) scale(0.99);
+        }
+
+        .btn-secondary {
+            background: rgba(59, 130, 246, 0.05);
+            border: 2px solid var(--accent-primary);
+            color: var(--accent-primary);
+            position: relative;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(59, 130, 246, 0.15);
+            transform: translateY(-4px);
+            box-shadow: 0 10px 30px rgba(59, 130, 246, 0.3);
+            border-color: #60A5FA;
+        }
+
+        .btn-secondary:active {
+            transform: translateY(-2px);
+        }
+
+        /* Stats Section */
+        .stats {
+            padding: var(--space-16) var(--space-6);
+            background: linear-gradient(135deg, rgba(11, 14, 18, 1) 0%, rgba(17, 22, 29, 0.8) 100%);
+            border-top: 1px solid rgba(59, 130, 246, 0.1);
+            border-bottom: 1px solid rgba(59, 130, 246, 0.1);
+            position: relative;
+        }
+
+        .stats::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: url('data:image/svg+xml,<svg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"><g fill="none" fill-rule="evenodd"><g fill="%233B82F6" fill-opacity="0.03"><path d="M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z"/></g></g></svg>');
+            opacity: 0.5;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: var(--space-8);
+            margin-top: var(--space-8);
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: var(--space-8);
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.08) 0%, rgba(16, 185, 129, 0.05) 100%);
+            border-radius: var(--radius-lg);
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            transition: all 0.4s cubic-bezier(0.23, 1, 0.320, 1);
+            position: relative;
+        }
+
+        .stat-item::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: var(--radius-lg);
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), transparent);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .stat-item:hover {
+            transform: translateY(-8px) scale(1.02);
+            border-color: var(--accent-primary);
+            box-shadow: 0 20px 50px rgba(59, 130, 246, 0.3);
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.15) 0%, rgba(16, 185, 129, 0.1) 100%);
+        }
+
+        .stat-item:hover::before {
+            opacity: 1;
+        }
+
+        .stat-number {
+            font-size: var(--fs-4xl);
+            font-weight: var(--fw-bold);
+            color: var(--accent-primary);
+            margin-bottom: var(--space-2);
+        }
+
+        .stat-label {
+            color: var(--text-secondary);
+            font-size: var(--fs-sm);
+        }
+
+        /* About Section */
+        .about {
+            padding: var(--space-20) var(--space-6);
+            background: linear-gradient(135deg, rgba(11, 14, 18, 1) 0%, rgba(17, 22, 29, 0.6) 100%);
+            position: relative;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: var(--space-12);
+        }
+
+        .section-header h2 {
+            font-size: var(--fs-3xl);
+            margin-bottom: var(--space-4);
+            background: linear-gradient(135deg, #60A5FA 0%, #34D399 50%, #FBBF24 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: 900;
+            letter-spacing: -0.01em;
+            animation: slideUp 0.6s ease-out;
+        }
+
+        .section-header p {
+            font-size: var(--fs-lg);
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto;
+            font-weight: 500;
+            animation: fadeInUp 0.6s ease-out;
+        }
+
+        .about-content {
+            max-width: 800px;
+            margin: 0 auto;
+            line-height: var(--lh-relaxed);
+        }
+
+        .about-content p {
+            font-size: var(--fs-base);
+            margin-bottom: var(--space-6);
+            color: var(--text-primary);
+            line-height: 1.8;
+        }
+
+        /* Features Section */
+        .features {
+            padding: var(--space-20) var(--space-6);
+            background: linear-gradient(135deg, rgba(11, 14, 18, 0.8) 0%, rgba(59, 130, 246, 0.02) 50%, rgba(11, 14, 18, 0.8) 100%);
+            position: relative;
+        }
+
+        .features::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.3), transparent);
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: var(--space-6);
+            margin-top: var(--space-12);
+        }
+
+        .feature-card {
+            padding: var(--space-8);
+            background: linear-gradient(135deg, var(--bg-secondary) 0%, rgba(23, 29, 37, 0.8) 100%);
+            border: 1px solid rgba(59, 130, 246, 0.1);
+            border-radius: var(--radius-lg);
+            transition: all 0.4s cubic-bezier(0.23, 1, 0.320, 1);
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-4);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            inset: -2px;
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.3), rgba(16, 185, 129, 0.2));
+            border-radius: var(--radius-lg);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: -1;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-12px) scale(1.03);
+            border-color: var(--accent-primary);
+            box-shadow: 0 25px 60px rgba(59, 130, 246, 0.3), 0 0 20px rgba(16, 185, 129, 0.15);
+        }
+
+        .feature-card:hover::before {
+            opacity: 1;
+        }
+
+        .feature-icon {
+            font-size: var(--fs-3xl);
+            animation: float 3s ease-in-out infinite, glow 2s ease-in-out infinite;
+            filter: drop-shadow(0 0 6px rgba(59, 130, 246, 0.2));
+        }
+
+        .feature-card h3 {
+            font-size: var(--fs-lg);
+            color: var(--text-primary);
+            margin: 0;
+        }
+
+        .feature-card p {
+            color: var(--text-secondary);
+            font-size: var(--fs-sm);
+            line-height: var(--lh-relaxed);
+            margin: 0;
+        }
+
+        /* Learning Path Section */
+        .learning-path {
+            padding: var(--space-20) var(--space-6);
+            background: linear-gradient(135deg, rgba(11, 14, 18, 1) 0%, rgba(23, 29, 37, 0.8) 100%);
+            border-top: 1px solid rgba(59, 130, 246, 0.1);
+            position: relative;
+        }
+
+        .learning-path::before {
+            content: '';
+            position: absolute;
+            bottom: -50%;
+            right: -20%;
+            width: 700px;
+            height: 700px;
+            background: radial-gradient(circle, rgba(52, 211, 153, 0.1), transparent);
+            border-radius: 50%;
+            animation: float 15s ease-in-out infinite;
+        }
+
+        .path-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: var(--space-8);
+            margin-top: var(--space-12);
+        }
+
+        .path-section {
+            padding: var(--space-8);
+            background: linear-gradient(135deg, rgba(17, 22, 29, 1) 0%, rgba(23, 29, 37, 0.9) 100%);
+            border: 1px solid rgba(59, 130, 246, 0.15);
+            border-radius: var(--radius-lg);
+            transition: all 0.4s cubic-bezier(0.23, 1, 0.320, 1);
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-4);
+            position: relative;
+        }
+
+        .path-section::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: var(--radius-lg);
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.2), transparent);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .path-section:hover {
+            transform: translateY(-10px) scale(1.02);
+            border-color: var(--accent-primary);
+            box-shadow: 0 20px 50px rgba(59, 130, 246, 0.25);
+        }
+
+        .path-section:hover::after {
+            opacity: 1;
+        }
+
+        .path-icon {
+            font-size: 2.5rem;
+        }
+
+        .path-section h3 {
+            font-size: var(--fs-lg);
+            color: var(--text-primary);
+            margin: 0;
+        }
+
+        .path-section p {
+            color: var(--text-secondary);
+            font-size: var(--fs-sm);
+            line-height: var(--lh-relaxed);
+            margin: 0;
+        }
+
+        /* CTA Section */
+        .cta {
+            padding: var(--space-24) var(--space-6);
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.12) 0%, rgba(16, 185, 129, 0.08) 100%);
+            border-top: 1px solid rgba(59, 130, 246, 0.2);
+            border-bottom: 1px solid rgba(59, 130, 246, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -10%;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(59, 130, 246, 0.1), transparent);
+            border-radius: 50%;
+            animation: float 12s ease-in-out infinite;
+        }
+
+        .cta-content {
+            max-width: 600px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .cta h2 {
+            font-size: var(--fs-3xl);
+            margin-bottom: var(--space-4);
+            background: linear-gradient(135deg, #60A5FA 0%, #34D399 50%, #FBBF24 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: 900;
+            animation: slideUp 0.6s ease-out;
+        }
+
+        .cta p {
+            font-size: var(--fs-lg);
+            color: var(--text-secondary);
+            margin-bottom: var(--space-8);
+            line-height: var(--lh-relaxed);
+        }
+
+        /* Footer */
+        footer {
+            background: linear-gradient(135deg, rgba(11, 14, 18, 1) 0%, rgba(17, 22, 29, 0.9) 100%);
+            border-top: 1px solid rgba(59, 130, 246, 0.15);
+            padding: var(--space-16) var(--space-6) var(--space-8);
+            position: relative;
+        }
+
+        footer::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.4), transparent);
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: var(--space-8);
+            margin-bottom: var(--space-12);
+        }
+
+        .footer-section h4 {
+            font-size: var(--fs-base);
+            font-weight: var(--fw-semibold);
+            margin-bottom: var(--space-4);
+            color: var(--text-primary);
+        }
+
+        .footer-section p {
+            color: var(--text-secondary);
+            font-size: var(--fs-sm);
+            line-height: var(--lh-relaxed);
+            margin: 0;
+        }
+
+        .footer-section ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .footer-section li {
+            margin-bottom: var(--space-2);
+        }
+
+        .footer-section a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: var(--fs-sm);
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .footer-section a::before {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 0;
+            height: 1px;
+            background: linear-gradient(90deg, var(--accent-primary), transparent);
+            transition: width 0.3s ease;
+        }
+
+        .footer-section a:hover {
+            color: var(--accent-primary);
+        }
+
+        .footer-section a:hover::before {
+            width: 100%;
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: var(--space-8);
+            border-top: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            font-size: var(--fs-xs);
+        }
+
+        @media (max-width: 768px) {
+            .hero { padding: var(--space-16) var(--space-6); }
+            .nav-link { display: none; }
+            .hero-title { font-size: var(--fs-3xl); }
+            .hero-cta-group { flex-direction: column; }
+            .stats-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <div class="logo">My Python Journey</div>
+            <div class="nav-links">
+                <a href="#about" class="nav-link">About</a>
+                <a href="#features" class="nav-link">Features</a>
+                <button class="btn btn-primary" id="loginBtn">Login</button>
+            </div>
+        </div>
+    </nav>
+
+    <main>
+        <!-- Hero Section -->
+        <section class="hero">
+            <div class="container">
+                <div class="hero-content">
+                    <h1 class="hero-title">My Python Journey</h1>
+                    <p class="hero-subtitle">Learn Python. Understand the concepts. Build the habit of thinking in code.</p>
+                    <div class="hero-cta-group">
+                        <button class="btn btn-large btn-primary" id="startBtn">Start Learning</button>
+                        <button class="btn btn-large btn-secondary" id="learnMoreBtn">Learn More</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Stats Section -->
+        <section class="stats">
+            <div class="container">
+                <div class="section-header">
+                    <h2>By The Numbers</h2>
+                </div>
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <div class="stat-number">26+</div>
+                        <div class="stat-label">Python Chapters</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">4</div>
+                        <div class="stat-label">Learning Parts</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">100%</div>
+                        <div class="stat-label">Bilingual</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">∞</div>
+                        <div class="stat-label">Learning Potential</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- About Section -->
+        <section class="about" id="about">
+            <div class="container">
+                <div class="section-header">
+                    <h2>What is My Python Journey?</h2>
+                    <p>Not just another Python course</p>
+                </div>
+                <div class="about-content">
+                    <p>This is a personal, structured Python learning journey. Not a traditional course or documentation—it's an <strong>interactive digital learning book</strong> where you can read Python concepts in depth, save personal notes, bookmark important sections, ask questions, and take chapter quizzes to verify your understanding.</p>
+                    <p>Each chapter builds on the previous one, creating a cohesive learning experience. You unlock the next chapter only after passing the mandatory quiz, ensuring you've truly mastered the concepts.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Features Section -->
+        <section class="features" id="features">
+            <div class="container">
+                <div class="section-header">
+                    <h2>Key Features</h2>
+                    <p>Everything you need for effective Python learning</p>
+                </div>
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">📚</div>
+                        <h3>Structured Learning</h3>
+                        <p>26+ chapters organized from Python fundamentals to advanced concepts</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">📝</div>
+                        <h3>Personal Notes</h3>
+                        <p>Save private notes on any topic while reading and reviewing</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">🔖</div>
+                        <h3>Smart Bookmarks</h3>
+                        <p>Bookmark important sections for quick reference later</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">❓</div>
+                        <h3>Ask Questions</h3>
+                        <p>Ask context-specific questions and get answers from the instructor</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">✅</div>
+                        <h3>Chapter Quizzes</h3>
+                        <p>Mandatory quizzes at the end of each chapter to verify understanding</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">🌍</div>
+                        <h3>Bilingual Support</h3>
+                        <p>Read in English or Bengali - switch anytime with one click</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">🎯</div>
+                        <h3>Progressive Learning</h3>
+                        <p>Unlock chapters as you progress. Can't skip ahead!</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">🌙</div>
+                        <h3>Dark Theme</h3>
+                        <p>Beautiful dark interface optimized for comfortable long reading</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Learning Path Section -->
+        <section class="learning-path">
+            <div class="container">
+                <div class="section-header">
+                    <h2>Your Learning Path</h2>
+                    <p>Structured progression through 4 comprehensive parts</p>
+                </div>
+                <div class="path-content">
+                    <div class="path-section">
+                        <div class="path-icon">📖</div>
+                        <h3>Part 1: Python Fundamentals</h3>
+                        <p>Master the basics: What is Python, installation, variables, data types, operators, input/output, conditions, and loops</p>
+                    </div>
+                    <div class="path-section">
+                        <div class="path-icon">🔧</div>
+                        <h3>Part 2: Core Python</h3>
+                        <p>Build strong foundations: Functions, arguments, scope, modules, packages, exception handling, and file operations</p>
+                    </div>
+                    <div class="path-section">
+                        <div class="path-icon">🏗️</div>
+                        <h3>Part 3: Object Oriented Python</h3>
+                        <p>Think in objects: Classes, objects, constructors, inheritance, encapsulation, and polymorphism</p>
+                    </div>
+                    <div class="path-section">
+                        <div class="path-icon">⚡</div>
+                        <h3>Part 4: Advanced Python</h3>
+                        <p>Go beyond basics: List comprehensions, lambdas, decorators, generators, iterators, and design patterns</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CTA Section -->
+        <section class="cta">
+            <div class="container">
+                <div class="cta-content">
+                    <h2>Ready to Start Your Journey?</h2>
+                    <p>Join learners who are mastering Python through structured, interactive learning</p>
+                    <button class="btn btn-large btn-primary" id="ctaLoginBtn">Begin Learning Now</button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>About</h4>
+                    <p>My Python Journey is a personal, interactive learning platform designed for serious Python learners.</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="#about">About</a></li>
+                        <li><a href="#features">Features</a></li>
+                        <li><a href="README.md" target="_blank">Documentation</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Get Started</h4>
+                    <p>Login to access the complete learning experience with all chapters and features.</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024-2026 My Python Journey. A personal learning platform. Made with ❤️ for Python learners.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/app.js"></script>
+    <script>
+        // Navigation clicks
+        document.getElementById('loginBtn')?.addEventListener('click', () => window.location.href = 'login.html');
+        document.getElementById('startBtn')?.addEventListener('click', () => window.location.href = 'login.html');
+        document.getElementById('learnMoreBtn')?.addEventListener('click', () => {
+            const aboutSection = document.getElementById('about');
+            if (aboutSection) aboutSection.scrollIntoView({ behavior: 'smooth' });
+        });
+        document.getElementById('ctaLoginBtn')?.addEventListener('click', () => window.location.href = 'login.html');
+
+        // Smooth scroll for nav links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                const href = this.getAttribute('href');
+                if (href !== '#') {
+                    e.preventDefault();
+                    const target = document.querySelector(href);
+                    if (target) target.scrollIntoView({ behavior: 'smooth' });
+                }
+            });
+        });
+
+        // Scroll animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver(function(entries) {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.feature-card, .stat-item, .path-section').forEach(el => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(20px)';
+            el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+            observer.observe(el);
+        });
+    </script>
+</body>
+</html>

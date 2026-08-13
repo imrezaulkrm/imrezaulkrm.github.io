@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - My Python Journey</title>
+    <link rel="stylesheet" href="css/variables.css">
+    <link rel="stylesheet" href="css/global.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <div class="logo">My Python Journey</div>
+            <div class="nav-right">
+                <div class="language-switcher">
+                    <button id="langEn" class="lang-btn active" data-lang="en">EN</button>
+                    <span class="lang-divider">|</span>
+                    <button id="langBn" class="lang-btn" data-lang="bn">বাংলা</button>
+                </div>
+                <a href="#" id="profileBtn" class="nav-link">Profile</a>
+                <a href="#" id="logoutBtn" class="nav-link">Logout</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="dashboard-container">
+        <main class="dashboard-main">
+            <!-- Welcome Section -->
+            <section class="welcome-section">
+                <h1>Welcome back, <span id="displayName">User</span></h1>
+                <p data-i18n="continue_journey">Continue your Python journey</p>
+            </section>
+
+            <!-- Current Progress -->
+            <section class="progress-section">
+                <h2 data-i18n="current_chapter">Current Chapter</h2>
+                <div id="currentChapter" class="chapter-card loading">
+                    <div class="skeleton"></div>
+                </div>
+            </section>
+
+            <!-- Statistics -->
+            <section class="stats-section">
+                <h2 data-i18n="your_progress">Your Progress</h2>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-number" id="chaptersCompleted">0</div>
+                        <div class="stat-label" data-i18n="chapters_completed">Chapters Completed</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="quizAverage">0%</div>
+                        <div class="stat-label" data-i18n="quiz_average">Quiz Average</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="bookmarkCount">0</div>
+                        <div class="stat-label" data-i18n="bookmarks">Bookmarks</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="questionCount">0</div>
+                        <div class="stat-label" data-i18n="questions_asked">Questions Asked</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Quick Actions -->
+            <section class="actions-section">
+                <h2 data-i18n="quick_actions">Quick Actions</h2>
+                <div class="actions-grid">
+                    <a href="reader.html" class="action-card">
+                        <div class="action-icon">📚</div>
+                        <div class="action-text" data-i18n="continue_reading">Continue Reading</div>
+                    </a>
+                    <a href="reader.html?view=bookmarks" class="action-card">
+                        <div class="action-icon">🔖</div>
+                        <div class="action-text" data-i18n="my_bookmarks">My Bookmarks</div>
+                    </a>
+                    <a href="reader.html?view=notes" class="action-card">
+                        <div class="action-icon">📝</div>
+                        <div class="action-text" data-i18n="my_notes">My Notes</div>
+                    </a>
+                    <a href="reader.html?view=questions" class="action-card">
+                        <div class="action-icon">❓</div>
+                        <div class="action-text" data-i18n="my_questions">My Questions</div>
+                    </a>
+                </div>
+            </section>
+
+            <!-- Chapter List -->
+            <section class="chapters-section">
+                <h2 data-i18n="all_chapters">All Chapters</h2>
+                <div id="chaptersList" class="chapters-list">
+                    <div class="loading-message">Loading chapters...</div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Profile Modal -->
+    <div id="profileModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 data-i18n="user_profile">User Profile</h2>
+                <button class="modal-close" id="closeProfileModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="profile-info">
+                    <p><strong data-i18n="username">Username:</strong> <span id="profileUsername">-</span></p>
+                    <p><strong data-i18n="display_name">Display Name:</strong> <span id="profileDisplayName">-</span></p>
+                </div>
+                <form id="passwordForm" class="profile-form">
+                    <h3 data-i18n="change_password">Change Password</h3>
+                    <div class="form-group">
+                        <label for="newPassword" data-i18n="new_password">New Password</label>
+                        <input type="password" id="newPassword" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="confirmPassword" data-i18n="confirm_password">Confirm Password</label>
+                        <input type="password" id="confirmPassword" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary" data-i18n="update_password">Update Password</button>
+                </form>
+                <div id="profileMessage"></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/api.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/i18n.js"></script>
+    <script src="js/dashboard.js"></script>
+</body>
+</html>

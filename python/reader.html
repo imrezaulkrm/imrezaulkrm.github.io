@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reader - My Python Journey</title>
+    <link rel="stylesheet" href="css/variables.css">
+    <link rel="stylesheet" href="css/global.css">
+    <link rel="stylesheet" href="css/reader.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <div class="nav-left">
+                <a href="dashboard.html" class="logo">← My Python Journey</a>
+            </div>
+            <div class="nav-right">
+                <div class="language-switcher">
+                    <button id="langEn" class="lang-btn active" data-lang="en">EN</button>
+                    <span class="lang-divider">|</span>
+                    <button id="langBn" class="lang-btn" data-lang="bn">বাংলা</button>
+                </div>
+                <a href="dashboard.html" id="profileBtn" class="nav-link">Profile</a>
+                <a href="#" id="logoutBtn" class="nav-link">Logout</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="reader-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h3 data-i18n="contents">Contents</h3>
+                <button id="toggleSidebar" class="toggle-btn">☰</button>
+            </div>
+            <div id="contentsList" class="contents-list">
+                <div class="loading">Loading...</div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="reader-main">
+            <div id="readerContent" class="reader-content">
+                <div class="loading-message">Loading content...</div>
+            </div>
+
+            <!-- Navigation Buttons -->
+            <div class="reader-nav">
+                <button id="prevBtn" class="btn btn-outline" data-i18n="previous">Previous</button>
+                <button id="nextBtn" class="btn btn-primary" data-i18n="next">Next</button>
+            </div>
+        </main>
+    </div>
+
+    <!-- Tools Modal -->
+    <div id="toolsModal" class="modal" style="display: none;">
+        <div class="modal-content modal-small">
+            <div class="modal-header">
+                <h2 data-i18n="reading_tools">Reading Tools</h2>
+                <button class="modal-close" id="closeToolsModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="tools-group">
+                    <button id="bookmarkBtn" class="tool-btn">
+                        <span class="tool-icon">🔖</span>
+                        <span class="tool-text" data-i18n="bookmark_section">Bookmark Section</span>
+                    </button>
+                    <button id="noteBtn" class="tool-btn">
+                        <span class="tool-icon">📝</span>
+                        <span class="tool-text" data-i18n="add_note">Add Note</span>
+                    </button>
+                    <button id="questionBtn" class="tool-btn">
+                        <span class="tool-icon">❓</span>
+                        <span class="tool-text" data-i18n="ask_question">Ask Question</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Note Modal -->
+    <div id="noteModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 data-i18n="add_personal_note">Add Personal Note</h2>
+                <button class="modal-close" id="closeNoteModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="noteForm">
+                    <textarea id="noteContent" placeholder="Write your note here..." required></textarea>
+                    <button type="submit" class="btn btn-primary" data-i18n="save_note">Save Note</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Question Modal -->
+    <div id="questionModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 data-i18n="ask_question_title">Ask a Question</h2>
+                <button class="modal-close" id="closeQuestionModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="questionForm">
+                    <div class="form-group">
+                        <label for="questionType" data-i18n="question_type">Question Type</label>
+                        <select id="questionType" required>
+                            <option value="concept">Concept</option>
+                            <option value="code">Code</option>
+                            <option value="example">Example</option>
+                            <option value="difference">Difference</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="questionText" data-i18n="what_confused">What did you not understand?</label>
+                        <textarea id="questionText" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="understanding" data-i18n="what_understand">What do you understand so far?</label>
+                        <textarea id="understanding" required></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary" data-i18n="submit_question">Submit Question</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/api.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/i18n.js"></script>
+    <script src="js/reader.js"></script>
+</body>
+</html>

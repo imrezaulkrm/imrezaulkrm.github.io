@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - My Python Journey</title>
+    <link rel="stylesheet" href="../css/variables.css">
+    <link rel="stylesheet" href="../css/global.css">
+    <link rel="stylesheet" href="../css/admin.css">
+</head>
+<body>
+    <div class="admin-container">
+        <!-- Sidebar -->
+        <aside class="admin-sidebar">
+            <div class="sidebar-header">
+                <h2>Admin Panel</h2>
+            </div>
+            <nav class="admin-nav">
+                <a href="#" data-section="dashboard" class="nav-item active">
+                    <span class="icon">📊</span>
+                    <span class="label">Dashboard</span>
+                </a>
+                <a href="#" data-section="users" class="nav-item">
+                    <span class="icon">👥</span>
+                    <span class="label">Users</span>
+                </a>
+                <a href="#" data-section="chapters" class="nav-item">
+                    <span class="icon">📚</span>
+                    <span class="label">Chapters</span>
+                </a>
+                <a href="#" data-section="content" class="nav-item">
+                    <span class="icon">✍️</span>
+                    <span class="label">Content</span>
+                </a>
+                <a href="#" data-section="quizzes" class="nav-item">
+                    <span class="icon">✅</span>
+                    <span class="label">Quizzes</span>
+                </a>
+                <a href="#" data-section="questions" class="nav-item">
+                    <span class="icon">❓</span>
+                    <span class="label">Questions</span>
+                </a>
+                <a href="#" data-section="progress" class="nav-item">
+                    <span class="icon">📈</span>
+                    <span class="label">Progress</span>
+                </a>
+                <a href="#" data-section="settings" class="nav-item">
+                    <span class="icon">⚙️</span>
+                    <span class="label">Settings</span>
+                </a>
+                <hr>
+                <a href="#" id="adminLogout" class="nav-item logout">
+                    <span class="icon">🚪</span>
+                    <span class="label">Logout</span>
+                </a>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="admin-main">
+            <div class="admin-header">
+                <h1 id="sectionTitle">Admin Dashboard</h1>
+                <div class="admin-user">
+                    <span id="adminName">Admin</span>
+                </div>
+            </div>
+
+            <!-- Dashboard Section -->
+            <section id="dashboardSection" class="admin-section active">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-number" id="totalUsers">0</div>
+                        <div class="stat-label">Total Users</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="activeUsers">0</div>
+                        <div class="stat-label">Active Users</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="totalChapters">0</div>
+                        <div class="stat-label">Total Chapters</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="pendingQuestions">0</div>
+                        <div class="stat-label">Pending Questions</div>
+                    </div>
+                </div>
+                <div class="recent-activity">
+                    <h2>Recent Activity</h2>
+                    <div id="activityLog" class="activity-list"></div>
+                </div>
+            </section>
+
+            <!-- Users Section -->
+            <section id="usersSection" class="admin-section" style="display: none;">
+                <div class="section-actions">
+                    <button id="createUserBtn" class="btn btn-primary">+ Create User</button>
+                </div>
+                <div id="usersList" class="data-table"></div>
+            </section>
+
+            <!-- Chapters Section -->
+            <section id="chaptersSection" class="admin-section" style="display: none;">
+                <div class="section-actions">
+                    <button id="createChapterBtn" class="btn btn-primary">+ Create Chapter</button>
+                </div>
+                <div id="chaptersList" class="data-table"></div>
+            </section>
+
+            <!-- Content Section -->
+            <section id="contentSection" class="admin-section" style="display: none;">
+                <div class="section-actions">
+                    <select id="chapterSelect" class="form-control">
+                        <option value="">Select Chapter</option>
+                    </select>
+                    <button id="createContentBtn" class="btn btn-primary">+ Add Content</button>
+                </div>
+                <div id="contentList" class="data-table"></div>
+            </section>
+
+            <!-- Quizzes Section -->
+            <section id="quizzesSection" class="admin-section" style="display: none;">
+                <div class="section-actions">
+                    <button id="createQuizBtn" class="btn btn-primary">+ Create Quiz</button>
+                </div>
+                <div id="quizzesList" class="data-table"></div>
+            </section>
+
+            <!-- Questions Section -->
+            <section id="questionsSection" class="admin-section" style="display: none;">
+                <div id="questionsList" class="questions-list"></div>
+            </section>
+
+            <!-- Progress Section -->
+            <section id="progressSection" class="admin-section" style="display: none;">
+                <div class="section-actions">
+                    <select id="userSelect" class="form-control">
+                        <option value="">Select User</option>
+                    </select>
+                </div>
+                <div id="userProgressData" class="progress-data"></div>
+            </section>
+
+            <!-- Settings Section -->
+            <section id="settingsSection" class="admin-section" style="display: none;">
+                <form id="settingsForm" class="settings-form">
+                    <h2>Platform Settings</h2>
+                    <div class="form-group">
+                        <label>Default Pass Mark (%)</label>
+                        <input type="number" id="passMarkSetting" min="0" max="100" value="70">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Save Settings</button>
+                </form>
+            </section>
+        </main>
+    </div>
+
+    <!-- User Modal -->
+    <div id="userModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="userModalTitle">Create User</h2>
+                <button class="modal-close" id="closeUserModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="userForm">
+                    <div class="form-group">
+                        <label>Username</label>
+                        <input type="text" id="formUsername" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Display Name</label>
+                        <input type="text" id="formDisplayName" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Password</label>
+                        <input type="password" id="formPassword" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Role</label>
+                        <select id="formRole">
+                            <option value="USER">User</option>
+                            <option value="ADMIN">Admin</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Status</label>
+                        <select id="formStatus">
+                            <option value="ACTIVE">Active</option>
+                            <option value="DISABLED">Disabled</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Save</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="../js/api.js"></script>
+    <script src="../js/auth.js"></script>
+    <script src="../js/admin.js"></script>
+</body>
+</html>

@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz - My Python Journey</title>
+    <link rel="stylesheet" href="css/variables.css">
+    <link rel="stylesheet" href="css/global.css">
+    <link rel="stylesheet" href="css/quiz.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <div class="logo">My Python Journey</div>
+        </div>
+    </nav>
+
+    <div class="quiz-container">
+        <!-- Quiz Interface -->
+        <div id="quizInterface" class="quiz-interface" style="display: none;">
+            <div class="quiz-header">
+                <h1 id="quizTitle">Chapter Quiz</h1>
+                <div class="quiz-progress">
+                    <span id="questionCounter">1 / 10</span>
+                    <div class="progress-bar">
+                        <div id="progressFill" class="progress-fill"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="quiz-content">
+                <div id="questionContent" class="question-content">
+                    <h2 id="questionText">Loading question...</h2>
+                    <div id="optionsContainer" class="options-container"></div>
+                </div>
+            </div>
+
+            <div class="quiz-footer">
+                <button id="submitAnswerBtn" class="btn btn-primary" data-i18n="submit">Submit</button>
+            </div>
+        </div>
+
+        <!-- Quiz Result -->
+        <div id="quizResult" class="quiz-result" style="display: none;">
+            <div class="result-header">
+                <h1 data-i18n="quiz_complete">Quiz Complete!</h1>
+            </div>
+
+            <div class="result-summary">
+                <div class="score-circle">
+                    <div id="scorePercentage" class="percentage">0%</div>
+                    <div class="score-text">
+                        <span id="scoreCount">0 / 0</span>
+                        <span data-i18n="correct">Correct</span>
+                    </div>
+                </div>
+
+                <div id="resultStatus" class="result-status">
+                    <p class="status-title" data-i18n="passed">Passed ✓</p>
+                    <p class="status-message" data-i18n="chapter_unlocked">Next chapter unlocked!</p>
+                </div>
+            </div>
+
+            <div id="detailedResults" class="detailed-results">
+                <h2 data-i18n="detailed_results">Detailed Results</h2>
+                <div id="resultsList"></div>
+            </div>
+
+            <div class="result-actions">
+                <button id="reviewQuizBtn" class="btn btn-outline" data-i18n="review_quiz">Review Quiz</button>
+                <button id="continueBtn" class="btn btn-primary" data-i18n="continue">Continue</button>
+            </div>
+        </div>
+
+        <!-- Loading State -->
+        <div id="quizLoading" class="quiz-loading">
+            <div class="loading-spinner"></div>
+            <p data-i18n="loading_quiz">Loading quiz...</p>
+        </div>
+    </div>
+
+    <script src="js/api.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/i18n.js"></script>
+    <script src="js/quiz.js"></script>
+</body>
+</html>
