@@ -1,13 +1,12 @@
-/* Authentication Logic */
+/* Authentication Logic & Route Protection */
 
 document.addEventListener('DOMContentLoaded', () => {
     const loginForm = document.getElementById('loginForm');
-    
     if (loginForm) {
         loginForm.addEventListener('submit', handleLogin);
     }
 
-    const logoutBtns = document.querySelectorAll('#logoutBtn, #adminLogout');
+    const logoutBtns = document.querySelectorAll('#logoutBtn, #adminLogout, .logout-btn');
     logoutBtns.forEach(btn => {
         btn.addEventListener('click', handleLogout);
     });
@@ -16,57 +15,96 @@ document.addEventListener('DOMContentLoaded', () => {
 async function handleLogin(e) {
     e.preventDefault();
 
-    const username = document.getElementById('username').value;
-    const password = document.getElementById('password').value;
+    const usernameInput = document.getElementById('username');
+    const passwordInput = document.getElementById('password');
     const errorDiv = document.getElementById('errorMessage');
     const loadingDiv = document.getElementById('loadingMessage');
+    const submitBtn = document.getElementById('loginSubmitBtn') || document.querySelector('button[type="submit"]');
 
-    // Clear previous messages
-    errorDiv.classList.remove('show');
-    errorDiv.textContent = '';
+    const username = usernameInput ? usernameInput.value.trim() : '';
+    const password = passwordInput ? passwordInput.value : '';
+
+    if (!username || !password) {
+        if (errorDiv) {
+            errorDiv.textContent = t('login_button');
+            errorDiv.classList.add('show');
+        }
+        return;
+    }
+
+    // Clear previous error
+    if (errorDiv) {
+        errorDiv.classList.remove('show');
+        errorDiv.textContent = '';
+    }
+
+    if (loadingDiv) loadingDiv.style.display = 'block';
+    if (submitBtn) submitBtn.disabled = true;
 
     try {
-        loadingDiv.style.display = 'block';
-
         const response = await APIClient.login(username, password);
 
-        if (response.success) {
-            // Store session
-            SessionManager.setSession(response.user);
+        if (response && response.success && response.data) {
+            SessionManager.setSession(response.data);
 
-            // Redirect to appropriate dashboard
-            if (response.user.role === 'ADMIN') {
-                window.location.href = 'admin/index.html';
+            // Redirect based on user role
+            if (response.data.role === 'ADMIN') {
+                window.location.href = getAdminPath();
             } else {
                 window.location.href = 'dashboard.html';
             }
         } else {
-            throw new Error(response.error || 'Login failed');
+            throw new Error(response ? (response.error || response.message) : 'Login failed');
         }
     } catch (error) {
-        errorDiv.textContent = 'Invalid username or password.';
-        errorDiv.classList.add('show');
-        loadingDiv.style.display = 'none';
+        console.error('Login error:', error);
+        if (errorDiv) {
+            errorDiv.textContent = handleAPIError(error);
+            errorDiv.classList.add('show');
+        }
+    } finally {
+        if (loadingDiv) loadingDiv.style.display = 'none';
+        if (submitBtn) submitBtn.disabled = false;
     }
 }
 
 function handleLogout(e) {
-    e.preventDefault();
+    if (e) e.preventDefault();
     SessionManager.clearSession();
-    window.location.href = 'index.html';
+    window.location.href = getRootPath() + 'login.html';
 }
 
-// Check if user is authenticated
+// Route Guard: Ensures the user is logged in
 function requireAuth() {
     if (!SessionManager.isAuthenticated()) {
-        window.location.href = 'login.html';
+        window.location.href = getRootPath() + 'login.html';
     }
 }
 
-// Check if user is admin
+// Route Guard: Ensures the user is an administrator
 function requireAdmin() {
     const user = SessionManager.getCurrentUser();
-    if (!user || user.role !== 'ADMIN') {
-        window.location.href = '../dashboard.html';
+    if (!user || user.role !== 'ADMIN' || user.status === 'DISABLED') {
+        window.location.href = user ? getRootPath() + 'dashboard.html' : getRootPath() + 'login.html';
     }
+}
+
+// If already authenticated and visiting login page, auto-redirect to appropriate area
+function redirectIfAuthenticated() {
+    if (SessionManager.isAuthenticated()) {
+        const user = SessionManager.getCurrentUser();
+        if (user.role === 'ADMIN') {
+            window.location.href = getAdminPath();
+        } else {
+            window.location.href = 'dashboard.html';
+        }
+    }
+}
+
+function getRootPath() {
+    return window.location.pathname.includes('/admin/') ? '../' : '';
+}
+
+function getAdminPath() {
+    return window.location.pathname.includes('/admin/') ? 'index.html' : 'admin/index.html';
 }

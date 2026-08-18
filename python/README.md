@@ -1,413 +1,120 @@
-# My Python Journey - Interactive Learning Platform
+# 🐍 My Python Journey — Interactive Learning Platform
 
-A modern, bilingual (English/Bengali), dark-themed interactive Python learning book built with GitHub Pages, Google Apps Script, and Google Sheets.
-
-## 🎯 Project Features
-
-### For Learners
-- 📚 **Structured Content**: 26+ chapters organized from fundamentals to advanced Python
-- 📝 **Personal Notes**: Save private notes on any topic while reading
-- 🔖 **Bookmarks**: Bookmark important sections for quick reference
-- ❓ **Ask Questions**: Submit context-specific questions and get answers
-- ✅ **Chapter Quizzes**: Mandatory quizzes with instant feedback
-- 🔐 **Progressive Learning**: Unlock chapters only after passing quizzes
-- 🌍 **Bilingual**: Read in English or Bengali - switch anytime
-- 🌙 **Dark Theme**: Beautiful, comfortable interface for long reading sessions
-
-### For Admins
-- 👥 **User Management**: Create, edit, disable users
-- 📖 **Content Management**: Add/edit chapters, sections, and content
-- ✏️ **Content Editor**: Bilingual content with rich formatting
-- 🎯 **Quiz Management**: Create quizzes, questions, and track attempts
-- ❓ **Question Management**: Answer student questions and provide explanations
-- 📊 **Analytics**: View user progress, quiz results, and learning statistics
-- ⚙️ **Settings**: Configure platform settings like pass marks
+> A production-grade, bilingual (English & Bengali), dark-themed interactive digital Python learning book with quiz-gated progressive learning, private study tools, and an administrative management panel.
+> 
+> **Zero Hosting Cost**: Hosted statically on **GitHub Pages** with a serverless **Google Apps Script** backend and **Google Sheets** database.
 
 ---
 
-## 🏗️ Technology Stack
+## 📚 Essential Documentation
 
-- **Frontend**: HTML5, CSS3, Vanilla JavaScript
-- **Backend**: Google Apps Script
-- **Database**: Google Sheets
-- **Hosting**: GitHub Pages
-- **Security**: SHA-256 password hashing, token-based sessions
-
----
-
-## 🚀 Quick Start
-
-### Option 1: Complete Setup (Recommended)
-
-Follow the [SETUP.md](SETUP.md) guide for step-by-step instructions to:
-1. Create Google Sheets database
-2. Deploy Google Apps Script backend
-3. Push frontend to GitHub Pages
-4. Enable GitHub Pages hosting
-
-### Option 2: Review Architecture
-
-See [SCHEMA.md](SCHEMA.md) for the database schema and structure.
+| Document | Description |
+| :--- | :--- |
+| **[📖 HOW_TO_USE.md](HOW_TO_USE.md)** | **Complete User & Admin Manual**: Explains every feature for Learners (Dashboard, Reader, Notes, Bookmarks, Quizzes, Q&A) and Admins (Content CMS, User Management, Progress Inspection). |
+| **[🚀 DEPLOYMENT_GUIDE.md](DEPLOYMENT_GUIDE.md)** | **Step-by-Step Deployment Guide**: How to set up Google Sheets, deploy Google Apps Script as a Web App, connect `js/api.js`, and launch on GitHub Pages. |
+| **[🗄️ SCHEMA.md](SCHEMA.md)** | Complete database structure for all 15 Google Sheets tables. |
+| **[🔌 API.md](API.md)** | Full specification of all REST-like API endpoints and parameters. |
 
 ---
 
-## 📂 Project Structure
+## 🔑 Pre-Configured Demo Accounts
+
+| Role | Username | Password | Access Area |
+| :--- | :--- | :--- | :--- |
+| **Administrator** | `admin` | `admin123` | Full access to [Admin Control Panel](admin/index.html) & Learner View |
+| **Learner (Active)** | `reza` | `demo123` | [Learner Dashboard](dashboard.html) & Chapter Reader |
+| **Learner (Disabled)** | `karim` | `demo123` | Demonstrates suspended user behavior |
+
+---
+
+## 🎯 Core Features
+
+### 🎓 For Learners
+- 📚 **28+ Chapter Structured Curriculum**: Covers Python Fundamentals, Core Python, Object-Oriented Python, and Advanced Python patterns.
+- 🔐 **Quiz-Gated Progressive Learning**: Must pass chapter quizzes ($\ge 70\%$) to unlock subsequent chapters.
+- 🌍 **Instant Bilingual Translation**: Toggle between **English** and **Bengali (বাংলা)** at any time. UI, chapter content, code explanations, and quizzes all switch seamlessly.
+- 📝 **Private Topic Notes**: Save notes attached to specific chapters/sections. Notes are private to the student and never exposed to admins.
+- 🔖 **Instant Bookmarks**: Save important sections with one-click jump links from the dashboard.
+- ❓ **Context-Aware Student Q&A**: Ask targeted questions specifying your point of confusion and current understanding to receive direct answers from the instructor.
+- 📋 **Executable Python Code Blocks**: Clean syntax styling with single-click **"Copy Code"** buttons.
+- 🌙 **Comfortable Dark Theme**: Eye-friendly color palette (`#0B0E12`, `#11161D`, `#171D25`) optimized for deep reading.
+
+### 🛠️ For Instructors & Admins
+- 📊 **Real-Time Analytics & Audit Logs**: Track active users, quiz completion averages, pending student questions, and recent activities.
+- 👥 **Full User Management**: Create learner accounts, edit display names, reset passwords, or enable/disable access with one click.
+- 📖 **Chapter & Section CMS**: Create, edit, reorder, and publish/draft curriculum chapters and sub-sections.
+- ✍️ **Modular Content Block Builder**: Insert rich content blocks (`paragraph`, `code`, `callout`, `heading`, `example`, `quote`) in both English and Bengali.
+- ✅ **Bilingual Quiz Builder**: Create quizzes with customizable pass marks, multi-option questions, and explanation feedback.
+- 💬 **Student Support Center**: Filter and answer student questions directly from the admin panel.
+- 📈 **Learner Progress Inspector**: View any individual student's completed chapters, quiz score averages, bookmark counts, and question history.
+- ⚙️ **Platform Configuration**: Adjust default pass percentages, site titles, and language settings.
+
+---
+
+## 📂 Codebase Structure
 
 ```
-python-learning-journey/
-├── index.html, login.html, dashboard.html, reader.html, quiz.html
-├── admin/index.html
-├── css/ (7 stylesheets for different pages)
-├── js/ (8 JavaScript modules)
-├── google-apps-script/ (Backend code - 6 files)
-├── README.md (this file)
-├── SETUP.md (step-by-step setup guide)
-├── SCHEMA.md (database structure)
-└── API.md (API documentation)
-```
-
----
-
-## 🔌 Key Features Explained
-
-### Progressive Chapter Learning
-- ✅ Chapter 1 → Take Quiz → Pass (70%+) → Unlock Chapter 2
-- ❌ Chapter 1 → Take Quiz → Fail (<70%) → Try Again
-- Users can't skip chapters
-
-### Bilingual Content
-- Switch between English and Bengali anytime
-- All content, UI, and translations included
-- Preference saved in browser
-
-### Personal Learning Tools
-- **Notes**: Private, per-section notes saved in Google Sheets
-- **Bookmarks**: Quick-access links to important sections
-- **Questions**: Ask context-specific questions, get admin answers
-
-### Admin Features
-- Dashboard with platform statistics
-- User CRUD operations
-- Content management system
-- Quiz builder with bilingual support
-- Question/answer system for student support
-
----
-
-## 🎓 Demo Content Included
-
-The system comes with sample data for testing:
-- Admin user (username: admin)
-- Sample chapters structure
-- Demo quizzes
-- Test user accounts
-
----
-
-## 🔐 Security Features
-
-✅ Secure authentication with password hashing
-✅ Role-based access control (USER/ADMIN)
-✅ User data isolation and privacy
-✅ Session management with tokens
-✅ HTTPS via GitHub Pages
-✅ No credentials stored in client
-
----
-
-## 📊 Admin Dashboard
-
-The admin panel provides:
-- **Dashboard**: Real-time statistics
-- **Users**: Create and manage users
-- **Chapters**: Organize learning content
-- **Content**: Edit bilingual chapter material
-- **Quizzes**: Create and manage chapter tests
-- **Questions**: Support system for students
-- **Progress**: Track user learning journey
-- **Settings**: Platform configuration
-
----
-
-## 🌍 Multilingual Support
-
-- **English**: Complete interface and content
-- **Bengali**: Complete Bangla translation
-- Switch instantly in any page
-- Content fully translatable in admin panel
-
----
-
-## 📱 Responsive Design
-
-- ✅ Desktop (1200px+)
-- ✅ Tablet (768px - 1199px)
-- ✅ Mobile (< 768px)
-- Dark theme optimized for all devices
-
----
-
-## 🧪 Testing
-
-### Demo Users
-
-```
-Username: admin
-Password: admin123
-Role: ADMIN
-```
-
-### Test Workflow
-
-1. **Login** → Dashboard
-2. **Read Chapter** → Add Notes/Bookmarks
-3. **Ask Question** → (As admin: Answer it)
-4. **Take Quiz** → Pass (70%+)
-5. **Unlock Next Chapter**
-
----
-
-## 📝 File Overview
-
-### Frontend HTML Files
-| File | Purpose |
-|------|---------|
-| `index.html` | Landing page with features |
-| `login.html` | User login form |
-| `dashboard.html` | User dashboard & chapter list |
-| `reader.html` | Chapter reading interface |
-| `quiz.html` | Quiz interface |
-| `admin/index.html` | Admin panel |
-
-### CSS Files
-| File | Purpose |
-|------|---------|
-| `variables.css` | Design tokens & color scheme |
-| `global.css` | Common styles & utilities |
-| `landing.css` | Landing page specific |
-| `auth.css` | Auth pages styling |
-| `dashboard.css` | Dashboard styling |
-| `reader.css` | Reader interface styling |
-| `quiz.css` | Quiz interface styling |
-| `admin.css` | Admin panel styling |
-
-### JavaScript Modules
-| File | Purpose |
-|------|---------|
-| `app.js` | Configuration & initialization |
-| `api.js` | API client for Apps Script |
-| `auth.js` | Authentication logic |
-| `i18n.js` | Internationalization (EN/BN) |
-| `dashboard.js` | Dashboard functionality |
-| `reader.js` | Reader & notes functionality |
-| `quiz.js` | Quiz logic & results |
-| `admin.js` | Admin panel functionality |
-
-### Google Apps Script Backend
-| File | Purpose |
-|------|---------|
-| `Code.gs` | Main request router |
-| `Auth.gs` | User authentication |
-| `Chapters.gs` | Chapter management |
-| `Progress.gs` | User progress tracking |
-| `Quiz.gs` | Quiz & questions |
-| `Stats.gs` | Analytics & statistics |
-
----
-
-## 🚨 Common Issues & Solutions
-
-| Issue | Solution |
-|-------|----------|
-| "Unauthorized" on login | Check user exists in sheets, status is ACTIVE |
-| Chapter not loading | Verify chapter ID in URL, check Google Sheet data |
-| Quiz options missing | Ensure quiz_questions and quiz_options are linked |
-| GitHub Pages 404 | Enable Pages in settings, wait for build |
-| API 403 error | Deploy Apps Script with "Anyone" access |
-
----
-
-## 🔄 Deployment Steps Summary
-
-```bash
-# 1. Create Google Sheet & Apps Script
-# (Follow SETUP.md Step 1-2)
-
-# 2. Update API URL in js/app.js
-CONFIG.API_URL = 'https://script.google.com/macros/d/YOUR_ID/userweb'
-
-# 3. Push to GitHub
-git add .
-git commit -m "Deploy Python Learning Journey"
-git push origin main
-
-# 4. Enable GitHub Pages
-# Settings → Pages → Deploy from main branch
-
-# 5. Share your site
-https://USERNAME.github.io/python-learning-journey/
+my-learning-journey-prototype/
+├── index.html                   # Landing page (Hero, Roadmap, Why this book)
+├── login.html                   # Authentication portal (Role-based routing)
+├── dashboard.html               # Learner hub (Stats, Continue reading, Quick actions)
+├── reader.html                  # Digital book reader (Sidebar TOC, reading tools)
+├── quiz.html                    # Assessment interface (Progress bar, score review)
+├── admin/
+│   └── index.html               # Admin control panel (CMS, Users, Quizzes, Q&A)
+├── css/
+│   ├── variables.css            # Design tokens, color palette, typography
+│   ├── global.css               # Shared utilities, buttons, badges, modals
+│   ├── landing.css              # Landing page styling
+│   ├── auth.css                 # Login screen styling
+│   ├── dashboard.css            # Learner dashboard styling
+│   ├── reader.css               # Book reader typography & code block styles
+│   ├── quiz.css                 # Quiz runner & result review styling
+│   └── admin.css                # Admin panel layout & tables styling
+├── js/
+│   ├── api.js                   # API client + local preview mock engine
+│   ├── auth.js                  # Login/logout & route protection guards
+│   ├── i18n.js                  # Bilingual translation dictionaries & engine
+│   ├── dashboard.js             # Dashboard data rendering & modal logic
+│   ├── reader.js                # Reader canvas, bookmarks, notes, questions
+│   ├── quiz.js                  # Quiz execution, score grading, chapter unlocking
+│   ├── admin.js                 # Admin panel CRUD & analytics logic
+│   └── app.js                   # Shared bootstrap & toast notification helpers
+├── google-apps-script/
+│   ├── Code.gs                  # Main request router, token auth & session caching
+│   ├── Auth.gs                  # User authentication & salted SHA-256 hashing
+│   ├── Chapters.gs              # Chapters, sections & content block management
+│   ├── Progress.gs              # Lock/unlock logic, progress tracking, notes, bookmarks
+│   ├── Quiz.gs                  # Quizzes, questions, attempt scoring, student Q&A
+│   ├── Stats.gs                 # Analytics calculation, settings & activity logs
+│   └── DatabaseSetup.gs         # 15-sheet automated schema & seed data initializer
+├── HOW_TO_USE.md                # Detailed user & admin guide
+├── DEPLOYMENT_GUIDE.md          # Full deployment instructions
+├── SCHEMA.md                    # Database schema reference
+├── API.md                       # REST API endpoint reference
+└── README.md                    # Project overview (this file)
 ```
 
 ---
 
-## 📚 Database Schema
+## ⚡ Quick Deployment (In 3 Minutes)
 
-The platform uses 15 Google Sheets to store:
-- Users (credentials, roles, status)
-- Chapters (content structure)
-- Content (bilingual text, code blocks)
-- Quizzes (questions, options, answers)
-- Progress (user advancement tracking)
-- Notes (personal learning notes)
-- Bookmarks (saved sections)
-- Questions (student Q&A)
-- And more...
+1. **Google Sheets**: Create a blank spreadsheet named `Python Learning Journey Database`.
+2. **Apps Script**: Open **Extensions → Apps Script**, paste the files from `google-apps-script/`, and run `setupDatabase()`.
+3. **Deploy Web App**: Click **Deploy → New deployment → Web app** (Execute as: *Me*, Who has access: *Anyone*). Copy the Web App URL.
+4. **Connect Frontend**: Paste your Web App URL into `CONFIG.API_URL` in `js/api.js`.
+5. **Publish to GitHub Pages**: Push the code to a GitHub repository and turn on **Pages** in **Settings → Pages**.
 
-See [SCHEMA.md](SCHEMA.md) for complete database documentation.
+👉 **For detailed step-by-step instructions with screenshots and troubleshooting, read [DEPLOYMENT_GUIDE.md](DEPLOYMENT_GUIDE.md).**
 
 ---
 
-## 🎨 Design System
+## 💡 Offline / Local Preview Support
 
-### Dark Theme Color Palette
-```
-Primary Background:     #0B0E12
-Secondary Background:   #11161D
-Tertiary Background:    #171D25
-Hover State:           #1F2530
-
-Primary Text:          #E9EDF2
-Secondary Text:        #B8BFCA
-Muted Text:           #929BA8
-
-Accent (Primary):      #3B82F6 (Blue)
-Accent (Success):      #10B981 (Green)
-Accent (Warning):      #F59E0B (Amber)
-Accent (Danger):       #EF4444 (Red)
-```
-
-### Typography
-- **Font**: System font stack (Apple, Segoe, Roboto)
-- **Sizes**: 0.75rem to 3rem scale
-- **Weights**: Normal, Medium, Semi-bold, Bold
-- **Monospace**: Courier New for code
+The frontend in `js/api.js` includes an automatic, built-in **localStorage Mock Engine**. You can double-click `index.html` or run `python3 -m http.server 8000` to test the entire application (logins, reading, bookmarks, private notes, submitting questions, quiz scoring, and admin CRUD) immediately in your browser even before deploying the Google Apps Script backend!
 
 ---
 
-## 🌟 Highlights
+## 📄 License & Attribution
 
-✨ **Zero External Dependencies**: Pure HTML/CSS/JavaScript
-✨ **Full Offline Support**: Works offline after first load
-✨ **Mobile Friendly**: Responsive design with touch support
-✨ **Dark Theme Optimized**: Designed for comfortable long reading
-✨ **Fully Customizable**: Easy to modify content, colors, text
-✨ **Privacy Focused**: User data stays in your Google account
-✨ **No Tracking**: No analytics, ads, or external calls
-
----
-
-## 🤝 Contributing
-
-To customize or extend:
-1. Fork the repository
-2. Make your changes
-3. Test locally (open index.html)
-4. Push to your GitHub Pages
-
----
-
-## 📄 Documentation Files
-
-- **README.md** - Overview (you are here)
-- **SETUP.md** - Complete setup guide
-- **SCHEMA.md** - Database structure
-- **API.md** - API endpoint documentation
-
----
-
-## ⚡ Performance
-
-- Landing page loads in <1s
-- Chapter content loads in <500ms
-- Quiz renders instantly
-- Dark theme reduces eye strain
-- Optimized CSS & minimal JavaScript
-
----
-
-## 🔄 Version
-
-**v1.0.0** - August 2024
-- Initial release
-- 26+ Python chapters template
-- Complete admin panel
-- Bilingual support
-- Dark theme
-
----
-
-## 📧 Support
-
-1. **Setup Issues?** → Read [SETUP.md](SETUP.md)
-2. **Database Questions?** → Check [SCHEMA.md](SCHEMA.md)
-3. **API Questions?** → Review [API.md](API.md)
-4. **Debugging?** → Check browser console (F12)
-5. **Apps Script Logs?** → Go to Apps Script → Executions
-
----
-
-## 🎓 Learning Path
-
-**Your Python journey consists of:**
-
-1. **Part 1: Fundamentals** (Chapters 1-8)
-   - What is Python, variables, data types, operators, input/output, conditions, loops
-
-2. **Part 2: Core Python** (Chapters 9-15)
-   - Functions, scope, modules, packages, exceptions, file handling
-
-3. **Part 3: OOP** (Chapters 16-20)
-   - Classes, objects, inheritance, encapsulation, polymorphism
-
-4. **Part 4: Advanced** (Chapters 21-26+)
-   - Comprehensions, lambdas, decorators, generators, patterns
-
-Each chapter includes:
-- 📖 Comprehensive content
-- 📝 Note-taking capability
-- 🔖 Bookmark system
-- ❓ Question asking
-- ✅ Chapter quiz (mandatory to progress)
-
----
-
-## 🎯 Next Steps
-
-1. **Read** [SETUP.md](SETUP.md) for detailed setup
-2. **Create** your Google Sheet
-3. **Deploy** Apps Script
-4. **Push** to GitHub Pages
-5. **Share** with learners
-6. **Add** your Python content
-7. **Enjoy** teaching Python!
-
----
-
-**Happy Learning! 🐍📚**
-
-*Made with ❤️ for Python learners*
-
----
-
-**Questions?** Check the documentation files or review the code comments.
-
-No backend or Google Sheets integration is included in this prototype yet.
-
-## Planned next phase
-- Google Apps Script API
-- Google Sheets database
-- Real authentication
-- Persistent notes/bookmarks/progress
-- Admin CRUD persistence
-- Media management
-- Real bilingual content
+This project is distributed under the MIT License. Built for focused Python learners and instructors.

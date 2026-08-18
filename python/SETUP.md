@@ -62,30 +62,16 @@ Example for `users` sheet:
 id | username | password_hash | display_name | role | status | created_at | updated_at
 ```
 
-### 1.4 Create Admin User
+### 1.4 Admin User
 
-In the `users` sheet, add the first admin:
+Do not manually create password hashes. After adding the Apps Script files, run `setupDatabase()` from the Apps Script editor. It creates the first admin with a hashed password:
 
+```text
+Username: admin
+Password: admin123
+Role: ADMIN
+Status: ACTIVE
 ```
-Row 2 (Admin):
-id: [any-uuid]
-username: admin
-password_hash: [see Password Hashing section]
-display_name: Administrator
-role: ADMIN
-status: ACTIVE
-created_at: [current-date]
-updated_at: [current-date]
-```
-
-#### Password Hashing
-
-For testing purposes, you can use online SHA-256 tools:
-- Password: `admin123`
-- Salt: `python_journey_2024`
-- SHA-256 hash of `admin123python_journey_2024`: Generate using any online tool
-
-For now, you can just put a placeholder hash. It will be updated when you use the backend.
 
 ---
 
@@ -108,6 +94,7 @@ For now, you can just put a placeholder hash. It will be updated when you use th
      - `Progress.gs` - Progress tracking, bookmarks, notes
      - `Quiz.gs` - Quiz functions
      - `Stats.gs` - Statistics
+     - `DatabaseSetup.gs` - Schema and demo-data initializer
 
 To create new files:
 - Click **+ (next to Files)** → **New file**
@@ -135,18 +122,36 @@ Example format:
 https://script.google.com/macros/d/YOUR_SCRIPT_ID/userweb
 ```
 
-### 2.5 Update Frontend Configuration
+### 2.5 Initialize the database
 
-In your frontend `js/app.js`, update:
+In the Apps Script editor, select and run:
+
+```javascript
+setupDatabase
+```
+
+This creates all required sheets, column headers, default admin, two demo users, three Python chapters, three quizzes, sample content, and sample notes/bookmarks/questions.
+
+Default accounts:
+
+```text
+admin / admin123
+reza / demo123
+karim / demo123   (disabled demo user)
+```
+
+### 2.6 Update Frontend Configuration
+
+In your frontend `js/api.js`, update:
 
 ```javascript
 const CONFIG = {
-    API_URL: 'https://script.google.com/macros/d/YOUR_SCRIPT_ID/userweb',
+    API_URL: 'https://script.google.com/macros/s/YOUR_DEPLOYMENT_ID/exec',
     // ... rest of config
 };
 ```
 
-Replace `YOUR_SCRIPT_ID` with your actual script ID.
+Replace `YOUR_DEPLOYMENT_ID` with your actual Apps Script deployment ID.
 
 ---
 

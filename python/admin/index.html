@@ -13,7 +13,8 @@
         <!-- Sidebar -->
         <aside class="admin-sidebar">
             <div class="sidebar-header">
-                <h2>Admin Panel</h2>
+                <h2>🐍 Admin Panel</h2>
+                <div style="font-size: 11px; color: var(--text-muted); margin-top: 4px;">My Python Journey</div>
             </div>
             <nav class="admin-nav">
                 <a href="#" data-section="dashboard" class="nav-item active">
@@ -49,6 +50,10 @@
                     <span class="label">Settings</span>
                 </a>
                 <hr>
+                <a href="../dashboard.html" class="nav-item" style="color: var(--accent-primary);">
+                    <span class="icon">📖</span>
+                    <span class="label">Learner View</span>
+                </a>
                 <a href="#" id="adminLogout" class="nav-item logout">
                     <span class="icon">🚪</span>
                     <span class="label">Logout</span>
@@ -59,13 +64,23 @@
         <!-- Main Content -->
         <main class="admin-main">
             <div class="admin-header">
-                <h1 id="sectionTitle">Admin Dashboard</h1>
-                <div class="admin-user">
-                    <span id="adminName">Admin</span>
+                <div>
+                    <div class="eyebrow" style="margin-bottom: 4px;">Administration</div>
+                    <h1 id="sectionTitle">Admin Dashboard</h1>
+                </div>
+                <div class="admin-user" style="display: flex; align-items: center; gap: 14px;">
+                    <div class="language-switcher">
+                        <button class="lang-btn active" data-lang="en">EN</button>
+                        <span class="lang-divider">|</span>
+                        <button class="lang-btn" data-lang="bn">বাংলা</button>
+                    </div>
+                    <div style="background: var(--bg-tertiary); padding: 6px 14px; border-radius: 20px; border: 1px solid var(--border-color); font-size: 13px;">
+                        👤 <span id="adminName">Admin</span>
+                    </div>
                 </div>
             </div>
 
-            <!-- Dashboard Section -->
+            <!-- 1. Dashboard Section -->
             <section id="dashboardSection" class="admin-section active">
                 <div class="stats-grid">
                     <div class="stat-card">
@@ -84,14 +99,18 @@
                         <div class="stat-number" id="pendingQuestions">0</div>
                         <div class="stat-label">Pending Questions</div>
                     </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="quizAverage">0%</div>
+                        <div class="stat-label">Quiz Average</div>
+                    </div>
                 </div>
                 <div class="recent-activity">
-                    <h2>Recent Activity</h2>
+                    <h2>Recent System Activity</h2>
                     <div id="activityLog" class="activity-list"></div>
                 </div>
             </section>
 
-            <!-- Users Section -->
+            <!-- 2. Users Section -->
             <section id="usersSection" class="admin-section" style="display: none;">
                 <div class="section-actions">
                     <button id="createUserBtn" class="btn btn-primary">+ Create User</button>
@@ -99,7 +118,7 @@
                 <div id="usersList" class="data-table"></div>
             </section>
 
-            <!-- Chapters Section -->
+            <!-- 3. Chapters Section -->
             <section id="chaptersSection" class="admin-section" style="display: none;">
                 <div class="section-actions">
                     <button id="createChapterBtn" class="btn btn-primary">+ Create Chapter</button>
@@ -107,49 +126,71 @@
                 <div id="chaptersList" class="data-table"></div>
             </section>
 
-            <!-- Content Section -->
+            <!-- 4. Content & Sections Section -->
             <section id="contentSection" class="admin-section" style="display: none;">
-                <div class="section-actions">
-                    <select id="chapterSelect" class="form-control">
-                        <option value="">Select Chapter</option>
+                <div class="section-actions" style="flex-wrap: wrap;">
+                    <select id="chapterSelect" class="form-control" style="min-width: 250px;">
+                        <option value="">Select Chapter...</option>
                     </select>
-                    <button id="createContentBtn" class="btn btn-primary">+ Add Content</button>
+                    <button id="createSectionBtn" class="btn btn-outline">+ Add Section</button>
+                    <button id="createContentBtn" class="btn btn-primary">+ Add Content Block</button>
                 </div>
                 <div id="contentList" class="data-table"></div>
             </section>
 
-            <!-- Quizzes Section -->
+            <!-- 5. Quizzes Section -->
             <section id="quizzesSection" class="admin-section" style="display: none;">
                 <div class="section-actions">
-                    <button id="createQuizBtn" class="btn btn-primary">+ Create Quiz</button>
+                    <button id="createQuizBtn" class="btn btn-primary">+ Create Chapter Quiz</button>
                 </div>
                 <div id="quizzesList" class="data-table"></div>
             </section>
 
-            <!-- Questions Section -->
+            <!-- 6. Questions Section -->
             <section id="questionsSection" class="admin-section" style="display: none;">
+                <div class="section-actions">
+                    <select id="questionFilter" class="form-control" style="width: 200px;">
+                        <option value="ALL">All Questions</option>
+                        <option value="PENDING" selected>Pending Only</option>
+                        <option value="ANSWERED">Answered</option>
+                    </select>
+                </div>
                 <div id="questionsList" class="questions-list"></div>
             </section>
 
-            <!-- Progress Section -->
+            <!-- 7. Progress Section -->
             <section id="progressSection" class="admin-section" style="display: none;">
                 <div class="section-actions">
-                    <select id="userSelect" class="form-control">
-                        <option value="">Select User</option>
+                    <select id="userSelect" class="form-control" style="min-width: 250px;">
+                        <option value="">Select User to Inspect...</option>
                     </select>
                 </div>
-                <div id="userProgressData" class="progress-data"></div>
+                <div id="userProgressData" class="progress-data">
+                    <p style="color: var(--text-muted); text-align: center;">Select a user from the dropdown above to inspect detailed learning progress.</p>
+                </div>
             </section>
 
-            <!-- Settings Section -->
+            <!-- 8. Settings Section -->
             <section id="settingsSection" class="admin-section" style="display: none;">
-                <form id="settingsForm" class="settings-form">
-                    <h2>Platform Settings</h2>
+                <form id="settingsForm" class="settings-form" style="background: var(--bg-secondary); padding: 24px; border-radius: 12px; border: 1px solid var(--border-color);">
+                    <h2 style="margin-bottom: 20px;">Platform Configuration</h2>
                     <div class="form-group">
                         <label>Default Pass Mark (%)</label>
-                        <input type="number" id="passMarkSetting" min="0" max="100" value="70">
+                        <input type="number" id="passMarkSetting" min="10" max="100" value="70" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Platform Title</label>
+                        <input type="text" id="platformTitleSetting" value="My Python Journey">
+                    </div>
+                    <div class="form-group">
+                        <label>Default Language</label>
+                        <select id="defaultLangSetting">
+                            <option value="en">English</option>
+                            <option value="bn">বাংলা (Bengali)</option>
+                        </select>
                     </div>
                     <button type="submit" class="btn btn-primary">Save Settings</button>
+                    <div id="settingsMessage" style="margin-top: 14px;"></div>
                 </form>
             </section>
         </main>
@@ -166,21 +207,21 @@
                 <form id="userForm">
                     <div class="form-group">
                         <label>Username</label>
-                        <input type="text" id="formUsername" required>
+                        <input type="text" id="formUsername" required autocomplete="off">
                     </div>
                     <div class="form-group">
                         <label>Display Name</label>
                         <input type="text" id="formDisplayName" required>
                     </div>
                     <div class="form-group">
-                        <label>Password</label>
-                        <input type="password" id="formPassword" required>
+                        <label id="formPasswordLabel">Password</label>
+                        <input type="password" id="formPassword">
                     </div>
                     <div class="form-group">
                         <label>Role</label>
                         <select id="formRole">
-                            <option value="USER">User</option>
-                            <option value="ADMIN">Admin</option>
+                            <option value="USER">User (Learner)</option>
+                            <option value="ADMIN">Admin (Instructor)</option>
                         </select>
                     </div>
                     <div class="form-group">
@@ -190,7 +231,215 @@
                             <option value="DISABLED">Disabled</option>
                         </select>
                     </div>
-                    <button type="submit" class="btn btn-primary">Save</button>
+                    <button type="submit" class="btn btn-primary" style="width: 100%;">Save User</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Chapter Modal -->
+    <div id="chapterModal" class="modal" style="display: none;">
+        <div class="modal-content" style="max-width: 700px;">
+            <div class="modal-header">
+                <h2 id="chapterModalTitle">Create Chapter</h2>
+                <button class="modal-close" onclick="document.getElementById('chapterModal').style.display='none'">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="chapterForm">
+                    <div class="form-group">
+                        <label>Part ID</label>
+                        <select id="formChapterPart">
+                            <option value="fundamentals">Part 1 - Python Fundamentals</option>
+                            <option value="core">Part 2 - Core Python</option>
+                            <option value="oop">Part 3 - Object Oriented Python</option>
+                            <option value="advanced">Part 4 - Advanced Python</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Chapter Number</label>
+                        <input type="number" id="formChapterNumber" min="1" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Title (English)</label>
+                        <input type="text" id="formChapterTitleEn" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Title (Bangla)</label>
+                        <input type="text" id="formChapterTitleBn" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Description (English)</label>
+                        <textarea id="formChapterDescEn" style="min-height: 70px;"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Description (Bangla)</label>
+                        <textarea id="formChapterDescBn" style="min-height: 70px;"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Status</label>
+                        <select id="formChapterStatus">
+                            <option value="PUBLISHED">Published</option>
+                            <option value="DRAFT">Draft</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="width: 100%;">Save Chapter</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Section Modal -->
+    <div id="sectionModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="sectionModalTitle">Create Section</h2>
+                <button class="modal-close" onclick="document.getElementById('sectionModal').style.display='none'">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="sectionForm">
+                    <div class="form-group">
+                        <label>Chapter</label>
+                        <select id="formSectionChapter" required></select>
+                    </div>
+                    <div class="form-group">
+                        <label>Section Title (English)</label>
+                        <input type="text" id="formSectionTitleEn" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Section Title (Bangla)</label>
+                        <input type="text" id="formSectionTitleBn" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Order Number</label>
+                        <input type="number" id="formSectionOrder" value="1" min="1">
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="width: 100%;">Save Section</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Content Block Modal -->
+    <div id="contentModal" class="modal" style="display: none;">
+        <div class="modal-content" style="max-width: 750px;">
+            <div class="modal-header">
+                <h2 id="contentModalTitle">Add Content Block</h2>
+                <button class="modal-close" onclick="document.getElementById('contentModal').style.display='none'">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="contentBlockForm">
+                    <div class="form-group">
+                        <label>Section</label>
+                        <select id="formContentSection" required></select>
+                    </div>
+                    <div class="form-group">
+                        <label>Content Type</label>
+                        <select id="formContentType">
+                            <option value="paragraph">Paragraph (HTML text)</option>
+                            <option value="code">Python Code Block</option>
+                            <option value="callout">Important Callout Note</option>
+                            <option value="heading">Sub-heading</option>
+                            <option value="example">Practical Example</option>
+                            <option value="quote">Quote</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Title (English - Optional)</label>
+                        <input type="text" id="formContentTitleEn">
+                    </div>
+                    <div class="form-group">
+                        <label>Title (Bangla - Optional)</label>
+                        <input type="text" id="formContentTitleBn">
+                    </div>
+                    <div class="form-group">
+                        <label>Content (English)</label>
+                        <textarea id="formContentBodyEn" style="min-height: 120px;" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Content (Bangla)</label>
+                        <textarea id="formContentBodyBn" style="min-height: 120px;" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Order Number</label>
+                        <input type="number" id="formContentOrder" value="1" min="1">
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="width: 100%;">Save Content</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quiz Question Modal -->
+    <div id="quizQuestionModal" class="modal" style="display: none;">
+        <div class="modal-content" style="max-width: 800px;">
+            <div class="modal-header">
+                <h2>Manage Quiz Question</h2>
+                <button class="modal-close" onclick="document.getElementById('quizQuestionModal').style.display='none'">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="quizQuestionForm">
+                    <div class="form-group">
+                        <label>Question (English)</label>
+                        <input type="text" id="qqQuestionEn" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Question (Bangla)</label>
+                        <input type="text" id="qqQuestionBn" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Explanation (English)</label>
+                        <textarea id="qqExplanationEn" style="min-height: 70px;" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Explanation (Bangla)</label>
+                        <textarea id="qqExplanationBn" style="min-height: 70px;" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Options & Correct Answer Selection</label>
+                        <div style="display: grid; gap: 10px; margin-top: 8px;">
+                            <div style="display: flex; gap: 10px; align-items: center;">
+                                <input type="radio" name="qqCorrectRadio" value="0" checked>
+                                <input type="text" id="qqOpt0En" placeholder="Option A (EN)" required style="flex: 1;">
+                                <input type="text" id="qqOpt0Bn" placeholder="Option A (BN)" required style="flex: 1;">
+                            </div>
+                            <div style="display: flex; gap: 10px; align-items: center;">
+                                <input type="radio" name="qqCorrectRadio" value="1">
+                                <input type="text" id="qqOpt1En" placeholder="Option B (EN)" required style="flex: 1;">
+                                <input type="text" id="qqOpt1Bn" placeholder="Option B (BN)" required style="flex: 1;">
+                            </div>
+                            <div style="display: flex; gap: 10px; align-items: center;">
+                                <input type="radio" name="qqCorrectRadio" value="2">
+                                <input type="text" id="qqOpt2En" placeholder="Option C (EN)" required style="flex: 1;">
+                                <input type="text" id="qqOpt2Bn" placeholder="Option C (BN)" required style="flex: 1;">
+                            </div>
+                            <div style="display: flex; gap: 10px; align-items: center;">
+                                <input type="radio" name="qqCorrectRadio" value="3">
+                                <input type="text" id="qqOpt3En" placeholder="Option D (EN)" required style="flex: 1;">
+                                <input type="text" id="qqOpt3Bn" placeholder="Option D (BN)" required style="flex: 1;">
+                            </div>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="width: 100%;">Save Question</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Answer Question Modal -->
+    <div id="answerModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Answer Student Question</h2>
+                <button class="modal-close" onclick="document.getElementById('answerModal').style.display='none'">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div id="answerQuestionDetail" style="background: var(--bg-tertiary); padding: 14px; border-radius: 8px; margin-bottom: 16px;"></div>
+                <form id="answerSubmitForm">
+                    <div class="form-group">
+                        <label>Your Answer / Explanation</label>
+                        <textarea id="answerTextarea" placeholder="Write clear, comprehensive explanation..." required style="min-height: 140px;"></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="width: 100%;">Submit Answer</button>
                 </form>
             </div>
         </div>
@@ -198,6 +447,7 @@
 
     <script src="../js/api.js"></script>
     <script src="../js/auth.js"></script>
+    <script src="../js/i18n.js"></script>
     <script src="../js/admin.js"></script>
 </body>
 </html>
