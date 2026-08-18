@@ -8,135 +8,17 @@
     <link rel="stylesheet" href="css/variables.css">
     <link rel="stylesheet" href="css/global.css">
     <link rel="stylesheet" href="css/landing.css">
-    <style>
-        /* Landing Page Specific Enhancements */
-        .landing-navbar {
-            height: 72px;
-            background: rgba(11, 14, 18, 0.88);
-            backdrop-filter: blur(14px);
-            border-bottom: 1px solid var(--border-color);
-            position: sticky;
-            top: 0;
-            z-index: 100;
-        }
-
-        .landing-navbar .container {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            height: 100%;
-        }
-
-        .hero-section {
-            padding: 100px 0 80px;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .hero-grid {
-            display: grid;
-            grid-template-columns: 1.2fr 0.8fr;
-            gap: 60px;
-            align-items: center;
-        }
-
-        .hero-code-preview {
-            background: var(--bg-secondary);
-            border: 1px solid var(--border-color);
-            border-radius: var(--radius-xl);
-            padding: 24px;
-            box-shadow: var(--shadow-xl);
-            position: relative;
-        }
-
-        .hero-code-header {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            margin-bottom: 16px;
-            padding-bottom: 12px;
-            border-bottom: 1px solid var(--border-color);
-        }
-
-        .dot {
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-            display: inline-block;
-        }
-        .dot-red { background: #ef4444; }
-        .dot-yellow { background: #f59e0b; }
-        .dot-green { background: #10b981; }
-
-        .curriculum-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-            gap: 20px;
-            margin-top: 30px;
-        }
-
-        .part-card {
-            background: var(--bg-secondary);
-            border: 1px solid var(--border-color);
-            border-radius: var(--radius-lg);
-            padding: 24px;
-            transition: all var(--transition-base);
-        }
-
-        .part-card:hover {
-            border-color: var(--accent-primary);
-            transform: translateY(-3px);
-        }
-
-        .part-card h3 {
-            font-size: 18px;
-            margin: 8px 0 12px;
-            color: var(--text-primary);
-        }
-
-        .part-card ul {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-            font-size: 14px;
-            color: var(--text-secondary);
-        }
-
-        .part-card ul li::before {
-            content: "•";
-            color: var(--accent-primary);
-            font-weight: bold;
-            display: inline-block;
-            width: 1em;
-            margin-left: -1em;
-        }
-
-        .feature-grid-3 {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 24px;
-            margin-top: 36px;
-        }
-
-        @media (max-width: 900px) {
-            .hero-grid { grid-template-columns: 1fr; }
-            .feature-grid-3 { grid-template-columns: 1fr; }
-        }
-    </style>
 </head>
 <body>
     <!-- Top Navigation -->
     <header class="landing-navbar">
         <div class="container">
-            <a href="index.html" class="logo" style="display: flex; align-items: center; gap: 10px;">
+            <a href="index.html" class="logo">
                 <span style="font-size: 24px;">🐍</span>
                 <span style="font-weight: 800; letter-spacing: -0.02em;">My <span style="color: var(--accent-primary);">Python</span> Journey</span>
             </a>
 
-            <div style="display: flex; align-items: center; gap: 18px;">
+            <div style="display: flex; align-items: center; gap: 16px;">
                 <div class="language-switcher">
                     <button class="lang-btn active" data-lang="en">EN</button>
                     <span class="lang-divider">|</span>
@@ -153,11 +35,11 @@
             <div class="container">
                 <div class="hero-grid">
                     <div>
-                        <div class="eyebrow" data-i18n="hero_badge">A Structured Python Learning Book</div>
-                        <h1 style="font-size: clamp(38px, 5.5vw, 64px); line-height: 1.05; letter-spacing: -0.04em; margin: 18px 0 20px;" data-i18n="hero_heading">
+                        <div class="hero-eyebrow" data-i18n="hero_badge">✨ A Structured Python Learning Book</div>
+                        <h1 class="hero-heading" data-i18n="hero_heading">
                             Learn Python the Right Way.
                         </h1>
-                        <p style="font-size: 18px; line-height: 1.7; color: var(--text-secondary); max-width: 600px; margin-bottom: 32px;" data-i18n="hero_desc">
+                        <p class="hero-desc" data-i18n="hero_desc">
                             A private, interactive digital learning book where Python concepts are mastered chapter-by-chapter through structured explanations, executable examples, private notes, and mandatory quizzes.
                         </p>
                         <div style="display: flex; gap: 14px; flex-wrap: wrap;">
@@ -172,22 +54,25 @@
                             <span class="dot dot-red"></span>
                             <span class="dot dot-yellow"></span>
                             <span class="dot dot-green"></span>
-                            <span style="font-size: 12px; color: var(--text-muted); margin-left: 8px;">functions_journey.py</span>
+                            <span class="code-title-tab">functions_journey.py</span>
                         </div>
-                        <pre style="margin: 0; background: transparent; border: none; padding: 0; font-family: var(--font-mono); font-size: 13.5px; line-height: 1.8; color: #cbd5e1;"><code><span style="color: var(--accent-primary);">def</span> <span style="color: #60a5fa;">learn_python</span>(topic):
-    <span style="color: #34d399;">"""Master concepts step by step."""</span>
+                        <pre style="margin: 0; background: transparent; border: none; padding: 0; font-family: var(--font-mono); font-size: 13.5px; line-height: 1.8; color: #CBD5E1; overflow-x: auto;"><code><span style="color: var(--accent-secondary); font-weight: 600;">def</span> <span style="color: #60A5FA;">learn_python</span>(topic):
+    <span style="color: #34D399;">"""Master concepts step by step."""</span>
     understanding = read_chapter(topic)
     notes = take_private_notes(understanding)
     passed = pass_chapter_quiz(topic)
     
-    <span style="color: var(--accent-primary);">if</span> passed:
+    <span style="color: var(--accent-secondary); font-weight: 600;">if</span> passed:
         unlock_next_chapter()
-        <span style="color: var(--accent-primary);">return</span> <span style="color: #34d399;">"Progress Saved ✓"</span>
+        <span style="color: var(--accent-secondary); font-weight: 600;">return</span> <span style="color: #34D399;">"Progress Saved ✓"</span>
 
-print(learn_python(<span style="color: #fbbf24;">"Functions & *args"</span>))</code></pre>
-                        <div style="background: var(--bg-tertiary); padding: 12px; border-radius: 8px; margin-top: 16px; font-size: 12px; display: flex; justify-content: space-between; align-items: center;">
-                            <span style="color: var(--accent-success); font-weight: 600;">✓ Chapter 05 Unlocked</span>
-                            <span style="color: var(--text-muted);">Pass mark: 70%</span>
+print(learn_python(<span style="color: #FBBF24;">"Functions & *args"</span>))</code></pre>
+                        <div style="background: var(--bg-tertiary); padding: 12px 16px; border-radius: 10px; margin-top: 18px; font-size: 13px; display: flex; justify-content: space-between; align-items: center; border: 1px solid var(--border-color);">
+                            <span style="color: var(--accent-success); font-weight: 600; display: flex; align-items: center; gap: 6px;">
+                                <span style="display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: var(--accent-success); box-shadow: 0 0 8px rgba(16,185,129,0.6);"></span>
+                                Chapter 05 Unlocked
+                            </span>
+                            <span style="color: var(--text-muted); font-size: 12px;">Pass mark: 70%</span>
                         </div>
                     </div>
                 </div>
@@ -195,34 +80,34 @@ print(learn_python(<span style="color: #fbbf24;">"Functions & *args"</span>))</c
         </section>
 
         <!-- Why This Book Section -->
-        <section class="section" style="background: var(--bg-secondary); border-top: 1px solid var(--border-color); border-bottom: 1px solid var(--border-color); padding: 80px 0;">
+        <section class="section" style="background: var(--bg-secondary); border-top: 1px solid var(--border-color); border-bottom: 1px solid var(--border-color);">
             <div class="container">
                 <div style="text-align: center; max-width: 700px; margin: 0 auto 40px;">
                     <div class="eyebrow" data-i18n="why_title">Why this learning book?</div>
-                    <h2 style="font-size: 32px; margin-top: 8px;">A calm, focused reading experience built for real comprehension.</h2>
+                    <h2 style="font-size: clamp(26px, 3.5vw, 36px); margin-top: 10px; letter-spacing: -0.02em;">A calm, focused reading experience built for real comprehension.</h2>
                 </div>
 
                 <div class="feature-grid-3">
                     <div class="part-card">
-                        <div style="font-size: 32px; margin-bottom: 12px;">📚</div>
+                        <div class="card-icon">📚</div>
                         <h3 data-i18n="why_structured_title">Structured Progression</h3>
-                        <p style="color: var(--text-muted); font-size: 14px; line-height: 1.6;" data-i18n="why_structured_desc">
+                        <p data-i18n="why_structured_desc">
                             From fundamentals to advanced patterns with verified quiz-gated progression. You cannot skip ahead without proving understanding.
                         </p>
                     </div>
 
                     <div class="part-card">
-                        <div style="font-size: 32px; margin-bottom: 12px;">🌍</div>
+                        <div class="card-icon">🌍</div>
                         <h3 data-i18n="why_bilingual_title">True Bilingual Learning</h3>
-                        <p style="color: var(--text-muted); font-size: 14px; line-height: 1.6;" data-i18n="why_bilingual_desc">
+                        <p data-i18n="why_bilingual_desc">
                             Seamlessly toggle between English and Bengali across both UI and actual book content at any time.
                         </p>
                     </div>
 
                     <div class="part-card">
-                        <div style="font-size: 32px; margin-bottom: 12px;">📝</div>
+                        <div class="card-icon">📝</div>
                         <h3 data-i18n="why_personal_title">Personal Study Space</h3>
-                        <p style="color: var(--text-muted); font-size: 14px; line-height: 1.6;" data-i18n="why_personal_desc">
+                        <p data-i18n="why_personal_desc">
                             Keep private per-topic notes, save bookmarks, and ask structured context-aware questions with direct answers from the instructor.
                         </p>
                     </div>
@@ -231,17 +116,17 @@ print(learn_python(<span style="color: #fbbf24;">"Functions & *args"</span>))</c
         </section>
 
         <!-- Curriculum Roadmap -->
-        <section id="curriculum" class="section" style="padding: 90px 0;">
+        <section id="curriculum" class="section">
             <div class="container">
                 <div style="text-align: center; max-width: 700px; margin: 0 auto 30px;">
                     <div class="eyebrow" data-i18n="roadmap_title">Structured Curriculum</div>
-                    <h2 style="font-size: 32px; margin-top: 8px;">28+ Focused Python Chapters</h2>
-                    <p style="color: var(--text-muted); font-size: 16px;">Exclusively Python. No filler topics. Pure conceptual depth.</p>
+                    <h2 style="font-size: clamp(26px, 3.5vw, 36px); margin-top: 10px; letter-spacing: -0.02em;">28+ Focused Python Chapters</h2>
+                    <p style="color: var(--text-muted); font-size: 16px; margin-top: 8px;">Exclusively Python. No filler topics. Pure conceptual depth.</p>
                 </div>
 
                 <div class="curriculum-grid">
                     <div class="part-card">
-                        <span class="badge" style="background: rgba(59,130,246,0.15); color: var(--accent-primary);">PART 01</span>
+                        <span class="badge">PART 01</span>
                         <h3>Python Fundamentals</h3>
                         <ul>
                             <li>What is Python & Setup</li>
@@ -254,7 +139,7 @@ print(learn_python(<span style="color: #fbbf24;">"Functions & *args"</span>))</c
                     </div>
 
                     <div class="part-card">
-                        <span class="badge" style="background: rgba(16,185,129,0.15); color: var(--accent-success);">PART 02</span>
+                        <span class="badge green">PART 02</span>
                         <h3>Core Python</h3>
                         <ul>
                             <li>Functions & Return Values</li>
@@ -268,7 +153,7 @@ print(learn_python(<span style="color: #fbbf24;">"Functions & *args"</span>))</c
                     </div>
 
                     <div class="part-card">
-                        <span class="badge" style="background: rgba(167,139,250,0.15); color: #c084fc;">PART 03</span>
+                        <span class="badge" style="background: rgba(167,139,250,0.15); color: #C084FC; border-color: rgba(167,139,250,0.3);">PART 03</span>
                         <h3>Object-Oriented Python</h3>
                         <ul>
                             <li>Classes & Instances</li>
@@ -280,7 +165,7 @@ print(learn_python(<span style="color: #fbbf24;">"Functions & *args"</span>))</c
                     </div>
 
                     <div class="part-card">
-                        <span class="badge" style="background: rgba(251,191,36,0.15); color: #fbbf24;">PART 04</span>
+                        <span class="badge gold">PART 04</span>
                         <h3>Advanced Python</h3>
                         <ul>
                             <li>Comprehensions & Expressions</li>
@@ -295,9 +180,9 @@ print(learn_python(<span style="color: #fbbf24;">"Functions & *args"</span>))</c
                 </div>
 
                 <!-- Call to action -->
-                <div style="background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: var(--radius-xl); padding: 48px; text-align: center; margin-top: 60px;">
-                    <h2 style="font-size: 28px; margin-bottom: 12px;">Ready to start your Python journey?</h2>
-                    <p style="color: var(--text-muted); font-size: 16px; margin-bottom: 24px;">Sign in to your learning account to start reading and tracking progress.</p>
+                <div class="cta-banner">
+                    <h2 style="font-size: clamp(24px, 3.2vw, 32px); margin-bottom: 12px; font-weight: 800; letter-spacing: -0.02em;">Ready to start your Python journey?</h2>
+                    <p style="color: var(--text-secondary); font-size: 16px; margin-bottom: 24px; max-width: 550px; margin-left: auto; margin-right: auto;">Sign in to your learning account to start reading and tracking progress.</p>
                     <a href="login.html" class="btn btn-primary btn-large" data-i18n="read_the_journey">Read the Journey →</a>
                 </div>
             </div>
@@ -305,10 +190,10 @@ print(learn_python(<span style="color: #fbbf24;">"Functions & *args"</span>))</c
     </main>
 
     <!-- Footer -->
-    <footer style="background: var(--bg-secondary); border-top: 1px solid var(--border-color); padding: 36px 0; text-align: center; font-size: 13px; color: var(--text-muted);">
+    <footer>
         <div class="container">
             <p style="margin-bottom: 6px;">© 2026 My Python Journey. Built for focused Python learners.</p>
-            <p>Static Hosting on GitHub Pages · Google Apps Script & Google Sheets Persistence</p>
+            <p style="font-size: 12px;">Static Hosting on GitHub Pages · Google Apps Script & Google Sheets Persistence</p>
         </div>
     </footer>
 
