@@ -23,7 +23,7 @@ const CONFIG = {
   --------------------------------------------------------------------- */
   unlock: {
     date: "2026-09-28",       // YYYY-MM-DD
-    time: "01:21:00",         // HH:MM:SS, 24-hour
+    time: "01:25:00",         // HH:MM:SS, 24-hour
     timezone: "Asia/Dhaka"
   },
 
