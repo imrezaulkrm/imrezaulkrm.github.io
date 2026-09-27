@@ -31,8 +31,8 @@ const CONFIG = {
      2. THE PERSON
   --------------------------------------------------------------------- */
   person: {
-    nickname: "Cynthia",
-    fullName: "Cynthia Rahman"
+    nickname: "Sinthiii",
+    fullName: "Sandia Ahmed Sinthiya"
   },
 
   /* ---------------------------------------------------------------------
