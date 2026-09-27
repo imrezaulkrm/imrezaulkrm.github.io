@@ -1,0 +1,713 @@
+/* =========================================================================
+   Design tokens
+   ========================================================================= */
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,600;1,9..144,400&family=Manrope:wght@300;400;500;600;700&display=swap');
+
+:root {
+  --bg:        #0a0b10;
+  --bg-soft:   #12131d;
+  --bg-lift:   #191a27;
+  --ink:       #f4f1ea;
+  --ink-dim:   #9d9bb0;
+  --ink-faint: #66647c;
+  --accent:    #dba066;   /* warm amber glow */
+  --accent-2:  #7c86ff;   /* soft violet, used sparingly */
+  --line:      rgba(244, 241, 234, 0.1);
+
+  --serif: 'Fraunces', Georgia, serif;
+  --sans:  'Manrope', -apple-system, BlinkMacSystemFont, sans-serif;
+
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+* { box-sizing: border-box; }
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: var(--safe-top);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--sans);
+  font-weight: 400;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+  padding-top: var(--safe-top);
+  padding-bottom: var(--safe-bottom);
+}
+
+h1, h2, h3 {
+  font-family: var(--serif);
+  font-weight: 400;
+  margin: 0;
+  letter-spacing: -0.01em;
+}
+
+p { margin: 0; }
+
+button {
+  font-family: var(--sans);
+  border: none;
+  background: none;
+  color: inherit;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+img { max-width: 100%; display: block; }
+
+::selection { background: var(--accent); color: #14151f; }
+
+.eyebrow {
+  font-family: var(--sans);
+  font-size: 0.8rem;
+  color: var(--accent);
+  font-weight: 500;
+  letter-spacing: 0.02em;
+}
+
+/* =========================================================================
+   Shared: starfield canvas backdrop
+   ========================================================================= */
+#starfield {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.7;
+}
+
+/* =========================================================================
+   Gate / waiting screen (Scene 01)
+   ========================================================================= */
+#gate {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 8vh 1.5rem;
+  background: radial-gradient(ellipse at 50% 30%, #171928 0%, var(--bg) 70%);
+  transition: opacity 1.4s var(--ease), filter 1.4s var(--ease);
+}
+
+#gate.hidden {
+  opacity: 0;
+  filter: blur(12px);
+  pointer-events: none;
+}
+
+.gate-eyebrow {
+  font-size: 0.75rem;
+  text-transform: lowercase;
+  color: var(--ink-faint);
+  margin-bottom: 1.25rem;
+  letter-spacing: 0.08em;
+}
+
+.gate-title {
+  font-family: var(--serif);
+  font-style: italic;
+  font-weight: 300;
+  font-size: clamp(1.4rem, 6vw, 2.1rem);
+  line-height: 1.35;
+  color: var(--ink);
+  white-space: pre-line;
+  max-width: 22ch;
+  margin-bottom: 2.25rem;
+}
+
+.countdown {
+  display: flex;
+  gap: clamp(0.5rem, 3vw, 1.25rem);
+  margin-bottom: 1.75rem;
+}
+
+.countdown .unit {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 3.4rem;
+}
+
+.countdown .num {
+  font-family: var(--serif);
+  font-size: clamp(1.8rem, 8vw, 2.8rem);
+  font-variant-numeric: tabular-nums;
+  color: var(--ink);
+  text-shadow: 0 0 24px rgba(219, 160, 102, 0.35);
+}
+
+.countdown .label {
+  font-size: 0.65rem;
+  color: var(--ink-faint);
+  letter-spacing: 0.1em;
+  margin-top: 0.35rem;
+}
+
+.countdown .sep {
+  font-family: var(--serif);
+  font-size: clamp(1.4rem, 6vw, 2.2rem);
+  color: var(--ink-faint);
+  align-self: flex-start;
+  margin-top: 0.3rem;
+}
+
+.gate-subtitle {
+  font-size: 0.9rem;
+  color: var(--ink-dim);
+  margin-bottom: 2.5rem;
+}
+
+.tap-hint {
+  font-size: 0.8rem;
+  color: var(--accent);
+  padding: 0.9rem 1.8rem;
+  border: 1px solid rgba(219, 160, 102, 0.35);
+  border-radius: 999px;
+  animation: pulseGlow 2.6s ease-in-out infinite;
+}
+
+@keyframes pulseGlow {
+  0%, 100% { box-shadow: 0 0 0 rgba(219, 160, 102, 0); }
+  50% { box-shadow: 0 0 22px rgba(219, 160, 102, 0.25); }
+}
+
+/* Reveal flash used at the exact unlock moment */
+#reveal-flash {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  background: #000;
+  opacity: 0;
+  pointer-events: none;
+}
+#reveal-flash.burst {
+  animation: revealBurst 2.2s var(--ease) forwards;
+}
+@keyframes revealBurst {
+  0%   { opacity: 0; }
+  35%  { opacity: 1; background: radial-gradient(circle at 50% 45%, #2a2438 0%, #000 70%); }
+  100% { opacity: 0; }
+}
+
+/* =========================================================================
+   Main experience
+   ========================================================================= */
+#experience {
+  position: relative;
+  z-index: 1;
+}
+
+#experience.locked-out {
+  visibility: hidden;
+}
+
+.scene {
+  position: relative;
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 5rem 1.5rem;
+  text-align: center;
+  overflow: hidden;
+}
+
+.scene-inner {
+  position: relative;
+  z-index: 2;
+  max-width: 480px;
+  width: 100%;
+  opacity: 0;
+  transform: translateY(18px);
+  transition: opacity 0.9s var(--ease), transform 0.9s var(--ease);
+}
+
+.scene.in-view .scene-inner {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* progress rail */
+#progress-rail {
+  position: fixed;
+  top: var(--safe-top);
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: transparent;
+  z-index: 40;
+}
+#progress-rail .fill {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, var(--accent), var(--accent-2));
+  transition: width 0.1s linear;
+}
+
+/* audio toggle */
+#audio-toggle {
+  position: fixed;
+  bottom: calc(1.25rem + var(--safe-bottom));
+  right: 1.25rem;
+  z-index: 40;
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: 50%;
+  background: rgba(20, 21, 31, 0.7);
+  border: 1px solid var(--line);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+}
+
+/* ---- Scene 02: Hero / Midnight ---- */
+#scene-hero {
+  background: radial-gradient(ellipse at 50% 20%, #201c2c 0%, var(--bg) 65%);
+}
+.hero-name {
+  font-family: var(--serif);
+  font-size: clamp(2.4rem, 12vw, 4.2rem);
+  margin: 0.4rem 0 0.9rem;
+  color: var(--ink);
+  text-shadow: 0 0 40px rgba(219, 160, 102, 0.3);
+}
+.hero-heading {
+  font-size: 0.78rem;
+  letter-spacing: 0.14em;
+  color: var(--ink-dim);
+}
+.hero-date {
+  margin-top: 1.4rem;
+  color: var(--ink-dim);
+  font-size: 0.95rem;
+}
+.hero-line {
+  margin-top: 0.6rem;
+  color: var(--ink-faint);
+  font-style: italic;
+  font-family: var(--serif);
+}
+.scroll-cue {
+  margin-top: 3.5rem;
+  font-size: 0.7rem;
+  color: var(--ink-faint);
+  letter-spacing: 0.08em;
+}
+.scroll-cue .stem {
+  display: block;
+  width: 1px;
+  height: 30px;
+  background: linear-gradient(var(--ink-faint), transparent);
+  margin: 0.6rem auto 0;
+  animation: stemMove 2s ease-in-out infinite;
+}
+@keyframes stemMove {
+  0%, 100% { transform: scaleY(1); opacity: 0.6; }
+  50% { transform: scaleY(0.6); opacity: 1; }
+}
+
+/* ---- Scene 03: Her Day ---- */
+#scene-herday { background: var(--bg-soft); }
+.herday-title {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(1.8rem, 8vw, 2.6rem);
+  margin: 0.75rem 0 1.5rem;
+}
+.herday-date {
+  font-family: var(--serif);
+  font-size: clamp(1.2rem, 6vw, 1.6rem);
+  color: var(--accent);
+  margin-bottom: 0.6rem;
+}
+.herday-custom {
+  color: var(--ink-dim);
+  max-width: 30ch;
+  margin: 0 auto;
+}
+
+/* ---- Scene 04: Little things (cards) ---- */
+#scene-cards { background: var(--bg); }
+.cards-title {
+  font-size: clamp(1.3rem, 6vw, 1.7rem);
+  margin: 0.6rem 0 2rem;
+  color: var(--ink);
+  font-weight: 300;
+}
+.card-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+  text-align: left;
+}
+.thing-card {
+  background: var(--bg-lift);
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  padding: 1.1rem 1.25rem;
+  cursor: pointer;
+  transition: border-color 0.3s var(--ease), background 0.3s var(--ease);
+}
+.thing-card.open { border-color: rgba(219, 160, 102, 0.4); background: #1d1e2c; }
+.thing-card-head {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+}
+.thing-icon {
+  font-family: var(--serif);
+  font-size: 1.1rem;
+  color: var(--accent);
+  width: 1.6rem;
+  text-align: center;
+}
+.thing-title {
+  font-family: var(--serif);
+  font-size: 1.05rem;
+  flex: 1;
+}
+.thing-chevron {
+  color: var(--ink-faint);
+  transition: transform 0.3s var(--ease);
+  font-size: 0.85rem;
+}
+.thing-card.open .thing-chevron { transform: rotate(45deg); }
+.thing-body {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.4s var(--ease), margin-top 0.4s var(--ease);
+  color: var(--ink-dim);
+  font-size: 0.92rem;
+  line-height: 1.6;
+}
+.thing-card.open .thing-body {
+  max-height: 200px;
+  margin-top: 0.75rem;
+}
+
+/* ---- Scene 05: Gallery ---- */
+#scene-gallery {
+  padding-left: 0;
+  padding-right: 0;
+  background: var(--bg-soft);
+}
+.gallery-track {
+  display: flex;
+  gap: 1rem;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  padding: 0 1.5rem 1rem;
+  width: 100%;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+.gallery-track::-webkit-scrollbar { display: none; }
+.photo-card {
+  scroll-snap-align: center;
+  flex: 0 0 78%;
+  max-width: 340px;
+  border-radius: 22px;
+  overflow: hidden;
+  position: relative;
+  aspect-ratio: 4 / 5;
+  background: linear-gradient(160deg, #22243a, #14151f);
+}
+.photo-card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.6s var(--ease);
+}
+.photo-card:active img { transform: scale(1.04); }
+.photo-fallback {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--serif);
+  font-style: italic;
+  color: var(--ink-faint);
+  font-size: 1.6rem;
+}
+.photo-caption {
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  padding: 1.5rem 1.1rem 1.1rem;
+  background: linear-gradient(0deg, rgba(0,0,0,0.75), transparent);
+  text-align: left;
+}
+.photo-caption .p-title {
+  font-family: var(--serif);
+  font-style: italic;
+  color: var(--ink);
+  font-size: 1rem;
+  margin-bottom: 0.2rem;
+}
+.photo-caption .p-caption {
+  color: var(--ink-dim);
+  font-size: 0.8rem;
+}
+.gallery-hint {
+  margin-top: 1rem;
+  font-size: 0.72rem;
+  color: var(--ink-faint);
+  letter-spacing: 0.05em;
+}
+
+/* ---- Scene 06: Choose your world ---- */
+#scene-choice {
+  transition: background 0.8s var(--ease);
+}
+#scene-choice.mood-night  { background: radial-gradient(ellipse at 50% 30%, #1b1c33, var(--bg) 70%); }
+#scene-choice.mood-ocean  { background: radial-gradient(ellipse at 50% 30%, #10283a, var(--bg) 70%); }
+#scene-choice.mood-nature { background: radial-gradient(ellipse at 50% 30%, #16301f, var(--bg) 70%); }
+
+.choice-row {
+  display: flex;
+  gap: 0.8rem;
+  justify-content: center;
+  margin-top: 1.75rem;
+}
+.choice-btn {
+  flex: 1;
+  max-width: 8.5rem;
+  padding: 1.4rem 0.5rem;
+  border-radius: 18px;
+  border: 1px solid var(--line);
+  background: rgba(255,255,255,0.02);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  transition: border-color 0.3s var(--ease), transform 0.3s var(--ease);
+}
+.choice-btn .icon { font-size: 1.6rem; }
+.choice-btn .label { font-size: 0.85rem; color: var(--ink-dim); }
+.choice-btn.selected {
+  border-color: var(--accent);
+  transform: translateY(-3px);
+}
+.choice-message {
+  margin-top: 1.75rem;
+  min-height: 1.4rem;
+  font-family: var(--serif);
+  font-style: italic;
+  color: var(--accent);
+  opacity: 0;
+  transition: opacity 0.5s var(--ease);
+}
+.choice-message.show { opacity: 1; }
+
+/* ---- Scene 07: Make a wish (candle) ---- */
+#scene-wish {
+  background: var(--bg);
+}
+.candle-wrap {
+  margin: 2rem auto 1.5rem;
+  cursor: pointer;
+  width: 90px;
+  height: 160px;
+  position: relative;
+}
+.candle-body {
+  position: absolute;
+  bottom: 0; left: 50%;
+  transform: translateX(-50%);
+  width: 22px;
+  height: 100px;
+  background: linear-gradient(90deg, #e9dcc3, #cbb98f);
+  border-radius: 4px;
+}
+.candle-wick {
+  position: absolute;
+  bottom: 100px; left: 50%;
+  transform: translateX(-50%);
+  width: 3px; height: 12px;
+  background: #4a4030;
+}
+.flame {
+  position: absolute;
+  bottom: 110px; left: 50%;
+  width: 18px; height: 34px;
+  transform: translateX(-50%);
+  background: radial-gradient(ellipse at 50% 70%, #fff2c2, var(--accent) 55%, transparent 75%);
+  border-radius: 50% 50% 50% 50% / 65% 65% 35% 35%;
+  filter: blur(0.3px);
+  transform-origin: bottom center;
+  animation: flicker 1.6s ease-in-out infinite;
+  box-shadow: 0 0 24px 6px rgba(219, 160, 102, 0.45);
+}
+@keyframes flicker {
+  0%, 100% { transform: translateX(-50%) scaleY(1) rotate(-1deg); }
+  50% { transform: translateX(-50%) scaleY(1.08) rotate(2deg); }
+}
+.candle-wrap.blown .flame {
+  animation: none;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+.candle-wrap.blown .smoke {
+  opacity: 1;
+}
+.smoke {
+  position: absolute;
+  bottom: 128px; left: 50%;
+  width: 6px; height: 40px;
+  transform: translateX(-50%);
+  background: linear-gradient(0deg, rgba(200,200,210,0.5), transparent);
+  opacity: 0;
+  transition: opacity 0.6s ease 0.3s;
+  filter: blur(3px);
+}
+.wish-instruction {
+  color: var(--ink-dim);
+  font-size: 0.85rem;
+  margin-bottom: 0.5rem;
+}
+.wish-after {
+  margin-top: 1.5rem;
+  font-family: var(--serif);
+  font-style: italic;
+  color: var(--accent);
+  opacity: 0;
+  transition: opacity 1s var(--ease);
+}
+.wish-after.show { opacity: 1; }
+
+/* ---- Scene 08: Surprise ---- */
+#scene-surprise { background: var(--bg-soft); }
+.surprise-btn {
+  margin-top: 1.5rem;
+  padding: 1rem 1.6rem;
+  border-radius: 999px;
+  border: 1px solid rgba(124, 134, 255, 0.4);
+  color: var(--accent-2);
+  font-size: 0.9rem;
+  animation: pulseGlow2 2.8s ease-in-out infinite;
+}
+@keyframes pulseGlow2 {
+  0%, 100% { box-shadow: 0 0 0 rgba(124, 134, 255, 0); }
+  50% { box-shadow: 0 0 22px rgba(124, 134, 255, 0.25); }
+}
+.surprise-reveal {
+  margin-top: 1.75rem;
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.6s var(--ease);
+}
+.surprise-reveal.open { max-height: 400px; }
+.surprise-reveal-inner {
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  padding: 1.4rem;
+  background: var(--bg-lift);
+  text-align: left;
+}
+.surprise-reveal-inner h3 {
+  font-family: var(--serif);
+  font-style: italic;
+  margin-bottom: 0.6rem;
+  color: var(--accent-2);
+}
+.surprise-reveal-inner p {
+  color: var(--ink-dim);
+  font-size: 0.92rem;
+  line-height: 1.65;
+}
+
+/* ---- Scene 09: Final message ---- */
+#scene-final { background: var(--bg); }
+.final-message {
+  white-space: pre-line;
+  color: var(--ink);
+  font-family: var(--serif);
+  font-size: clamp(1.1rem, 5vw, 1.35rem);
+  line-height: 1.75;
+  margin-bottom: 2.25rem;
+}
+.final-happy {
+  font-size: clamp(1.6rem, 8vw, 2.2rem);
+  margin-bottom: 0.4rem;
+  text-shadow: 0 0 30px rgba(219, 160, 102, 0.3);
+}
+.final-name {
+  color: var(--ink-dim);
+  font-size: 1rem;
+  margin-bottom: 1.5rem;
+}
+.final-signoff {
+  font-size: 0.8rem;
+  color: var(--ink-faint);
+  font-style: italic;
+}
+
+/* ---- Scene 10: Ending ---- */
+#scene-ending {
+  min-height: 70svh;
+  background: radial-gradient(ellipse at 50% 60%, #16182a, var(--bg) 70%);
+}
+.ending-line {
+  font-family: var(--serif);
+  font-style: italic;
+  color: var(--ink-faint);
+  font-size: 1.1rem;
+}
+
+/* rising particles used at wish + reveal moments */
+.particle-layer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+.particle {
+  position: absolute;
+  bottom: -10px;
+  width: 4px; height: 4px;
+  border-radius: 50%;
+  background: var(--accent);
+  opacity: 0;
+  animation: floatUp 4s ease-in forwards;
+}
+@keyframes floatUp {
+  0%   { opacity: 0; transform: translateY(0) scale(1); }
+  10%  { opacity: 0.9; }
+  100% { opacity: 0; transform: translateY(-70vh) scale(0.4); }
+}
+
+/* focus visibility */
+a:focus-visible, button:focus-visible, .thing-card:focus-visible, .choice-btn:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+@media (min-width: 720px) {
+  .scene-inner { max-width: 560px; }
+  .card-stack { max-width: 520px; margin: 0 auto; }
+}

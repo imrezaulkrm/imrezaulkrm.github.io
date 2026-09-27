@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Happy Birthday</title>
+<meta name="description" content="A little something for a birthday.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎂</text></svg>">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<canvas id="starfield" aria-hidden="true"></canvas>
+<div id="progress-rail" aria-hidden="true"><div class="fill"></div></div>
+
+<!-- ============================================================
+     SCENE 01 — THE WAIT (gate). Shown pre-unlock, and briefly
+     as a tap-gate if the visitor arrives after unlock.
+     ============================================================ -->
+<div id="gate">
+  <div class="gate-eyebrow" id="gate-eyebrow"></div>
+  <h1 class="gate-title" id="gate-title"></h1>
+
+  <div class="countdown" id="countdown" role="timer" aria-live="off">
+    <div class="unit"><span class="num" id="cd-days">00</span><span class="label">days</span></div>
+    <span class="sep">:</span>
+    <div class="unit"><span class="num" id="cd-hours">00</span><span class="label">hrs</span></div>
+    <span class="sep">:</span>
+    <div class="unit"><span class="num" id="cd-mins">00</span><span class="label">min</span></div>
+    <span class="sep">:</span>
+    <div class="unit"><span class="num" id="cd-secs">00</span><span class="label">sec</span></div>
+  </div>
+
+  <p class="gate-subtitle" id="gate-subtitle"></p>
+  <button class="tap-hint" id="tap-hint">Tap to enter</button>
+</div>
+
+<div id="reveal-flash" aria-hidden="true"></div>
+
+<!-- ============================================================
+     MAIN EXPERIENCE — hidden behind the gate until unlock
+     ============================================================ -->
+<main id="experience" class="locked-out">
+
+  <!-- SCENE 02 — MIDNIGHT / HERO -->
+  <section class="scene" id="scene-hero">
+    <div class="particle-layer" id="hero-particles"></div>
+    <div class="scene-inner">
+      <p class="hero-heading" id="hero-eyebrow"></p>
+      <h1 class="hero-name" id="hero-happy"></h1>
+      <p class="hero-name" id="hero-nickname" style="margin-top:-1rem;"></p>
+      <p class="hero-date" id="hero-date"></p>
+      <p class="hero-line" id="hero-custom"></p>
+      <div class="scroll-cue">keep going<span class="stem"></span></div>
+    </div>
+  </section>
+
+  <!-- SCENE 03 — HER DAY -->
+  <section class="scene" id="scene-herday">
+    <div class="scene-inner">
+      <p class="eyebrow" id="herday-eyebrow"></p>
+      <h2 class="herday-title" id="herday-line"></h2>
+      <p class="herday-date" id="herday-date"></p>
+      <p class="herday-custom" id="herday-custom"></p>
+    </div>
+  </section>
+
+  <!-- SCENE 04 — LITTLE THINGS -->
+  <section class="scene" id="scene-cards">
+    <div class="scene-inner">
+      <p class="eyebrow" id="cards-eyebrow"></p>
+      <h2 class="cards-title" id="cards-title"></h2>
+      <div class="card-stack" id="card-stack"></div>
+    </div>
+  </section>
+
+  <!-- SCENE 05 — PHOTO JOURNEY -->
+  <section class="scene" id="scene-gallery">
+    <div class="scene-inner" style="max-width:none;">
+      <p class="eyebrow" id="gallery-eyebrow"></p>
+      <h2 class="cards-title" id="gallery-title"></h2>
+    </div>
+    <div class="gallery-track" id="gallery-track"></div>
+    <p class="gallery-hint">swipe →</p>
+  </section>
+
+  <!-- SCENE 06 — CHOOSE YOUR WORLD -->
+  <section class="scene" id="scene-choice">
+    <div class="scene-inner">
+      <p class="eyebrow" id="choice-eyebrow"></p>
+      <h2 class="cards-title" id="choice-title"></h2>
+      <div class="choice-row" id="choice-row"></div>
+      <p class="choice-message" id="choice-message"></p>
+    </div>
+  </section>
+
+  <!-- SCENE 07 — MAKE A WISH -->
+  <section class="scene" id="scene-wish">
+    <div class="particle-layer" id="wish-particles"></div>
+    <div class="scene-inner">
+      <p class="eyebrow" id="wish-eyebrow"></p>
+      <h2 class="cards-title" id="wish-title"></h2>
+      <p class="wish-instruction" id="wish-instruction"></p>
+      <div class="candle-wrap" id="candle" role="button" tabindex="0" aria-label="Blow out the candle">
+        <div class="smoke"></div>
+        <div class="flame"></div>
+        <div class="candle-wick"></div>
+        <div class="candle-body"></div>
+      </div>
+      <p class="wish-after" id="wish-after"></p>
+    </div>
+  </section>
+
+  <!-- SCENE 08 — ONE MORE THING -->
+  <section class="scene" id="scene-surprise">
+    <div class="scene-inner">
+      <p class="eyebrow" id="surprise-eyebrow"></p>
+      <button class="surprise-btn" id="surprise-btn"></button>
+      <div class="surprise-reveal" id="surprise-reveal">
+        <div class="surprise-reveal-inner">
+          <h3 id="surprise-title"></h3>
+          <p id="surprise-text"></p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SCENE 09 — FINAL MESSAGE -->
+  <section class="scene" id="scene-final">
+    <div class="scene-inner">
+      <p class="eyebrow" id="final-eyebrow"></p>
+      <p class="final-message" id="final-message"></p>
+      <p class="final-happy">HAPPY BIRTHDAY ❤</p>
+      <p class="final-name" id="final-name"></p>
+      <p class="final-signoff" id="final-signoff"></p>
+    </div>
+  </section>
+
+  <!-- SCENE 10 — ENDING -->
+  <section class="scene" id="scene-ending">
+    <div class="scene-inner">
+      <p class="ending-line" id="ending-line"></p>
+    </div>
+  </section>
+
+</main>
+
+<button id="audio-toggle" aria-label="Toggle sound">🔈</button>
+
+<audio id="audio-waiting" loop preload="none"></audio>
+<audio id="audio-birthday" loop preload="none"></audio>
+<audio id="audio-voice" preload="none"></audio>
+
+<script src="js/config.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
