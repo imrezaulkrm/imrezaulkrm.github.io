@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <meta
+    name="description"
+    content="Journiq — Track Every Journey."
+  >
+
+  <title>Journiq — Track Every Journey</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --bg: #071014;
+      --bg-secondary: #0b171c;
+      --card: rgba(255, 255, 255, 0.055);
+      --card-border: rgba(255, 255, 255, 0.11);
+      --text: #f4f8fa;
+      --muted: #91a4ac;
+      --accent: #35d6c5;
+      --accent-soft: rgba(53, 214, 197, 0.14);
+      --shadow: rgba(0, 0, 0, 0.35);
+    }
+
+    body {
+      min-height: 100vh;
+      font-family:
+        Inter,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
+
+      color: var(--text);
+
+      background:
+        radial-gradient(
+          circle at 50% -10%,
+          rgba(53, 214, 197, 0.12),
+          transparent 38%
+        ),
+        linear-gradient(
+          180deg,
+          var(--bg),
+          var(--bg-secondary)
+        );
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .container {
+      width: min(1080px, calc(100% - 32px));
+      margin: auto;
+    }
+
+    /* NAV */
+
+    nav {
+      height: 76px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: -0.4px;
+    }
+
+    .brand img {
+      width: 38px;
+      height: 38px;
+      border-radius: 11px;
+      object-fit: cover;
+    }
+
+    .github-link {
+      color: var(--muted);
+      font-size: 14px;
+      transition: 0.2s;
+    }
+
+    .github-link:hover {
+      color: var(--text);
+    }
+
+    /* HERO */
+
+    .hero {
+      min-height: calc(100vh - 76px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 70px 0 100px;
+    }
+
+    .hero-content {
+      max-width: 760px;
+      width: 100%;
+    }
+
+    .app-icon {
+      width: 108px;
+      height: 108px;
+      border-radius: 28px;
+      object-fit: cover;
+
+      box-shadow:
+        0 24px 70px var(--shadow),
+        0 0 0 1px rgba(255,255,255,0.08);
+
+      margin-bottom: 28px;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+
+      padding: 8px 13px;
+
+      border: 1px solid var(--card-border);
+      background: var(--card);
+
+      border-radius: 999px;
+
+      color: var(--muted);
+      font-size: 13px;
+
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+
+      margin-bottom: 22px;
+    }
+
+    .dot {
+      width: 7px;
+      height: 7px;
+      background: var(--accent);
+      border-radius: 50%;
+      box-shadow: 0 0 12px var(--accent);
+    }
+
+    h1 {
+      font-size: clamp(48px, 8vw, 82px);
+      line-height: 0.95;
+      letter-spacing: -4px;
+      margin-bottom: 20px;
+    }
+
+    .tagline {
+      font-size: clamp(19px, 3vw, 25px);
+      color: var(--muted);
+      margin-bottom: 16px;
+    }
+
+    .description {
+      max-width: 580px;
+      margin: 0 auto 34px;
+
+      color: var(--muted);
+      line-height: 1.7;
+      font-size: 15px;
+    }
+
+    /* DOWNLOAD */
+
+    .download-card {
+      width: min(520px, 100%);
+      margin: auto;
+
+      padding: 22px;
+
+      border-radius: 24px;
+
+      background: var(--card);
+      border: 1px solid var(--card-border);
+
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+
+      box-shadow: 0 24px 70px var(--shadow);
+    }
+
+    .version-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      margin-bottom: 18px;
+    }
+
+    .version {
+      font-size: 18px;
+      font-weight: 650;
+    }
+
+    .latest {
+      padding: 6px 10px;
+      border-radius: 999px;
+
+      background: var(--accent-soft);
+      color: var(--accent);
+
+      font-size: 12px;
+      font-weight: 650;
+    }
+
+    .download-button {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      width: 100%;
+      min-height: 54px;
+
+      border-radius: 16px;
+
+      background: var(--accent);
+      color: #031311;
+
+      font-size: 15px;
+      font-weight: 750;
+
+      transition:
+        transform 0.2s,
+        box-shadow 0.2s;
+    }
+
+    .download-button:hover {
+      transform: translateY(-2px);
+
+      box-shadow:
+        0 14px 32px rgba(53, 214, 197, 0.2);
+    }
+
+    .release-link {
+      display: block;
+
+      margin-top: 14px;
+
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .release-link:hover {
+      color: var(--text);
+    }
+
+    /* FEATURES */
+
+    .features {
+      padding: 20px 0 90px;
+    }
+
+    .section-title {
+      text-align: center;
+      font-size: 30px;
+      letter-spacing: -1px;
+      margin-bottom: 12px;
+    }
+
+    .section-subtitle {
+      text-align: center;
+      color: var(--muted);
+      font-size: 14px;
+      margin-bottom: 34px;
+    }
+
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+    }
+
+    .feature {
+      padding: 22px;
+
+      border-radius: 20px;
+
+      background: rgba(255,255,255,0.035);
+      border: 1px solid rgba(255,255,255,0.07);
+    }
+
+    .feature-icon {
+      width: 42px;
+      height: 42px;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      border-radius: 13px;
+
+      background: var(--accent-soft);
+      color: var(--accent);
+
+      margin-bottom: 16px;
+
+      font-size: 19px;
+    }
+
+    .feature h3 {
+      font-size: 16px;
+      margin-bottom: 8px;
+    }
+
+    .feature p {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    /* FOOTER */
+
+    footer {
+      padding: 28px 0 40px;
+
+      color: var(--muted);
+      font-size: 13px;
+
+      text-align: center;
+
+      border-top: 1px solid rgba(255,255,255,0.06);
+    }
+
+    /* MOBILE */
+
+    @media (max-width: 720px) {
+
+      .container {
+        width: min(100% - 24px, 600px);
+      }
+
+      nav {
+        height: 66px;
+      }
+
+      .github-link {
+        display: none;
+      }
+
+      .hero {
+        min-height: auto;
+        padding: 60px 0 80px;
+      }
+
+      h1 {
+        letter-spacing: -2.5px;
+      }
+
+      .app-icon {
+        width: 88px;
+        height: 88px;
+        border-radius: 23px;
+      }
+
+      .feature-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="container">
+
+    <nav>
+
+      <a class="brand" href="#">
+        <img
+          src="assets/journiq_icon.png"
+          alt="Journiq"
+        >
+        <span>Journiq</span>
+      </a>
+
+      <a
+        class="github-link"
+        href="https://github.com/imrezaulkrm/Journiq"
+        target="_blank"
+        rel="noopener"
+      >
+        GitHub ↗
+      </a>
+
+    </nav>
+
+    <main>
+
+      <section class="hero">
+
+        <div class="hero-content">
+
+          <img
+            class="app-icon"
+            src="assets/journiq_icon.png"
+            alt="Journiq app icon"
+          >
+
+          <div class="eyebrow">
+            <span class="dot"></span>
+            <span id="status">Latest Android release</span>
+          </div>
+
+          <h1>Journiq</h1>
+
+          <p class="tagline">
+            Track Every Journey.
+          </p>
+
+          <p class="description">
+            A personal GPS journey tracker designed to capture
+            your routes, distance, speed and travel history —
+            privately and locally on your device.
+          </p>
+
+          <div class="download-card">
+
+            <div class="version-row">
+
+              <span
+                class="version"
+                id="version"
+              >
+                Journiq v1.0.0
+              </span>
+
+              <span class="latest">
+                LATEST
+              </span>
+
+            </div>
+
+            <a
+              id="download"
+              class="download-button"
+              href="#"
+            >
+              Download APK
+            </a>
+
+            <a
+              id="release"
+              class="release-link"
+              href="#"
+              target="_blank"
+              rel="noopener"
+            >
+              View release details →
+            </a>
+
+          </div>
+
+        </div>
+
+      </section>
+
+
+      <section class="features">
+
+        <h2 class="section-title">
+          Built for every journey.
+        </h2>
+
+        <p class="section-subtitle">
+          Everything you need to capture and understand your travels.
+        </p>
+
+        <div class="feature-grid">
+
+          <div class="feature">
+
+            <div class="feature-icon">
+              ◎
+            </div>
+
+            <h3>GPS Tracking</h3>
+
+            <p>
+              Record your route, distance, duration,
+              speed and location with validated GPS data.
+            </p>
+
+          </div>
+
+
+          <div class="feature">
+
+            <div class="feature-icon">
+              ↗
+            </div>
+
+            <h3>Journey History</h3>
+
+            <p>
+              Keep your completed journeys organized
+              with detailed routes and statistics.
+            </p>
+
+          </div>
+
+
+          <div class="feature">
+
+            <div class="feature-icon">
+              ◌
+            </div>
+
+            <h3>Offline Ready</h3>
+
+            <p>
+              Designed with local-first storage and
+              offline journey data in mind.
+            </p>
+
+          </div>
+
+
+          <div class="feature">
+
+            <div class="feature-icon">
+              ◇
+            </div>
+
+            <h3>Weather</h3>
+
+            <p>
+              See weather information while tracking
+              your journey.
+            </p>
+
+          </div>
+
+
+          <div class="feature">
+
+            <div class="feature-icon">
+              ⌁
+            </div>
+
+            <h3>My Journey Map</h3>
+
+            <p>
+              Visualize your completed routes together
+              on one cumulative map.
+            </p>
+
+          </div>
+
+
+          <div class="feature">
+
+            <div class="feature-icon">
+              ◫
+            </div>
+
+            <h3>Statistics</h3>
+
+            <p>
+              Understand your journeys through distance,
+              time, speed and mode statistics.
+            </p>
+
+          </div>
+
+        </div>
+
+      </section>
+
+    </main>
+
+
+    <footer>
+
+      © 2026 Journiq · Track Every Journey.
+
+    </footer>
+
+  </div>
+
+
+  <script>
+
+    async function loadRelease() {
+
+      try {
+
+        const response =
+          await fetch("update.json", {
+            cache: "no-store"
+          });
+
+        if (!response.ok) {
+          throw new Error("Failed to load update information.");
+        }
+
+        const data = await response.json();
+
+        document.getElementById("version").textContent =
+          `Journiq v${data.latestVersion}`;
+
+        document.getElementById("download").href =
+          data.downloadUrl;
+
+        document.getElementById("release").href =
+          data.releaseUrl;
+
+      } catch (error) {
+
+        console.error(error);
+
+        document.getElementById("status").textContent =
+          "Android release";
+
+      }
+
+    }
+
+    loadRelease();
+
+  </script>
+
+</body>
+</html>
