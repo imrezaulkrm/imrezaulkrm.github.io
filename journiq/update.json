@@ -4,7 +4,8 @@
   "minimumSupportedVersion": "1.0.0",
   "updateUrl": "https://github.com/imrezaulkrm/Journiq/releases/download/v1.0.1/Journiq-v1.0.1.apk",
   "releaseNotes": [
-    "Test update",
-    "Testing Journiq update system"
+    "Improved update system",
+    "Improved journey tracking experience",
+    "Improved map experience"
   ]
 }
