@@ -601,46 +601,38 @@
   </div>
 
 
-  <script>
+<script>
+  async function loadRelease() {
+    try {
+      const response = await fetch("update.json", {
+        cache: "no-store"
+      });
 
-    async function loadRelease() {
-
-      try {
-
-        const response =
-          await fetch("update.json", {
-            cache: "no-store"
-          });
-
-        if (!response.ok) {
-          throw new Error("Failed to load update information.");
-        }
-
-        const data = await response.json();
-
-        document.getElementById("version").textContent =
-          `Journiq v${data.latestVersion}`;
-
-        document.getElementById("download").href =
-          data.downloadUrl;
-
-        document.getElementById("release").href =
-          data.releaseUrl;
-
-      } catch (error) {
-
-        console.error(error);
-
-        document.getElementById("status").textContent =
-          "Android release";
-
+      if (!response.ok) {
+        throw new Error("Failed to load update information.");
       }
 
+      const data = await response.json();
+
+      document.getElementById("version").textContent =
+        `Journiq v${data.latestVersion}`;
+
+      document.getElementById("download").href =
+        data.downloadUrl;
+
+      document.getElementById("release").href =
+        data.releaseUrl;
+
+    } catch (error) {
+      console.error(error);
+
+      document.getElementById("status").textContent =
+        "Android release";
     }
+  }
 
-    loadRelease();
-
-  </script>
+  loadRelease();
+</script>
 
 </body>
 </html>
