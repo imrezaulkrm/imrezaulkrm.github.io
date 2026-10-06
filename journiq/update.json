@@ -1,14 +1,18 @@
 {
   "appName": "Journiq",
-  "latestVersion": "1.0.2",
+  "latestVersion": "1.0.3",
   "minimumSupportedVersion": "1.0.0",
-  "updateUrl": "https://github.com/imrezaulkrm/Journiq/releases/download/v1.0.2/Journiq-v1.0.2.apk",
-  "downloadUrl": "https://github.com/imrezaulkrm/Journiq/releases/download/v1.0.2/Journiq-v1.0.2.apk",
-  "releaseUrl": "https://github.com/imrezaulkrm/Journiq/releases/tag/v1.0.2",
+  "updateUrl": "https://github.com/imrezaulkrm/Journiq/releases/download/v1.0.3/Journiq-v1.0.3.apk",
+  "downloadUrl": "https://github.com/imrezaulkrm/Journiq/releases/download/v1.0.3/Journiq-v1.0.3.apk",
+  "releaseUrl": "https://github.com/imrezaulkrm/Journiq/releases/tag/v1.0.3",
   "releaseNotes": [
-    "Improved update system",
-    "Improved journey tracking experience",
-    "Improved map experience"
+    "Improved Live Journey screen layout and responsiveness",
+    "Improved Weather card and Back button positioning",
+    "Improved Follow Me button placement above the metrics panel",
+    "Added cleaner iOS-inspired glass UI for a more modern look",
+    "Improved map visibility with a lighter translucent card design",
+    "Improved overall floating card consistency and visual experience",
+    "Journey tracking functionality remains unchanged"
   ]
 }
 
